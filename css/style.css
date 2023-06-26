@@ -1,0 +1,76 @@
+body {
+    font: normal 15px Segoe UI, Segoe UI, sans-serif;
+}
+
+.tab.mode {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tabContent.mode {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.tab.furnitureType {
+    overflow: hidden;
+}
+
+.tabContent.furnitureType {
+    display: none;
+}
+
+button {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: default;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #ddd;
+}
+
+button.active {
+    background-color: #ccc;
+}
+
+.loadInputClass {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.loadInputClass:hover {
+    background-color: #ddd;
+}
+
+.loadInputClass:active {
+    background-color: #ccc;
+}
+
+.inputTD {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+input,
+button,
+label {
+    font-family: inherit;
+    font-size: inherit;
+}
