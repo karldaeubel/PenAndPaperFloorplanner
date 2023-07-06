@@ -88,7 +88,6 @@ class Openable extends Movable {
         return false;
     }
 
-
     handleSnap(values, angle, diff) {
         for (const value of values) {
             if (snap(angle, value, diff)) {
@@ -781,13 +780,17 @@ canvas.addEventListener("dblclick", (e) => {
 
 canvas.addEventListener("wheel", (e) => {
     if (e.deltaY > 0) {
-        projection.scale /= settings.zoomFactor;
-        projection.p.x = e.x - (e.x - projection.p.x) / settings.zoomFactor;
-        projection.p.y = e.y - (e.y - projection.p.y) / settings.zoomFactor;
+        if (settings.minZoom < projection.scale) {
+            projection.scale /= settings.zoomFactor;
+            projection.p.x = e.x - (e.x - projection.p.x) / settings.zoomFactor;
+            projection.p.y = e.y - (e.y - projection.p.y) / settings.zoomFactor;
+        }
     } else if (e.deltaY < 0) {
-        projection.scale *= settings.zoomFactor;
-        projection.p.x = e.x - (e.x - projection.p.x) * settings.zoomFactor;
-        projection.p.y = e.y - (e.y - projection.p.y) * settings.zoomFactor;
+        if (settings.maxZoom > projection.scale) {
+            projection.scale *= settings.zoomFactor;
+            projection.p.x = e.x - (e.x - projection.p.x) * settings.zoomFactor;
+            projection.p.y = e.y - (e.y - projection.p.y) * settings.zoomFactor;
+        }
     }
     drawMain();
 });
@@ -1112,7 +1115,7 @@ function drawGraph() {
 
                 const scaling = Math.min(sx, sy) / 2;
 
-                setFontSize(15, false);
+                setFontSize(18, false);
 
                 ctx.fillText(
                     distance(node1.p, node2.p).toFixed(1),
@@ -1174,7 +1177,7 @@ function drawGraph() {
                 ctx.stroke();
 
                 if (!node.remove) {
-                    setFontSize(15, false);
+                    setFontSize(18, false);
 
                     ctx.fillText(distance(node.p, newPos).toFixed(1), (node.p.x + newPos.x) / 2, (node.p.y + newPos.y) / 2);
                 }
@@ -1219,21 +1222,42 @@ function drawLabel(label) {
 }
 
 function drawScale() {
-    const scaleWidth = 1000;
+    const lhs = projection.to({ x: 0, y: 0 });
+    const rhs = projection.to({ x: canvas.width, y: 0 });
+    const scaleWidth = (rhs.x - lhs.x) / 3;
+    let range = 0.1;
+    while (scaleWidth / (range * 10) > 2) {
+        range *= 10;
+    }
+    let units = 1000;
+    let unit = "m";
+    if (range === 100 || range === 10) {
+        units = 10;
+        unit = "cm";
+    } else if (range < 10) {
+        units = 1;
+        unit = "mm";
+    }
     ctx.beginPath();
 
     setFontSize(15, false);
 
-    ctx.moveTo((-projection.p.x + 10) / projection.scale, (-projection.p.y + 10) / projection.scale);
-    ctx.lineTo((-projection.p.x + 10) / projection.scale, (-projection.p.y + 20) / projection.scale);
+    console.log(scaleWidth / range);
 
-    ctx.moveTo((-projection.p.x + 10) / projection.scale, (-projection.p.y + 15) / projection.scale);
-    ctx.lineTo((-projection.p.x + 10) / projection.scale + scaleWidth, (-projection.p.y + 15) / projection.scale);
+    let i = 0;
+    for (; i < scaleWidth; i += range) {
+        ctx.moveTo((-projection.p.x + 20) / projection.scale + i, (-projection.p.y + 17) / projection.scale);
+        ctx.lineTo((-projection.p.x + 20) / projection.scale + i, (-projection.p.y + 27) / projection.scale);
+        if (i % (10 * range) === 0 || Math.floor(scaleWidth / range) < 10) {
+            ctx.fillText((i / units) + unit,
+                (-projection.p.x + 20) / projection.scale + i, 
+                (-projection.p.y + 15) / projection.scale, 
+                Math.floor(scaleWidth / range) < 10 ? range : scaleWidth / 2);
+        }
+    }
 
-    ctx.moveTo((-projection.p.x + 10) / projection.scale + scaleWidth, (-projection.p.y + 10) / projection.scale);
-    ctx.lineTo((-projection.p.x + 10) / projection.scale + scaleWidth, (-projection.p.y + 20) / projection.scale);
-
-    ctx.fillText("1m", (-projection.p.x + 10) / projection.scale + scaleWidth / 2, (-projection.p.y + 13) / projection.scale, scaleWidth);
+    ctx.moveTo((-projection.p.x + 20) / projection.scale, (-projection.p.y + 22) / projection.scale);
+    ctx.lineTo((-projection.p.x + 20) / projection.scale + i - range, (-projection.p.y + 22) / projection.scale);
 
     ctx.stroke();
     restoreDefaultContext();
@@ -1401,7 +1425,7 @@ document.getElementById("addOpenableButton").addEventListener("click", () => {
     }
 
     const start = projection.to({ x: 10, y: 100 });
-    openables.push(new Openable(settings.openableType, start.x, start.y, openableWidth, 200));
+    openables.push(new Openable(settings.openableType, start.x, start.y, openableWidth, 180));
     console.log("add Openable:", settings.openableType);
     drawMain();
 });
@@ -1597,7 +1621,6 @@ document.getElementById("helpButton").addEventListener("click", () => {
         getText(loc.help.explanationRoom) + "\n\n" +
         getText(loc.help.introFurniture) + "\n" +
         getText(loc.help.explanationFurniture) + "\n\n" +
-        getText(loc.help.todo) + "\n\n" +
         getText(loc.help.issue) + "\n\n" +
         getText(loc.help.creator) + "\n\n");
 });

@@ -43,7 +43,11 @@ const loc = {
             "The snap distance is determined by the size of the outer circle. " +
             "The size of the center and the outer circle can be adjusted in the right menu. " +
             "Corners droped at the garbage bin at the top right corner will be removed. " +
-            "In this mode it is furthermore possible to create labels to name rooms for example. ",
+            "In this mode it is furthermore possible to create labels to name rooms for example. Labels can be deleted if droped in the garbage bin. " +
+            "It is also possible to place doors and windows, openables for short. " +
+            "Openables have a width and can be of three different types, anchored left, anchored right or doubled. " +
+            "They can be moved and rotated with the handle above the door/window. Openables snap to walls by placing them close to one. " +
+            "The angle is then adjusted automatically. A snaped openable will move together with walls. Openables can be removed by dropping them in the garbage bin. ",
             de: "Die beiden Hauptelemente in diesem Modus sind Ecken und Wände. Eine Ecke kann durch einen Doppelklick erstellt werden. " + 
             "Eine Ecke besteht aus einem inneren und einem äußeren Kreis. " +
             "Durch einen Klick auf den inneren Kreis kann eine Ecke verschoben werden. " +
@@ -53,7 +57,11 @@ const loc = {
             "Die Entfernung dieser automatischen Fixierung ist von der größe des äußeren Kreises abhängig. " +
             "Die größe der Kreise einer Ecke kann im rechten Menü eingestellt werden. " +
             "Ecken die in der Mülltonne abgelegt werden, der rote Bereich am oberen rechten Bildschirmrand, werden gelöscht. " +
-            "In diesem Modus können außerdem Aufschriften erstellt werden um zum Beispiel Räume zu benennen. "
+            "In diesem Modus können außerdem Aufschriften erstellt werden um zum Beispiel Räume zu benennen. Eine Aufschrift kann gelöscht werden indem diese in die Mülltonne verschoben wird. " +
+            "Weiterhin erlaubt dieser Modus das Erstellen von Türen und Fenstern. " +
+            "Diese haben eine Breite und sind einem von drei Typen zugeordnet: Linksbündig, Rechtsbündig oder Doppelt. " +
+            "Türen und Fenster können durch den Bereich darüber verschoben und rotiert werden. " +
+            "Sie können an Wänden ausgerichtet werden und positionieren sich anschießend automatisch. Türen/Fenster können gelöscht werden indem diese in die Mülltonne verschoben werden. ",
         },
         introFurniture: {
             en: "Furniture-Mode:",
@@ -72,11 +80,6 @@ const loc = {
             "Möbel können einen Namen erhalten. " +
             "Möbel, außder der Kreis, können rotiert werden indem man den kleinen Kreis innerhalb jedes Möbelstücks klickt, der sich zu Beginn immer am linken oberen Rand befindet. " +
             "Möbelstücke die man in der Mülltonne ablegt, der rote Bereich am oberen rechten Bildschirmrand, werden gelöscht. "
-        },
-        todo: {
-            en: "TODO's:\n" +
-            " - windows/doors within walls\n" +
-            " - colors for furniture",
         },
         issue: {
             en: "Known Issues:\n" +

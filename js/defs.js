@@ -58,6 +58,8 @@ const settings = {
     openableType: OpenableType.Left,
     type: FurnitureType.Rectangle,
     zoomFactor: 1.05,
+    minZoom: 1 / 500,
+    maxZoom: 100,
     deleteDim: {
         w: 50,
         h: 50
