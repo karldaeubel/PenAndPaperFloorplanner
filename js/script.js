@@ -1,5 +1,3 @@
-/* global settings projection loc getText ctx canvas Mode FurnitureType graph furniture labels CornerNode*/
-
 class Movable {
     constructor(type) {
         this.type = type;
@@ -17,6 +15,309 @@ class Movable {
 
     toJSON() {
         return { type: this.type, stroke: this.stroke, fill: this.fill };
+    }
+}
+
+class Openable extends Movable {
+    constructor(type, x, y, w, h) {
+        super(MovableType.Openable);
+        this.openableType = type;
+        this.p = {
+            x,
+            y
+        };
+        this.dim = {
+            w,
+            h
+        };
+        this.angle = 0;
+        this.snap = {
+            edge: null,
+            pos: null,
+            orientation: null,
+        }
+    }
+
+    center() {
+        return {
+            x: this.p.x + this.dim.w / 2,
+            y: this.p.y
+        };
+    }
+
+    handle() {
+        return {
+            x: this.p.x,
+            y: this.p.y - this.dim.h
+        }
+    }
+
+    pointInRotCircle(other, radius) {
+        const pRot = rotate(this.center(), other, -this.angle);
+        return pointInCircle(translate(this.handle(), { w: radius, h: radius }), radius, pRot);
+    }
+
+    getRotateSize() {
+        if (this.dim.w / 2 <= settings.furnitureRotateSize || this.dim.h / 2 <= settings.furnitureRotateSize) {
+            return Math.min(this.dim.w, this.dim.h) / 2;
+        }
+        return settings.furnitureRotateSize;
+    }
+
+    pointInRotRectangle(other) {
+        const pRot = rotate(this.center(), other, -this.angle);
+        const h = this.handle();
+        if (h.x <= pRot.x && h.x + this.dim.w >= pRot.x && h.y <= pRot.y && h.y + this.dim.h >= pRot.y) {
+            return true;
+        }
+        return false;
+    }
+
+    handleClick(e) {
+        if (!this.snap.edge && this.pointInRotCircle(projection.to(e), this.getRotateSize() / 2)) {
+            this.rotate = true;
+            this.delta.x = e.x;
+            this.delta.y = e.y;
+            return true;
+        } else if (this.pointInRotRectangle(projection.to(e))) {
+            this.translate = true;
+            this.delta.x = e.x;
+            this.delta.y = e.y;
+            return true;
+        }
+        return false;
+    }
+
+
+    handleSnap(values, angle, diff) {
+        for (const value of values) {
+            if (snap(angle, value, diff)) {
+                this.angle = value % 360;
+                this.delta = projection.from(rotate(this.center(),
+                    { x: this.p.x, y: this.p.y - this.dim.h },
+                    value % 360
+                ));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    handleEdgeSnap(p, graph) {
+        const clickPos = projection.to(p);
+
+        let minDist = null;
+        let minEdge = null;
+        let minT = null;
+        let minOrientation = null;
+
+        for (const id1 in graph.edges) {
+            for (const id2 in graph.edges[id1]) {
+                const edge = graph.edges[id1][id2];
+                const node1 = graph.nodes[edge.id1];
+                const node2 = graph.nodes[edge.id2];
+
+                const t =
+                    ((node2.p.x - node1.p.x) * (clickPos.x - node1.p.x) + (node2.p.y - node1.p.y) * (clickPos.y - node1.p.y)) /
+                    ((node2.p.x - node1.p.x) ** 2 + (node2.p.y - node1.p.y) ** 2);
+
+                if (t < 0 || t > 1) {
+                    continue;
+                }
+                const orientationDist =
+                    ((node2.p.x - node1.p.x) * (node1.p.y - clickPos.y) - (node1.p.x - clickPos.x) * (node2.p.y - node1.p.y)) /
+                    distance(node2.p, node1.p);
+                const dist = Math.abs(orientationDist);
+                if (dist < settings.nodeExtendSize && (!minDist || dist < minDist)) {
+                    minDist = dist;
+                    minEdge = edge;
+                    minT = t;
+                    minOrientation = Math.sign(orientationDist) < 0 ? 1 : 0;
+
+                    const proj = {
+                        x: node1.p.x + t * (node2.p.x - node1.p.x),
+                        y: node1.p.y + t * (node2.p.y - node1.p.y)
+                    };
+
+                    const shift = { x: proj.x - this.dim.w / 2, y: proj.y };
+                    this.p = shift;
+                    this.delta = projection.from(proj);
+                    this.angle = toDeg(Math.atan2(node2.p.y - node1.p.y, node2.p.x - node1.p.x)) + minOrientation * 180;
+                }
+            }
+        }
+
+        this.snap.pos = minT;
+        this.snap.orientation = minOrientation;
+
+        if (this.snap.edge && this.snap.edge !== minEdge) {
+            for (let i = this.snap.edge.snapOpenables.length - 1; i >= 0; --i) {
+                if (this.snap.edge.snapOpenables[i] === this) {
+                    this.snap.edge.snapOpenables.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        if (this.snap.edge !== minEdge) {
+            this.snap.edge = minEdge;
+            if (this.snap.edge) {
+                this.snap.edge.snapOpenables.push(this);
+            }
+        }
+
+        if (!minDist) {
+            this.snap.edge = null;
+            this.snap.pos = null;
+            this.snap.orientation = null;
+
+            this.p.x += (p.x - this.delta.x) / projection.scale;
+            this.p.y += (p.y - this.delta.y) / projection.scale;
+
+            this.delta.x = p.x;
+            this.delta.y = p.y;
+        }
+    }
+
+    handleMove(e, graph) {
+        let changed = false;
+        if (this.translate) {
+            changed = true;
+
+            this.handleEdgeSnap(e, graph);
+
+            if (willRemove(e)) {
+                this.remove = true;
+            } else {
+                this.remove = false;
+            }
+        } else if (this.rotate) {
+            changed = true;
+            const a = angleBetweenPoints(projection.from(this.center()),
+                this.delta,
+                e);
+            if (!this.handleSnap([360, 270, 180, 90], Math.abs((this.angle + a + 360) % 360), settings.furnitureSnapAngle)) {
+                this.angle += a;
+
+                this.delta.x = e.x;
+                this.delta.y = e.y;
+            }
+        }
+
+        return changed;
+    }
+
+    draw() {
+        ctx.save();
+
+        const c = this.center();
+
+        ctx.translate(c.x, c.y);
+        ctx.rotate(toRad(this.angle));
+
+        ctx.fillStyle = this.remove ? "red" : settings.mode === Mode.Room ? this.fill : "gray";
+        ctx.strokeStyle = this.remove ? "red" : settings.mode === Mode.Room ? this.stroke : "gray";
+
+        switch (this.openableType) {
+            case OpenableType.Left: {
+                ctx.beginPath();
+                ctx.moveTo(-this.dim.w / 2, 0);
+                ctx.lineTo(-this.dim.w / 2, this.dim.w);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(-this.dim.w / 2, 0, this.dim.w, 0, Math.PI / 2);
+                ctx.stroke();
+                break;
+            }
+            case OpenableType.Right: {
+                ctx.beginPath();
+                ctx.moveTo(this.dim.w / 2, 0);
+                ctx.lineTo(this.dim.w / 2, this.dim.w);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(this.dim.w / 2, 0, this.dim.w, Math.PI / 2, Math.PI);
+                ctx.stroke();
+                break;
+            }
+            case OpenableType.Double: {
+                ctx.beginPath();
+                ctx.moveTo(-this.dim.w / 2, 0);
+                ctx.lineTo(-this.dim.w / 2, this.dim.w / 2);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(-this.dim.w / 2, 0, this.dim.w / 2, 0, Math.PI / 2);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(this.dim.w / 2, 0);
+                ctx.lineTo(this.dim.w / 2, this.dim.w / 2);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(this.dim.w / 2, 0, this.dim.w / 2, Math.PI / 2, Math.PI);
+                ctx.stroke();
+                break;
+            }
+        }
+
+        const rotateSize = this.getRotateSize();
+
+        if (settings.mode === Mode.Room) {
+            ctx.beginPath();
+            ctx.rect(-this.dim.w / 2, -this.dim.h, this.dim.w, this.dim.h);
+            ctx.stroke();
+
+            if (!this.snap.edge) {
+                ctx.beginPath();
+                ctx.arc(
+                    -this.dim.w / 2 + rotateSize / 2,
+                    -this.dim.h + rotateSize / 2,
+                    rotateSize / 2,
+                    0,
+                    2 * Math.PI
+                );
+                ctx.stroke();
+            }
+        }
+
+        if (this.translate || this.rotate) {
+            setFontSize(rotateSize * 2);
+
+            ctx.beginPath();
+            ctx.fillText(this.dim.w, 0, -this.dim.h + rotateSize * 2, this.dim.w);
+            ctx.stroke();
+
+            if (this.snap.edge) {
+                const node1 = graph.nodes[this.snap.edge.id1];
+                const node2 = graph.nodes[this.snap.edge.id2];
+
+                const dist = distance(node1.p, node2.p);
+                const dist1 = (dist * this.snap.pos - this.dim.w / 2).toFixed(1);
+                const dist2 = (dist * (1 - this.snap.pos) - this.dim.w / 2).toFixed(1);
+
+                if (dist1 > 0) {
+                    ctx.textAlign = this.snap.orientation === 0 ? "right" : "left";
+                    ctx.beginPath();
+                    ctx.fillText(dist1, (this.snap.orientation - 1 / 2) * this.dim.w, -this.dim.h + rotateSize * 2, dist1);
+                    ctx.stroke();
+                }
+
+                if (dist2 > 0) {
+                    ctx.textAlign = this.snap.orientation === 1 ? "right" : "left";
+                    ctx.beginPath();
+                    ctx.fillText(dist2, (-this.snap.orientation + 1 / 2) * this.dim.w, -this.dim.h + rotateSize * 2, dist2);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        ctx.restore();
+    }
+
+    toJSON() {
+        return { mov: super.toJSON(), openableType: this.openableType, p: this.p, dim: this.dim, angle: this.angle, snap: this.snap };
     }
 }
 
@@ -231,7 +532,7 @@ class Rectangle extends Movable {
 
 class Circle extends Movable {
     constructor(name, x, y, r) {
-        super(FurnitureType.Circle);
+        super(MovableType.Circle);
         this.name = name;
         this.c = {
             x,
@@ -520,6 +821,14 @@ function mouseDown(e) {
             }
         }
         if (!selected) {
+            for (const openable of openables) {
+                if (openable.handleClick(e)) {
+                    selected = true;
+                    break;
+                }
+            }
+        }
+        if (!selected) {
             for (const label of labels) {
                 if (label.handleClick(e)) {
                     selected = true;
@@ -558,6 +867,25 @@ function mouseMove(e) {
 
                 node.p = toNextNumber(projection.to(node.delta));
 
+                for (const id1 in graph.edges) {
+                    for (const id2 in graph.edges[id1]) {
+                        const edge = graph.edges[id1][id2];
+                        if (edge.id1 === node.id || edge.id2 === node.id) {
+                            const node1 = graph.nodes[id1];
+                            const node2 = graph.nodes[id2];
+                            for (const openable of edge.snapOpenables) {
+                                const proj = {
+                                    x: node1.p.x + openable.snap.pos * (node2.p.x - node1.p.x),
+                                    y: node1.p.y + openable.snap.pos * (node2.p.y - node1.p.y)
+                                };
+                                const shift = { x: proj.x - openable.dim.w / 2, y: proj.y };
+                                openable.p = shift;
+                                openable.angle = toDeg(Math.atan2(node2.p.y - node1.p.y, node2.p.x - node1.p.x)) + openable.snap.orientation * 180;
+                            }
+                        }
+                    }
+                }
+
                 if (willRemove(e)) {
                     node.remove = true;
                 } else {
@@ -575,6 +903,11 @@ function mouseMove(e) {
                 } else {
                     node.remove = false;
                 }
+            }
+        }
+        for (const openable of openables) {
+            if (openable.handleMove(e, graph)) {
+                changed = true;
             }
         }
         for (const label of labels) {
@@ -600,10 +933,19 @@ function mouseMove(e) {
 }
 
 function mouseUpForMovables(movables) {
-    let i = movables.length;
-    while (i--) {
+    for (let i = movables.length - 1; i >= 0; --i) {
         const mov = movables[i];
         if (mov.remove) {
+            if (mov.type === MovableType.Openable) {
+                if (mov.snap.edge) {
+                    for (let i = mov.snap.edge.snapOpenables.length - 1; i >= 0; --i) {
+                        if (mov.snap.edge.snapOpenables[i] === mov) {
+                            mov.snap.edge.snapOpenables.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
             movables.splice(i, 1);
         } else {
             mov.translate = false;
@@ -643,6 +985,7 @@ function mouseUp(e) {
             node.snap = { x: null, y: null };
             node.delta = { x: 0, y: 0 };
         }
+        mouseUpForMovables(openables);
         mouseUpForMovables(labels);
     }
 
@@ -684,11 +1027,15 @@ function drawMain() {
     drawScale();
     drawDeletionField();
 
-    if (Object.keys(graph.nodes).length === 0 && furniture.length === 0 && labels.length === 0) {
+    if (Object.keys(graph.nodes).length === 0 && furniture.length === 0 && openables.length === 0 && labels.length === 0) {
         drawHelp();
     } else {
         for (let i = labels.length - 1; i >= 0; i--) {
             drawLabel(labels[i]);
+        }
+
+        for (let i = openables.length - 1; i >= 0; i--) {
+            openables[i].draw();
         }
 
         drawGraph();
@@ -725,13 +1072,28 @@ function drawGraph() {
         const node1 = graph.nodes[id1];
         for (const id2 in graph.edges[id1]) {
             const node2 = graph.nodes[id2];
+            const edge = graph.edges[id1][id2];
 
             if ((node1.remove && node1.translate) || (node2.remove && node2.translate)) {
                 ctx.fillStyle = "red";
                 ctx.strokeStyle = "red";
             }
+
+            const dist = distance(node1.p, node2.p);
+
             ctx.beginPath();
             ctx.moveTo(node1.p.x, node1.p.y);
+
+            // uncomment for gaps in windows
+            // for (const openable of edge.snapOpenables) {
+            //     const relWidth = openable.dim.w / dist;
+            //     const t1 = Math.max(0, openable.snap.pos - relWidth / 2);
+            //     const t2 = Math.min(1, openable.snap.pos + relWidth / 2);
+
+            //     ctx.lineTo(node1.p.x + t1 * (node2.p.x - node1.p.x), node1.p.y + t1 * (node2.p.y - node1.p.y));
+            //     ctx.moveTo(node1.p.x + t2 * (node2.p.x - node1.p.x), node1.p.y + t2 * (node2.p.y - node1.p.y));
+            // }
+
             ctx.lineTo(node2.p.x, node2.p.y);
             ctx.stroke();
 
@@ -931,6 +1293,34 @@ function changeToFurnitureMode(e) {
     changeMode(e, Mode.Furniture);
 }
 
+// openable type tabs
+
+document.getElementById("leftOpenableButton").addEventListener("click", changeToLeftOpenableType);
+document.getElementById("rightOpenableButton").addEventListener("click", changeToRightOpenableType);
+document.getElementById("doubleOpenableButton").addEventListener("click", changeToDoubleOpenableType);
+
+function changeOpenableType(e, type) {
+    const tabContent = document.getElementsByClassName("tabContent openableType");
+    for (let i = 0; i < tabContent.length; i++) {
+        tabContent[i].style.display = "none";
+    }
+
+    const tabLinks = document.getElementsByClassName("tabLinks openableType");
+    for (let i = 0; i < tabLinks.length; i++) {
+        tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+    }
+
+    settings.openableType = type;
+
+    e.currentTarget.className += " active";
+
+    drawMain();
+}
+
+function changeToLeftOpenableType(e) { changeOpenableType(e, OpenableType.Left); }
+function changeToRightOpenableType(e) { changeOpenableType(e, OpenableType.Right); }
+function changeToDoubleOpenableType(e) { changeOpenableType(e, OpenableType.Double); }
+
 // furniture type tabs
 
 document.getElementById("rectangleButton").addEventListener("click", changeToRectangleType);
@@ -952,18 +1342,18 @@ function changeFurnitureType(e, type) {
     settings.type = type;
 
     switch (type) {
-    case FurnitureType.Rectangle:
-        document.getElementById("rectangleTab").style.display = "contents";
-        break;
-    case FurnitureType.Circle:
-        document.getElementById("circleTab").style.display = "contents";
-        break;
-    case FurnitureType.L:
-        document.getElementById("LTab").style.display = "contents";
-        break;
-    case FurnitureType.U:
-        document.getElementById("UTab").style.display = "contents";
-        break;
+        case FurnitureType.Rectangle:
+            document.getElementById("rectangleTab").style.display = "contents";
+            break;
+        case FurnitureType.Circle:
+            document.getElementById("circleTab").style.display = "contents";
+            break;
+        case FurnitureType.L:
+            document.getElementById("LTab").style.display = "contents";
+            break;
+        case FurnitureType.U:
+            document.getElementById("UTab").style.display = "contents";
+            break;
     }
 
     e.currentTarget.className += " active";
@@ -976,27 +1366,6 @@ function changeToCircleType(e) { changeFurnitureType(e, FurnitureType.Circle); }
 function changeToLType(e) { changeFurnitureType(e, FurnitureType.L); }
 function changeToUType(e) { changeFurnitureType(e, FurnitureType.U); }
 
-document.getElementById("addLabelButton").addEventListener("click", clickAddLabel);
-
-function clickAddLabel() {
-    const labelName = document.getElementById("labelNameInput").value;
-    const labelHeight = document.getElementById("labelHeightInput").valueAsNumber;
-
-    if (isNaN(labelHeight) || labelHeight < 1 || !labelName) {
-        alert(getText(loc.room.label.inputError));
-        return;
-    }
-    const start = projection.to({ x: 10, y: 100 });
-    setFontSize(labelHeight);
-    labels.push(new Rectangle(labelName, FurnitureType.Rectangle, start.x, start.y, ctx.measureText(labelName).width, labelHeight));
-    console.log("add Label:", labelName);
-    drawMain();
-}
-
-// Furniture Mode
-
-document.getElementById("addFurnitureButton").addEventListener("click", clickAddFurniture);
-
 function validNumericInput(...values) {
     for (const value of values) {
         if (isNaN(value) || value < 1) {
@@ -1006,94 +1375,142 @@ function validNumericInput(...values) {
     return true;
 }
 
-function clickAddFurniture() {
+// Room Mode
+
+document.getElementById("addLabelButton").addEventListener("click", () => {
+    const labelName = document.getElementById("labelNameInput").value;
+    const labelHeight = document.getElementById("labelHeightInput").valueAsNumber;
+
+    if (!validNumericInput(labelHeight) || !labelName) {
+        alert(getText(loc.room.label.inputError));
+        return;
+    }
+    const start = projection.to({ x: 10, y: 100 });
+    setFontSize(labelHeight);
+    labels.push(new Rectangle(labelName, MovableType.Rectangle, start.x, start.y, ctx.measureText(labelName).width, labelHeight));
+    console.log("add Label:", labelName);
+    drawMain();
+});
+
+document.getElementById("addOpenableButton").addEventListener("click", () => {
+    const openableWidth = document.getElementById("openableWidthInput").valueAsNumber;
+
+    if (!validNumericInput(openableWidth)) {
+        alert(getText(loc.room.openable.inputError));
+        return;
+    }
+
+    const start = projection.to({ x: 10, y: 100 });
+    openables.push(new Openable(settings.openableType, start.x, start.y, openableWidth, 200));
+    console.log("add Openable:", settings.openableType);
+    drawMain();
+});
+
+// Furniture Mode
+
+document.getElementById("addFurnitureButton").addEventListener("click", () => {
     const furName = document.getElementById("nameInput").value;
 
     switch (settings.type) {
-    case FurnitureType.Rectangle: {
-        const furWidth = document.getElementById("widthInput").valueAsNumber;
-        const furHeight = document.getElementById("heightInput").valueAsNumber;
-        if (!validNumericInput(furWidth, furHeight)) {
-            alert(getText(loc.furniture.add.inputError));
-            return;
+        case FurnitureType.Rectangle: {
+            const furWidth = document.getElementById("widthInput").valueAsNumber;
+            const furHeight = document.getElementById("heightInput").valueAsNumber;
+            if (!validNumericInput(furWidth, furHeight)) {
+                alert(getText(loc.furniture.add.inputError));
+                return;
+            }
+            const start = projection.to({ x: 10, y: 100 });
+            furniture.push(new Rectangle(furName, MovableType.Rectangle, start.x, start.y, furWidth, furHeight));
+            break;
         }
-        const start = projection.to({ x: 10, y: 100 });
-        furniture.push(new Rectangle(furName, FurnitureType.Rectangle, start.x, start.y, furWidth, furHeight));
-        break;
-    }
-    case FurnitureType.Circle: {
-        const circleWidth = document.getElementById("circleWidthInput").valueAsNumber;
-        if (!validNumericInput(circleWidth)) {
-            alert(getText(loc.furniture.add.inputError));
-            return;
+        case FurnitureType.Circle: {
+            const circleWidth = document.getElementById("circleWidthInput").valueAsNumber;
+            if (!validNumericInput(circleWidth)) {
+                alert(getText(loc.furniture.add.inputError));
+                return;
+            }
+            const start = projection.to({ x: 10, y: 100 });
+            furniture.push(new Circle(furName, start.x + circleWidth / 2, start.y + circleWidth / 2, circleWidth / 2));
+            break;
         }
-        const start = projection.to({ x: 10, y: 100 });
-        furniture.push(new Circle(furName, start.x + circleWidth / 2, start.y + circleWidth / 2, circleWidth / 2));
-        break;
-    }
-    case FurnitureType.L: {
-        const LWidth1 = document.getElementById("LWidthInput1").valueAsNumber;
-        const LHeight1 = document.getElementById("LHeightInput1").valueAsNumber;
+        case FurnitureType.L: {
+            const LWidth1 = document.getElementById("LWidthInput1").valueAsNumber;
+            const LHeight1 = document.getElementById("LHeightInput1").valueAsNumber;
 
-        const LWidth2 = document.getElementById("LWidthInput2").valueAsNumber;
-        const LHeight2 = document.getElementById("LHeightInput2").valueAsNumber;
-        if (!validNumericInput(LWidth1, LHeight1, LWidth2, LHeight2)) {
-            alert(getText(loc.furniture.add.inputError));
-            return;
+            const LWidth2 = document.getElementById("LWidthInput2").valueAsNumber;
+            const LHeight2 = document.getElementById("LHeightInput2").valueAsNumber;
+            if (!validNumericInput(LWidth1, LHeight1, LWidth2, LHeight2)) {
+                alert(getText(loc.furniture.add.inputError));
+                return;
+            }
+            const start = projection.to({ x: 10, y: 100 });
+            let newRect = new Rectangle(furName, MovableType.L, start.x, start.y, LWidth1, LHeight1);
+            newRect.dims.push({ w: LWidth2, h: LHeight2 });
+            furniture.push(newRect);
+            break;
         }
-        const start = projection.to({ x: 10, y: 100 });
-        let newRect = new Rectangle(furName, FurnitureType.L, start.x, start.y, LWidth1, LHeight1);
-        newRect.dims.push({ w: LWidth2, h: LHeight2 });
-        furniture.push(newRect);
-        break;
-    }
-    case FurnitureType.U: {
-        const UWidth1 = document.getElementById("UWidthInput1").valueAsNumber;
-        const UHeight1 = document.getElementById("UHeightInput1").valueAsNumber;
+        case FurnitureType.U: {
+            const UWidth1 = document.getElementById("UWidthInput1").valueAsNumber;
+            const UHeight1 = document.getElementById("UHeightInput1").valueAsNumber;
 
-        const UWidth2 = document.getElementById("UWidthInput2").valueAsNumber;
-        const UHeight2 = document.getElementById("UHeightInput2").valueAsNumber;
+            const UWidth2 = document.getElementById("UWidthInput2").valueAsNumber;
+            const UHeight2 = document.getElementById("UHeightInput2").valueAsNumber;
 
-        const UWidth3 = document.getElementById("UWidthInput3").valueAsNumber;
-        const UHeight3 = document.getElementById("UHeightInput3").valueAsNumber;
+            const UWidth3 = document.getElementById("UWidthInput3").valueAsNumber;
+            const UHeight3 = document.getElementById("UHeightInput3").valueAsNumber;
 
-        if (!validNumericInput(UWidth1, UHeight1, UWidth2, UHeight2, UWidth3, UHeight3)) {
-            alert(getText(loc.furniture.add.inputError));
-            return;
+            if (!validNumericInput(UWidth1, UHeight1, UWidth2, UHeight2, UWidth3, UHeight3)) {
+                alert(getText(loc.furniture.add.inputError));
+                return;
+            }
+            const start = projection.to({ x: 10, y: 100 });
+            let newRect = new Rectangle(furName, MovableType.U, start.x, start.y, UWidth1, UHeight1);
+            newRect.dims.push({ w: UWidth2, h: UHeight2 });
+            newRect.dims.push({ w: UWidth3, h: UHeight3 });
+            furniture.push(newRect);
+            break;
         }
-        const start = projection.to({ x: 10, y: 100 });
-        let newRect = new Rectangle(furName, FurnitureType.U, start.x, start.y, UWidth1, UHeight1);
-        newRect.dims.push({ w: UWidth2, h: UHeight2 });
-        newRect.dims.push({ w: UWidth3, h: UHeight3 });
-        furniture.push(newRect);
-        break;
-    }
     }
 
     console.log("add %s: %s", settings.type, furName);
     drawMain();
-}
+});
 
 document.getElementById("loadInput").addEventListener("change", loadFile);
 
-function loadFurniture(fur) {
-    switch (fur.mov.type) {
-    case FurnitureType.Circle: {
-        const newCircle = new Circle(fur.name, fur.c.x, fur.c.y, fur.r);
-        newCircle.stroke = fur.mov.stroke;
-        newCircle.fill = fur.mov.fill;
-        return newCircle;
-    }
-    case FurnitureType.Rectangle:
-    case FurnitureType.L:
-    case FurnitureType.U: {
-        const newFur = new Rectangle(fur.name, fur.type, fur.p.x, fur.p.y, 100, 100);
-        newFur.dims = fur.dims;
-        newFur.angle = fur.angle;
-        newFur.stroke = fur.mov.stroke;
-        newFur.fill = fur.mov.fill;
-        return newFur;
-    }
+function loadMovable(mov, graph) {
+    switch (mov.mov.type) {
+        case MovableType.Openable: {
+            const newOpenable = new Openable(mov.openableType, mov.p.x, mov.p.y, mov.dim.w, mov.dim.h);
+            newOpenable.angle = mov.angle;
+
+            newOpenable.snap.pos = mov.snap.pos;
+            newOpenable.snap.orientation = mov.snap.orientation;
+            if (mov.snap.edge) {
+                newOpenable.snap.edge = graph.edges[mov.snap.edge.id1][mov.snap.edge.id2];
+                newOpenable.snap.edge.snapOpenables.push(newOpenable);
+            }
+
+            newOpenable.stroke = mov.mov.stroke;
+            newOpenable.fill = mov.mov.fill;
+            return newOpenable;
+        }
+        case MovableType.Circle: {
+            const newCircle = new Circle(mov.name, mov.c.x, mov.c.y, mov.r);
+            newCircle.stroke = mov.mov.stroke;
+            newCircle.fill = mov.mov.fill;
+            return newCircle;
+        }
+        case MovableType.Rectangle:
+        case MovableType.L:
+        case MovableType.U: {
+            const newFur = new Rectangle(mov.name, mov.type, mov.p.x, mov.p.y, 100, 100);
+            newFur.dims = mov.dims;
+            newFur.angle = mov.angle;
+            newFur.stroke = mov.mov.stroke;
+            newFur.fill = mov.mov.fill;
+            return newFur;
+        }
     }
 }
 
@@ -1115,8 +1532,9 @@ function loadFile(e) {
         }
 
         graph.reset();
-        furniture.length = 0;
         labels.length = 0;
+        openables.length = 0;
+        furniture.length = 0;
 
         if (floorPlanner.graph) {
             graph.count = floorPlanner.graph.count;
@@ -1133,15 +1551,21 @@ function loadFile(e) {
             }
         }
 
-        if (floorPlanner.furniture) {
-            for (const fur of floorPlanner.furniture) {
-                furniture.push(loadFurniture(fur));
+        if (floorPlanner.labels) {
+            for (const label of floorPlanner.labels) {
+                labels.push(loadMovable(label));
             }
         }
 
-        if (floorPlanner.labels) {
-            for (const label of floorPlanner.labels) {
-                labels.push(loadFurniture(label));
+        if (floorPlanner.openables) {
+            for (const openable of floorPlanner.openables) {
+                openables.push(loadMovable(openable, graph));
+            }
+        }
+
+        if (floorPlanner.furniture) {
+            for (const fur of floorPlanner.furniture) {
+                furniture.push(loadMovable(fur));
             }
         }
 
@@ -1151,7 +1575,8 @@ function loadFile(e) {
 
 document.getElementById("saveButton").addEventListener("click", () => {
     const pom = document.createElement("a");
-    pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify({ graph, furniture, labels }, null, " ")));
+    pom.setAttribute("href", "data:text/plain;charset=utf-8," +
+        encodeURIComponent(JSON.stringify({ graph, labels, openables, furniture }, null, " ")));
 
     pom.setAttribute("download", "house.json");
 

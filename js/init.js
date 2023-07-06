@@ -4,6 +4,17 @@
 document.getElementById("nodeTransSlider").addEventListener("input", setNodeTransSize);
 document.getElementById("nodeExtendSlider").addEventListener("input", setNodeExtendSize);
 
+function initNodeSize() {
+    const transSlider = document.getElementById("nodeTransSlider");
+    const extendSlider = document.getElementById("nodeExtendSlider");
+
+    settings.nodeTransSize = transSlider.value;
+    settings.nodeExtendSize = extendSlider.value;
+
+    setNodeTransSize();
+    setNodeExtendSize();
+}
+
 function setNodeTransSize() {
     const transSlider = document.getElementById("nodeTransSlider");
     const extendSlider = document.getElementById("nodeExtendSlider");
@@ -39,6 +50,14 @@ function setButtonContent() {
     document.getElementById("labelNameInput").value = getText(loc.room.label.defaultName);
     document.getElementById("labelHeightInputLabel").textContent = getText(loc.room.label.height);
     document.getElementById("addLabelButton").textContent = getText(loc.room.label.add);
+
+    // openable
+    document.getElementById("openableHead").textContent = getText(loc.room.openable.head);
+    document.getElementById("openableWidthInputLabel").textContent = getText(loc.room.openable.width);
+
+    document.getElementById("openableTypeInputLabel").textContent = getText(loc.room.openable.type);
+
+    document.getElementById("addOpenableButton").textContent = getText(loc.room.openable.add);
 
     // furniture
     document.getElementById("furnitureButton").textContent = getText(loc.furniture.category);
@@ -86,10 +105,11 @@ function init() {
 
     document.getElementById("roomButton").click();
 
+    document.getElementById("leftOpenableButton").click();
+
     document.getElementById("rectangleButton").click();
 
-    setNodeTransSize();
-    setNodeExtendSize();
+    initNodeSize();
 
     setButtonContent();
 

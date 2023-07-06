@@ -153,7 +153,29 @@ const loc = {
                 en: "Please input only positive numbers for height and a non empty string for the name.",
                 de: "Bitte geben Sie nur positive Zahlen für die Höhe und eine nicht leere Zeichenkette für den Namen ein."
             },
-        }
+        },
+        openable: {
+            head: {
+                en: "Door/Window",
+                de: "Tür/Fenster"
+            },
+            width: {
+                en: "Width (mm):",
+                de: "Breite (mm):"
+            },
+            type: {
+                en: "Type:",
+                de: "Typ:"
+            },
+            add: {
+                en: "Add",
+                de: "Hinzufügen"
+            },
+            inputError: {
+                en: "Please input only positive numbers for width.",
+                de: "Bitte geben Sie nur positive Zahlen für die Breite ein."
+            },
+        },
     },
     furniture: {
         category: {

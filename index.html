@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html>
-<!-- TODO:
-    [?] color for furniture while adding
-    [ ] add windows and doors to walls
--->
 
 <head>
   <meta charset="UTF-8">
@@ -56,6 +52,28 @@
           <tr>
             <td colspan="2">
               <button type="button" id="addLabelButton" style="width:100%; padding: 2px 5px;"></button>
+            </td>
+          </tr>
+          <tr>
+            <th id="openableHead" colspan="2"></th>
+          </tr>
+          <tr>
+            <td><label id="openableWidthInputLabel" for="openableWidthInput"></label></td>
+            <td class="inputTD">
+              <input type="number" id="openableWidthInput" min="100" value="1000" required="" style="width: 100%">
+            </td>
+          </tr>
+          <tr>
+            <td><label id="openableTypeInputLabel" for="leftOpenableButton"></label></td>
+            <td class="tab openableType" style="width: 100%">
+              <button type="button" id="leftOpenableButton" class="tabLinks openableType">L</button>
+              <button type="button" id="rightOpenableButton" class="tabLinks openableType">R</button>
+              <button type="button" id="doubleOpenableButton" class="tabLinks openableType">D</button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <button type="button" id="addOpenableButton" style="width:100%; padding: 2px 5px;"></button>
             </td>
           </tr>
         </table>

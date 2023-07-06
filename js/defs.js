@@ -1,5 +1,3 @@
-/* exported canvas ctx projection settings furniture labels*/
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -7,6 +5,20 @@ const Mode = {
     Room: "Room",
     Furniture: "Furniture"
 };
+
+const MovableType = {
+    Openable: "Openable",
+    Rectangle: "Rectangle",
+    Circle: "Circle",
+    L: "L",
+    U: "U",
+}
+
+const OpenableType = {
+    Left: "Left",
+    Right: "Right",
+    Double: "Double",
+}
 
 const FurnitureType = {
     Rectangle: "Rectangle",
@@ -43,6 +55,7 @@ const projection = {
 const settings = {
     language: "en",
     mode: Mode.Room,
+    openableType: OpenableType.Left,
     type: FurnitureType.Rectangle,
     zoomFactor: 1.05,
     deleteDim: {
@@ -57,8 +70,11 @@ const settings = {
     furnitureSnapAngle: 5
 };
 
-const furniture = [
+const labels = [
 ];
 
-const labels = [
+const openables = [
+];
+
+const furniture = [
 ];
