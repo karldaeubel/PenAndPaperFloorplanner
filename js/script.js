@@ -165,7 +165,7 @@ class Openable extends Movable {
             }
         }
 
-        if (!minDist) {
+        if (minDist === null) {
             this.snap.edge = null;
             this.snap.pos = null;
             this.snap.orientation = null;
