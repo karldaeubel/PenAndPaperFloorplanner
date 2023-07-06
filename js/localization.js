@@ -81,10 +81,6 @@ const loc = {
             "Möbel, außder der Kreis, können rotiert werden indem man den kleinen Kreis innerhalb jedes Möbelstücks klickt, der sich zu Beginn immer am linken oberen Rand befindet. " +
             "Möbelstücke die man in der Mülltonne ablegt, der rote Bereich am oberen rechten Bildschirmrand, werden gelöscht. "
         },
-        issue: {
-            en: "Known Issues:\n" +
-            " - no support for mobile devices (probably too small anyway)",
-        },
         creator: {
             en: "Created by: Karl Däubel",
             de: "Author: Karl Däubel"

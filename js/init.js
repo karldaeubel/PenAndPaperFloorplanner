@@ -23,6 +23,8 @@ function setNodeTransSize() {
     settings.nodeExtendSize = Math.max(settings.nodeExtendSize, settings.nodeTransSize);
 
     extendSlider.value = settings.nodeExtendSize;
+
+    drawMain();
 }
 
 function setNodeExtendSize() {
@@ -33,6 +35,8 @@ function setNodeExtendSize() {
     settings.nodeTransSize = Math.min(settings.nodeExtendSize, settings.nodeTransSize);
 
     transSlider.value = settings.nodeTransSize;
+
+    drawMain();
 }
 
 function setButtonContent() {

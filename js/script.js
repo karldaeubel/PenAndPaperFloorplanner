@@ -768,7 +768,95 @@ function handleExtendNeighborSnap(node, p, snapSelf) {
 canvas.addEventListener("mousedown", mouseDown);
 canvas.addEventListener("mousemove", mouseMove);
 document.addEventListener("mouseup", mouseUp);
-canvas.addEventListener("dblclick", (e) => {
+canvas.addEventListener("dblclick", mouseDoubleClick);
+canvas.addEventListener("wheel", zoom);
+
+function touchToCoordinates(t) {
+    return { x: t.clientX, y: t.clientY };
+}
+
+let lastClick = 0;
+let lastClickId = null;
+
+let oldDist = null;
+
+canvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+
+    if (e.touches.length === 1) {
+        const touch = touchToCoordinates(e.touches[0]);
+        const date = new Date();
+        const time = date.getTime();
+        const time_between_taps = 200; // 200ms
+        if (lastClickId === e.touches[0].identifier && time - lastClick < time_between_taps) {
+            mouseDoubleClick(touch);
+        } else {
+            mouseDown(touch);
+        }
+        lastClick = time;
+        lastClickId = e.touches[0].identifier;
+    } else if (e.touches.length === 2) {
+        const touch1 = touchToCoordinates(e.touches[0]);
+        const touch2 = touchToCoordinates(e.touches[1]);
+
+        mouseUp(touch1);
+
+        oldDist = distance(touch1, touch2);
+    }
+});
+
+canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+
+    if (e.touches.length === 1) {
+        const touch = touchToCoordinates(e.touches[0]);
+        mouseMove(touch);
+    } else if (e.touches.length === 2) {
+        const touch1 = touchToCoordinates(e.touches[0]);
+        const touch2 = touchToCoordinates(e.touches[1]);
+
+        const pin = { x: touch1.x / 2 + touch2.x / 2, y: touch1.y / 2 + touch2.y / 2 };
+
+        const dist = distance(touch1, touch2);
+
+        if (oldDist && dist !== oldDist) {
+            zoom(pin, dist / oldDist);
+        }
+        oldDist = dist;
+    }
+});
+canvas.addEventListener("touchend", (e) => {
+    e.preventDefault();
+
+    if (e.changedTouches.length > 0) {
+        mouseUp(touchToCoordinates(e.changedTouches[0]));
+    }
+    oldDist = null;
+});
+canvas.addEventListener("touchcancel", (e) => {
+    e.preventDefault();
+
+    if (e.changedTouches.length > 0) {
+        mouseUp(touchToCoordinates(e.changedTouches[0]));
+    }
+    oldDist = null;
+});
+
+function zoom(e, factor) {
+    const f = factor ? factor : e.deltaY > 0 ? 1 / settings.zoomFactor : e.deltaY < 0 ? settings.zoomFactor : null;
+    if (f) {
+        const newScale = projection.scale * f;
+        if (newScale > settings.minZoom && newScale < settings.maxZoom) {
+            projection.scale = newScale;
+            projection.p.x = e.x - (e.x - projection.p.x) * f;
+            projection.p.y = e.y - (e.y - projection.p.y) * f;
+
+            drawMain();
+        }
+    }
+}
+
+function mouseDoubleClick(e) {
     if (settings.mode === Mode.Furniture) {
         // add furniture double click
     } else if (settings.mode === Mode.Room) {
@@ -776,24 +864,7 @@ canvas.addEventListener("dblclick", (e) => {
     }
 
     drawMain();
-});
-
-canvas.addEventListener("wheel", (e) => {
-    if (e.deltaY > 0) {
-        if (settings.minZoom < projection.scale) {
-            projection.scale /= settings.zoomFactor;
-            projection.p.x = e.x - (e.x - projection.p.x) / settings.zoomFactor;
-            projection.p.y = e.y - (e.y - projection.p.y) / settings.zoomFactor;
-        }
-    } else if (e.deltaY < 0) {
-        if (settings.maxZoom > projection.scale) {
-            projection.scale *= settings.zoomFactor;
-            projection.p.x = e.x - (e.x - projection.p.x) * settings.zoomFactor;
-            projection.p.y = e.y - (e.y - projection.p.y) * settings.zoomFactor;
-        }
-    }
-    drawMain();
-});
+}
 
 function mouseDown(e) {
     let selected = false;
@@ -1242,16 +1313,14 @@ function drawScale() {
 
     setFontSize(15, false);
 
-    console.log(scaleWidth / range);
-
     let i = 0;
     for (; i < scaleWidth; i += range) {
         ctx.moveTo((-projection.p.x + 20) / projection.scale + i, (-projection.p.y + 17) / projection.scale);
         ctx.lineTo((-projection.p.x + 20) / projection.scale + i, (-projection.p.y + 27) / projection.scale);
         if (i % (10 * range) === 0 || Math.floor(scaleWidth / range) < 10) {
             ctx.fillText((i / units) + unit,
-                (-projection.p.x + 20) / projection.scale + i, 
-                (-projection.p.y + 15) / projection.scale, 
+                (-projection.p.x + 20) / projection.scale + i,
+                (-projection.p.y + 15) / projection.scale,
                 Math.floor(scaleWidth / range) < 10 ? range : scaleWidth / 2);
         }
     }
@@ -1401,7 +1470,8 @@ function validNumericInput(...values) {
 
 // Room Mode
 
-document.getElementById("addLabelButton").addEventListener("click", () => {
+document.getElementById("addLabelButton").addEventListener("click", (e) => {
+    e.preventDefault();
     const labelName = document.getElementById("labelNameInput").value;
     const labelHeight = document.getElementById("labelHeightInput").valueAsNumber;
 
@@ -1416,7 +1486,8 @@ document.getElementById("addLabelButton").addEventListener("click", () => {
     drawMain();
 });
 
-document.getElementById("addOpenableButton").addEventListener("click", () => {
+document.getElementById("addOpenableButton").addEventListener("click", (e) => {
+    e.preventDefault();
     const openableWidth = document.getElementById("openableWidthInput").valueAsNumber;
 
     if (!validNumericInput(openableWidth)) {
@@ -1432,7 +1503,9 @@ document.getElementById("addOpenableButton").addEventListener("click", () => {
 
 // Furniture Mode
 
-document.getElementById("addFurnitureButton").addEventListener("click", () => {
+document.getElementById("addFurnitureButton").addEventListener("click", (e) => {
+    e.preventDefault();
+
     const furName = document.getElementById("nameInput").value;
 
     switch (settings.type) {
@@ -1621,6 +1694,5 @@ document.getElementById("helpButton").addEventListener("click", () => {
         getText(loc.help.explanationRoom) + "\n\n" +
         getText(loc.help.introFurniture) + "\n" +
         getText(loc.help.explanationFurniture) + "\n\n" +
-        getText(loc.help.issue) + "\n\n" +
         getText(loc.help.creator) + "\n\n");
 });
