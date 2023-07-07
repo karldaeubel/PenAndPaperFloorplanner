@@ -101,6 +101,7 @@ const graph = {
                             openable.snap.orientation = (openable.snap.orientation + 1) % 2;
                         }
                     }
+                    edge.snapOpenables.length = 0;
                 } else if (edge.id2 === fromId && edge.id1 !== toId) {
                     const newEdge = this.addEdge(toId, edge.id1);
                     newEdge.snapOpenables.push(...edge.snapOpenables);
@@ -111,6 +112,7 @@ const graph = {
                         }
                         openable.snap.edge = newEdge;
                     }
+                    edge.snapOpenables.length = 0;
                 }
             }
         }
