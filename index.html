@@ -31,7 +31,7 @@
           <tr>
             <td><label id="nodeExtendSliderLabel" for="nodeExtendSlider"></label></td>
             <td class="inputTD">
-              <input type="range" min="5" max="750" value="100" id="nodeExtendSlider" style="width: 100%">
+              <input type="range" min="5" max="750" value="150" id="nodeExtendSlider" style="width: 100%">
             </td>
           </tr>
           <tr>
@@ -47,7 +47,7 @@
             <tr>
               <td><label id="labelHeightInputLabel" for="labelHeightInput"></label></td>
               <td class="inputTD">
-                <input type="number" id="labelHeightInput" min="100" value="1000" required="" style="width: 100%">
+                <input type="number" id="labelHeightInput" min="1" value="1000" required="" style="width: 100%">
               </td>
             </tr>
             <tr>
@@ -63,7 +63,7 @@
             <tr>
               <td><label id="openableWidthInputLabel" for="openableWidthInput"></label></td>
               <td class="inputTD">
-                <input type="number" id="openableWidthInput" min="100" value="1000" required="" style="width: 100%">
+                <input type="number" id="openableWidthInput" min="1" value="1000" required="" style="width: 100%">
               </td>
             </tr>
             <tr>
@@ -92,33 +92,39 @@
               </td>
             </tr>
             <tr>
-              <td><label id="typeInputLabel" for="rectangleButton"></label></td>
+              <td><label id="typeInputLabel" for="circleButton"></label></td>
               <td class="tab furnitureType" style="width: 100%">
-                <button type="button" id="rectangleButton" class="tabLinks furnitureType">▭</button>
                 <button type="button" id="circleButton" class="tabLinks furnitureType">○</button>
+                <button type="button" id="rectangleButton" class="tabLinks furnitureType">▭</button>
                 <button type="button" id="LButton" class="tabLinks furnitureType">L</button>
                 <button type="button" id="UButton" class="tabLinks furnitureType">U</button>
               </td>
             </tr>
+            <tbody id="circleTab" class="tabContent furnitureType">
+              <tr>
+                <td><label id="circleWidthInputLabel" for="circleWidthInput"></label></td>
+                <td class="inputTD">
+                  <input type="number" id="circleWidthInput" min="1" value="1000" required="" style="width:100%">
+                </td>
+              </tr>
+              <tr>
+                <td><label id="circleHeightInputLabel" for="circleHeightInput"></label></td>
+                <td class="inputTD">
+                  <input type="number" id="circleHeightInput" min="1" value="1000" required="" style="width:100%">
+                </td>
+              </tr>
+            </tbody>
             <tbody id="rectangleTab" class="tabContent furnitureType">
               <tr>
                 <td><label id="widthInputLabel" for="widthInput"></label></td>
                 <td class="inputTD">
-                  <input type="number" id="widthInput" min="100" value="2000" required="" style="width:100%">
+                  <input type="number" id="widthInput" min="1" value="2000" required="" style="width:100%">
                 </td>
               </tr>
               <tr>
                 <td><label id="heightInputLabel" for="heightInput"></label></td>
                 <td class="inputTD">
-                  <input type="number" id="heightInput" min="100" value="1000" required="" style="width:100%">
-                </td>
-              </tr>
-            </tbody>
-            <tbody id="circleTab" class="tabContent furnitureType">
-              <tr>
-                <td><label id="circleWidthInputLabel" for="circleWidthInput"></label></td>
-                <td class="inputTD">
-                  <input type="number" id="circleWidthInput" min="100" value="1000" required="" style="width:100%">
+                  <input type="number" id="heightInput" min="1" value="1000" required="" style="width:100%">
                 </td>
               </tr>
             </tbody>
@@ -126,15 +132,15 @@
               <tr>
                 <td><label id="LWidthInputLabel" for="LWidthInput1"></label></td>
                 <td class="inputTD">
-                  <input type="number" id="LWidthInput1" min="100" value="1000" required="" style="width:50%">
-                  <input type="number" id="LWidthInput2" min="100" value="1000" required="" style="width:50%">
+                  <input type="number" id="LWidthInput1" min="1" value="1000" required="" style="width:50%">
+                  <input type="number" id="LWidthInput2" min="1" value="1000" required="" style="width:50%">
                 </td>
               </tr>
               <tr>
                 <td><label id="LHeightInputLabel" for="LHeightInput1"></label></td>
                 <td class="inputTD">
-                  <input type="number" id="LHeightInput1" min="100" value="2000" required="" style="width:50%">
-                  <input type="number" id="LHeightInput2" min="100" value="1000" required="" style="width:50%">
+                  <input type="number" id="LHeightInput1" min="1" value="2000" required="" style="width:50%">
+                  <input type="number" id="LHeightInput2" min="1" value="1000" required="" style="width:50%">
                 </td>
               </tr>
             </tbody>
@@ -142,17 +148,17 @@
               <tr>
                 <td><label id="UWidthInputLabel" for="UWidthInput1"></label></td>
                 <td class="inputTD">
-                  <input type="number" id="UWidthInput1" min="100" value="1000" required="" style="width: 33%;">
-                  <input type="number" id="UWidthInput2" min="100" value="1000" required="" style="width: 33%;">
-                  <input type="number" id="UWidthInput3" min="100" value="1000" required="" style="width: 33%;">
+                  <input type="number" id="UWidthInput1" min="1" value="1000" required="" style="width: 33%;">
+                  <input type="number" id="UWidthInput2" min="1" value="1000" required="" style="width: 33%;">
+                  <input type="number" id="UWidthInput3" min="1" value="1000" required="" style="width: 33%;">
                 </td>
               </tr>
               <tr>
                 <td><label id="UHeightInputLabel" for="UHeightInput1"></label></td>
                 <td class="inputTD">
-                  <input type="number" id="UHeightInput1" min="100" value="2000" required="" style="width:33%;">
-                  <input type="number" id="UHeightInput2" min="100" value="1000" required="" style="width:33%;">
-                  <input type="number" id="UHeightInput3" min="100" value="2000" required="" style="width:33%;">
+                  <input type="number" id="UHeightInput1" min="1" value="2000" required="" style="width:33%;">
+                  <input type="number" id="UHeightInput2" min="1" value="1000" required="" style="width:33%;">
+                  <input type="number" id="UHeightInput3" min="1" value="2000" required="" style="width:33%;">
                 </td>
               </tr>
             </tbody>
@@ -175,6 +181,7 @@
   <script src="js/defs.js"></script>
   <script src="js/localization.js"></script>
   <script src="js/graph.js"></script>
+  <script src="js/movable.js"></script>
   <script src="js/script.js"></script>
   <script src="js/init.js"></script>
 </body>

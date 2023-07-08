@@ -1,5 +1,3 @@
-/* global canvas settings loc drawMain getText */
-
 // corner node size slider init
 document.getElementById("nodeTransSlider").addEventListener("input", setNodeTransSize);
 document.getElementById("nodeExtendSlider").addEventListener("input", setNodeExtendSize);
@@ -75,6 +73,7 @@ function setButtonContent() {
     document.getElementById("heightInputLabel").textContent = getText(loc.furniture.add.height);
 
     document.getElementById("circleWidthInputLabel").textContent = getText(loc.furniture.add.width);
+    document.getElementById("circleHeightInputLabel").textContent = getText(loc.furniture.add.height);
 
     document.getElementById("LWidthInputLabel").textContent = getText(loc.furniture.add.width);
     document.getElementById("LHeightInputLabel").textContent = getText(loc.furniture.add.height);
@@ -111,7 +110,7 @@ function init() {
 
     document.getElementById("leftOpenableButton").click();
 
-    document.getElementById("rectangleButton").click();
+    document.getElementById("circleButton").click();
 
     initNodeSize();
 

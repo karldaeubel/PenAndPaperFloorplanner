@@ -1,5 +1,3 @@
-/* exported graph */
-
 class CornerNode {
     constructor(id, x, y) {
         this.id = id;
