@@ -68,6 +68,10 @@ button.active {
     border-top: none;
 }
 
+#furnitureTab {
+    overflow: auto;
+}
+
 .tab.furnitureType {
     overflow: hidden;
 }
@@ -95,6 +99,15 @@ button.active {
     background-color: #ccc;
 }
 
+#loadInput {
+    display: none;
+}
+
+.addButton {
+    padding: 2px 5px;
+    width: 100%;
+}
+
 .inputTD {
     width: 100%;
     display: flex;
@@ -110,4 +123,12 @@ button.active {
 
 .w100pc {
     width: 100%;
+}
+
+.w50pc {
+    width: 50%;
+}
+
+.w33pc {
+    width: 33%;
 }

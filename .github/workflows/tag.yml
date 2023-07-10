@@ -1,0 +1,34 @@
+---
+name: Release
+on:
+  push:
+    tags:
+    - '*'
+  # release:
+  #   types:
+  #     - published
+  workflow_dispatch:
+
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install vsce
+        run: git tag -a 0.0.1 --file CHANGELOG.md
+
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install the dependencies
+        run: npm i
+
+      - name: Install vsce
+        run: npm i -g vsce
+
+      - name: Publish
+        run: vsce publish -p ${{ secrets.VSCE_PAT }}
