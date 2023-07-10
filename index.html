@@ -1,182 +1,179 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <meta charset="UTF-8">
-  <title>PenAndPaperFloorplanner</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-  <div style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; display: flex">
-    <canvas id="canvas" style="flex: 80%; height: 100%;">
-      Your browser does not support the HTML 5 Canvas.
-    </canvas>
-    <div style="flex: 20%; background-color: #4CAF50; height: 100%; overflow: auto;">
-      <div class="tab mode">
-        <button type="button" id="roomButton" class="tabLinks mode"></button>
-        <button type="button" id="furnitureButton" class="tabLinks mode"></button>
-      </div>
-      <div id="roomTab" class="tabContent mode">
-        <table style="table-layout: auto; width: 100%">
-          <tr>
-            <th id="cornerHead" colspan="2"></th>
-          </tr>
-          <tr>
-            <td><label id="nodeTransSliderLabel" for="nodeTransSlider"></label></td>
-            <td class="inputTD">
-              <input type="range" min="5" max="750" value="50" id="nodeTransSlider" style="width: 100%">
-            </td>
-          </tr>
-          <tr>
-            <td><label id="nodeExtendSliderLabel" for="nodeExtendSlider"></label></td>
-            <td class="inputTD">
-              <input type="range" min="5" max="750" value="100" id="nodeExtendSlider" style="width: 100%">
-            </td>
-          </tr>
-          <tr>
-            <th id="labelHead" colspan="2"></th>
-          </tr>
-          <form>
-            <tr>
-              <td><label id="labelNameInputLabel" for="labelNameInput"></label></td>
-              <td class="inputTD">
-                <input id="labelNameInput" value="Livingroom" style="width: 100%">
-              </td>
-            </tr>
-            <tr>
-              <td><label id="labelHeightInputLabel" for="labelHeightInput"></label></td>
-              <td class="inputTD">
-                <input type="number" id="labelHeightInput" min="100" value="1000" required="" style="width: 100%">
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <button id="addLabelButton" style="width:100%; padding: 2px 5px;"></button>
-              </td>
-            </tr>
-          </form>
-          <tr>
-            <th id="openableHead" colspan="2"></th>
-          </tr>
-          <form>
-            <tr>
-              <td><label id="openableWidthInputLabel" for="openableWidthInput"></label></td>
-              <td class="inputTD">
-                <input type="number" id="openableWidthInput" min="100" value="1000" required="" style="width: 100%">
-              </td>
-            </tr>
-            <tr>
-              <td><label id="openableTypeInputLabel" for="leftOpenableButton"></label></td>
-              <td class="tab openableType" style="width: 100%">
-                <button type="button" id="leftOpenableButton" class="tabLinks openableType">L</button>
-                <button type="button" id="rightOpenableButton" class="tabLinks openableType">R</button>
-                <button type="button" id="doubleOpenableButton" class="tabLinks openableType">D</button>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <button id="addOpenableButton" style="width:100%; padding: 2px 5px;"></button>
-              </td>
-            </tr>
-          </form>
-        </table>
-      </div>
-      <div id="furnitureTab" class="tabContent mode" style="overflow: auto;">
-        <table style="table-layout: auto; width: 100%">
-          <form>
-            <tr>
-              <td><label id="nameInputLabel" for="nameInput"></label></td>
-              <td class="inputTD">
-                <input id="nameInput" value="Couch" style="width:100%">
-              </td>
-            </tr>
-            <tr>
-              <td><label id="typeInputLabel" for="rectangleButton"></label></td>
-              <td class="tab furnitureType" style="width: 100%">
-                <button type="button" id="rectangleButton" class="tabLinks furnitureType">▭</button>
-                <button type="button" id="circleButton" class="tabLinks furnitureType">○</button>
-                <button type="button" id="LButton" class="tabLinks furnitureType">L</button>
-                <button type="button" id="UButton" class="tabLinks furnitureType">U</button>
-              </td>
-            </tr>
-            <tbody id="rectangleTab" class="tabContent furnitureType">
-              <tr>
-                <td><label id="widthInputLabel" for="widthInput"></label></td>
-                <td class="inputTD">
-                  <input type="number" id="widthInput" min="100" value="2000" required="" style="width:100%">
-                </td>
-              </tr>
-              <tr>
-                <td><label id="heightInputLabel" for="heightInput"></label></td>
-                <td class="inputTD">
-                  <input type="number" id="heightInput" min="100" value="1000" required="" style="width:100%">
-                </td>
-              </tr>
-            </tbody>
-            <tbody id="circleTab" class="tabContent furnitureType">
-              <tr>
-                <td><label id="circleWidthInputLabel" for="circleWidthInput"></label></td>
-                <td class="inputTD">
-                  <input type="number" id="circleWidthInput" min="100" value="1000" required="" style="width:100%">
-                </td>
-              </tr>
-            </tbody>
-            <tbody id="LTab" class="tabContent furnitureType">
-              <tr>
-                <td><label id="LWidthInputLabel" for="LWidthInput1"></label></td>
-                <td class="inputTD">
-                  <input type="number" id="LWidthInput1" min="100" value="1000" required="" style="width:50%">
-                  <input type="number" id="LWidthInput2" min="100" value="1000" required="" style="width:50%">
-                </td>
-              </tr>
-              <tr>
-                <td><label id="LHeightInputLabel" for="LHeightInput1"></label></td>
-                <td class="inputTD">
-                  <input type="number" id="LHeightInput1" min="100" value="2000" required="" style="width:50%">
-                  <input type="number" id="LHeightInput2" min="100" value="1000" required="" style="width:50%">
-                </td>
-              </tr>
-            </tbody>
-            <tbody id="UTab" class="tabContent furnitureType">
-              <tr>
-                <td><label id="UWidthInputLabel" for="UWidthInput1"></label></td>
-                <td class="inputTD">
-                  <input type="number" id="UWidthInput1" min="100" value="1000" required="" style="width: 33%;">
-                  <input type="number" id="UWidthInput2" min="100" value="1000" required="" style="width: 33%;">
-                  <input type="number" id="UWidthInput3" min="100" value="1000" required="" style="width: 33%;">
-                </td>
-              </tr>
-              <tr>
-                <td><label id="UHeightInputLabel" for="UHeightInput1"></label></td>
-                <td class="inputTD">
-                  <input type="number" id="UHeightInput1" min="100" value="2000" required="" style="width:33%;">
-                  <input type="number" id="UHeightInput2" min="100" value="1000" required="" style="width:33%;">
-                  <input type="number" id="UHeightInput3" min="100" value="2000" required="" style="width:33%;">
-                </td>
-              </tr>
-            </tbody>
-            <tr>
-              <td colspan="2">
-                <button id="addFurnitureButton" style="width:100%; padding: 2px 5px;"></button>
-              </td>
-            </tr>
-          </form>
-        </table>
-      </div>
-      <div style="overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; float: right;">
-        <button type="button" id="saveButton"></button>
-        <label id="loadButton" class="loadInputClass" for="loadInput"></label>
-        <input type="file" id="loadInput" style="display: none;">
-        <button type="button" id="helpButton"></button>
-      </div>
-    </div>
-  </div>
-  <script src="js/defs.js"></script>
-  <script src="js/localization.js"></script>
-  <script src="js/graph.js"></script>
-  <script src="js/script.js"></script>
-  <script src="js/init.js"></script>
-</body>
-
+    <head>
+        <meta charset="UTF-8">
+        <title>PenAndPaperFloorplanner</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="content">
+            <canvas id="canvas" class="mainContent">
+                Your browser does not support the HTML 5 Canvas.
+            </canvas>
+            <div class="sidebarContent" >
+                <div class="tab mode">
+                    <button type="button" id="roomButton" class="tabLinks mode"></button>
+                    <button type="button" id="furnitureButton" class="tabLinks mode"></button>
+                </div>
+                <div id="roomTab" class="tabContent mode">
+                    <table>
+                        <tr>
+                            <th id="cornerHead" colspan="2"></th>
+                        </tr>
+                        <tr>
+                            <td><label id="nodeTransSliderLabel" for="nodeTransSlider"></label></td>
+                            <td class="inputTD">
+                                <input type="range" id="nodeTransSlider" class="w100pc" min="5" max="750" value="50">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label id="nodeExtendSliderLabel" for="nodeExtendSlider"></label></td>
+                            <td class="inputTD">
+                                <input type="range" id="nodeExtendSlider" class="w100pc" min="5" max="750" value="100">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th id="labelHead" colspan="2"></th>
+                        </tr>
+                        <form>
+                            <tr>
+                                <td><label id="labelNameInputLabel" for="labelNameInput"></label></td>
+                                <td class="inputTD">
+                                    <input id="labelNameInput" value="Livingroom" class="w100pc">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label id="labelHeightInputLabel" for="labelHeightInput"></label></td>
+                                <td class="inputTD">
+                                    <input type="number" id="labelHeightInput" min="100" value="1000" required="" class="w100pc">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button id="addLabelButton" style="width:100%; padding: 2px 5px;"></button>
+                                </td>
+                            </tr>
+                        </form>
+                        <tr>
+                            <th id="openableHead" colspan="2"></th>
+                        </tr>
+                        <form>
+                            <tr>
+                                <td><label id="openableWidthInputLabel" for="openableWidthInput"></label></td>
+                                <td class="inputTD">
+                                    <input type="number" id="openableWidthInput" class="w100pc" min="100" value="1000" required="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label id="openableTypeInputLabel" for="leftOpenableButton"></label></td>
+                                <td class="tab openableType w100pc">
+                                    <button type="button" id="leftOpenableButton" class="tabLinks openableType">L</button>
+                                    <button type="button" id="rightOpenableButton" class="tabLinks openableType">R</button>
+                                    <button type="button" id="doubleOpenableButton" class="tabLinks openableType">D</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button id="addOpenableButton" style="width:100%; padding: 2px 5px;"></button>
+                                </td>
+                            </tr>
+                        </form>
+                    </table>
+                </div>
+                <div id="furnitureTab" class="tabContent mode" style="overflow: auto;">
+                    <table>
+                        <form>
+                            <tr>
+                                <td><label id="nameInputLabel" for="nameInput"></label></td>
+                                <td class="inputTD">
+                                    <input id="nameInput" class="w100pc" value="Couch">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label id="typeInputLabel" for="rectangleButton"></label></td>
+                                <td class="tab furnitureType w100pc">
+                                    <button type="button" id="rectangleButton" class="tabLinks furnitureType">▭</button>
+                                    <button type="button" id="circleButton" class="tabLinks furnitureType">○</button>
+                                    <button type="button" id="LButton" class="tabLinks furnitureType">L</button>
+                                    <button type="button" id="UButton" class="tabLinks furnitureType">U</button>
+                                </td>
+                            </tr>
+                            <tbody id="rectangleTab" class="tabContent furnitureType">
+                                <tr>
+                                    <td><label id="widthInputLabel" for="widthInput"></label></td>
+                                    <td class="inputTD">
+                                        <input type="number" id="widthInput" class="w100pc" min="100" value="2000" required="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label id="heightInputLabel" for="heightInput"></label></td>
+                                    <td class="inputTD">
+                                        <input type="number" id="heightInput" class="w100pc" min="100" value="1000" required="">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody id="circleTab" class="tabContent furnitureType">
+                                <tr>
+                                    <td><label id="circleWidthInputLabel" for="circleWidthInput"></label></td>
+                                    <td class="inputTD">
+                                        <input type="number" id="circleWidthInput" min="100" value="1000" required="" style="width:100%">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody id="LTab" class="tabContent furnitureType">
+                                <tr>
+                                    <td><label id="LWidthInputLabel" for="LWidthInput1"></label></td>
+                                    <td class="inputTD">
+                                        <input type="number" id="LWidthInput1" min="100" value="1000" required="" style="width:50%">
+                                        <input type="number" id="LWidthInput2" min="100" value="1000" required="" style="width:50%">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label id="LHeightInputLabel" for="LHeightInput1"></label></td>
+                                    <td class="inputTD">
+                                        <input type="number" id="LHeightInput1" min="100" value="2000" required="" style="width:50%">
+                                        <input type="number" id="LHeightInput2" min="100" value="1000" required="" style="width:50%">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody id="UTab" class="tabContent furnitureType">
+                                <tr>
+                                    <td><label id="UWidthInputLabel" for="UWidthInput1"></label></td>
+                                    <td class="inputTD">
+                                        <input type="number" id="UWidthInput1" min="100" value="1000" required="" style="width: 33%;">
+                                        <input type="number" id="UWidthInput2" min="100" value="1000" required="" style="width: 33%;">
+                                        <input type="number" id="UWidthInput3" min="100" value="1000" required="" style="width: 33%;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label id="UHeightInputLabel" for="UHeightInput1"></label></td>
+                                    <td class="inputTD">
+                                        <input type="number" id="UHeightInput1" min="100" value="2000" required="" style="width:33%;">
+                                        <input type="number" id="UHeightInput2" min="100" value="1000" required="" style="width:33%;">
+                                        <input type="number" id="UHeightInput3" min="100" value="2000" required="" style="width:33%;">
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <button id="addFurnitureButton" style="width:100%; padding: 2px 5px;"></button>
+                                </td>
+                            </tr>
+                        </form>
+                    </table>
+                </div>
+                <div style="overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; float: right;">
+                    <button type="button" id="saveButton"></button>
+                    <label id="loadButton" class="loadInputClass" for="loadInput"></label>
+                    <input type="file" id="loadInput" style="display: none;">
+                    <button type="button" id="helpButton"></button>
+                </div>
+            </div>
+        </div>
+        <script src="js/defs.js"></script>
+        <script src="js/localization.js"></script>
+        <script src="js/graph.js"></script>
+        <script src="js/script.js"></script>
+        <script src="js/init.js"></script>
+    </body>
 </html>

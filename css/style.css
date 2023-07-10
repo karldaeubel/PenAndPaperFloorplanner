@@ -2,25 +2,16 @@ body {
     font: normal 15px Segoe UI, Segoe UI, sans-serif;
 }
 
-.tab.mode {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+table {
+    table-layout: auto;
+    width: 100%;
 }
 
-.tabContent.mode {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-}
-
-.tab.furnitureType {
-    overflow: hidden;
-}
-
-.tabContent.furnitureType {
-    display: none;
+input,
+button,
+label {
+    font-family: inherit;
+    font-size: inherit;
 }
 
 button {
@@ -40,6 +31,49 @@ button:hover {
 
 button.active {
     background-color: #ccc;
+}
+
+.content {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    display: flex
+}
+
+.mainContent {
+    flex: 80%;
+    height: 100%;
+}
+
+.sidebarContent {
+    flex: 20%;
+    background-color: #4CAF50;
+    height: 100%;
+    overflow: auto;
+}
+
+
+.tab.mode {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.tabContent.mode {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.tab.furnitureType {
+    overflow: hidden;
+}
+
+.tabContent.furnitureType {
+    display: none;
 }
 
 .loadInputClass {
@@ -68,9 +102,12 @@ button.active {
     justify-content: space-between;
 }
 
-input,
-button,
-label {
-    font-family: inherit;
-    font-size: inherit;
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.w100pc {
+    width: 100%;
 }
