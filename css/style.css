@@ -7,6 +7,10 @@ table {
     width: 100%;
 }
 
+td:first-child {
+    width: 25%;
+}
+
 input,
 button,
 label {
@@ -59,7 +63,7 @@ button.active {
     border: 1px solid #ccc;
     background-color: #f1f1f1;
     float: right;
-        width: 100%;
+    width: 100%;
 }
 
 .tab.mode {
@@ -81,17 +85,27 @@ button.active {
 
 .tab.furnitureType {
     overflow: hidden;
-    display: flex;
-    flex-direction: row;
 }
 
-.tab.furnitureType button {
-    width: 100%;
+.buttonRow {
     display: flex;
     flex-direction: row;
-    display: block;
-     height: 45px;
+    width: 100%;
 }
+
+.buttonRow button,
+.buttonRow label {
+    width: 100%;
+    flex-direction: row;
+    height: 45px;
+}
+
+.buttonRow label {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
 
 
 .tabContent.furnitureType {
@@ -105,7 +119,7 @@ button.active {
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 14px 16px;
+/*    padding: 14px 16px;*/
     transition: 0.3s;
 }
 

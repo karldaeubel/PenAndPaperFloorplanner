@@ -13,7 +13,7 @@
             Your browser does not support the HTML 5 Canvas.
         </canvas>
         <div id="sidebar">
-            <div class="tab mode">
+            <div class="tab mode buttonRow">
                 <button type="button" id="roomButton" class="tabLinks mode"></button>
                 <button type="button" id="furnitureButton" class="tabLinks mode"></button>
             </div>
@@ -37,7 +37,6 @@
                     <tr>
                         <th id="labelHead" colspan="2"></th>
                     </tr>
-                    <form>
                         <tr>
                             <td><label id="labelNameInputLabel" for="labelNameInput"></label></td>
                             <td class="inputTD">
@@ -55,11 +54,9 @@
                                 <button id="addLabelButton" class="addButton"></button>
                             </td>
                         </tr>
-                    </form>
                     <tr>
                         <th id="openableHead" colspan="2"></th>
                     </tr>
-                    <form>
                         <tr>
                             <td><label id="openableWidthInputLabel" for="openableWidthInput"></label></td>
                             <td class="inputTD">
@@ -68,7 +65,7 @@
                         </tr>
                         <tr>
                             <td><label id="openableTypeInputLabel" for="leftOpenableButton"></label></td>
-                            <td class="tab openableType w100pc">
+                            <td class="tab openableType buttonRow">
                                 <button type="button" id="leftOpenableButton" class="tabLinks openableType">L</button>
                                 <button type="button" id="rightOpenableButton" class="tabLinks openableType">R</button>
                                 <button type="button" id="doubleOpenableButton" class="tabLinks openableType">D</button>
@@ -79,12 +76,10 @@
                                 <button id="addOpenableButton" class="addButton"></button>
                             </td>
                         </tr>
-                    </form>
                 </table>
             </div>
             <div id="furnitureTab" class="tabContent mode">
                 <table>
-                    <form>
                         <tr>
                             <td><label id="nameInputLabel" for="nameInput"></label></td>
                             <td class="inputTD">
@@ -93,7 +88,7 @@
                         </tr>
                         <tr>
                             <td><label id="typeInputLabel" for="circleButton"></label></td>
-                            <td class="tab furnitureType w100pc">
+                            <td class="tab furnitureType buttonRow">
                                 <button type="button" id="circleButton" class="tabLinks furnitureType">○</button>
                                 <button type="button" id="rectangleButton" class="tabLinks furnitureType">▭</button>
                                 <button type="button" id="LButton" class="tabLinks furnitureType">L</button>
@@ -167,10 +162,9 @@
                                 <button id="addFurnitureButton" class="addButton"></button>
                             </td>
                         </tr>
-                    </form>
                 </table>
             </div>
-            <div id="bottomMenu">
+            <div id="bottomMenu" class="buttonRow">
                 <button type="button" id="saveButton"></button>
                 <label id="loadButton" class="loadInputClass" for="loadInput"></label>
                 <input type="file" id="loadInput">
