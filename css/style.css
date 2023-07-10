@@ -106,8 +106,6 @@ button.active {
     justify-content: center;
 }
 
-
-
 .tabContent.furnitureType {
     display: none;
 }
@@ -119,7 +117,6 @@ button.active {
     border: none;
     outline: none;
     cursor: pointer;
-/*    padding: 14px 16px;*/
     transition: 0.3s;
 }
 
