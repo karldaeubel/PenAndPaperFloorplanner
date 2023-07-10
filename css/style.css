@@ -33,7 +33,7 @@ button.active {
     background-color: #ccc;
 }
 
-.content {
+#content {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -42,18 +42,21 @@ button.active {
     display: flex
 }
 
-.mainContent {
+#canvas {
     flex: 80%;
     height: 100%;
 }
 
-.sidebarContent {
+#sidebar {
     flex: 20%;
     background-color: #4CAF50;
     height: 100%;
     overflow: auto;
 }
 
+#bottomMenu {
+overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; float: right;
+}
 
 .tab.mode {
     overflow: hidden;

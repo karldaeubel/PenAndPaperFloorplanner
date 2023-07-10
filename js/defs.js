@@ -9,6 +9,7 @@ const Mode = {
 const MovableType = {
     Openable: "Openable",
     Rectangle: "Rectangle",
+    Ellipse: "Ellipse",
     Circle: "Circle",
     L: "L",
     U: "U",

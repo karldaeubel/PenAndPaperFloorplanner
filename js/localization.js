@@ -1,6 +1,3 @@
-/* exported loc getText */
-/* global settings */
-
 function getText(element) {
     return settings.language in element ? element[settings.language] : element.en;
 }
@@ -70,15 +67,15 @@ const loc = {
         explanationFurniture: {
             en: "In this mode furniture can be created, dragged and rotated. " +
             "Furniture can be created in the right menu by clicking the 'Add' button. There are 4 different types of furniture. " +
-            "The rectangle is determined by a width and a height. The circle needs a diameter to be created. The L-Shape has two block segments, both defined by width and height. The overall width is the sum of the two segment widths. The U-Shape behaves similarly but has three segments instead of two. " +
+            "The ellipse is determined by a width and a height. The rectangle also requires width and height. The L-Shape has two block segments, both defined by width and height. The overall width is the sum of the two segment widths. The U-Shape behaves similarly but has three segments instead of two. " +
             "All types of furniture can have a name. " +
-            "Furniture, except the circle, can be rotated by clicking the small circle within a piece of furniture (default position is the top left corner). " +
+            "Furniture can be rotated by clicking the small circle within a piece of furniture. " +
             "Furniture dropped at the grabage bin at the top right corner will be removed. ",
             de: "In diesem Modus können Möbel erstellt, verschoben und rotiert werden. " +
             "Möbel können im rechten Menü erstellt werden. Es gibt 4 verschiedene Typen von Möbeln. " +
-            "Das Rechteck ist durch eine Breite und eine Höhe definiert. Der Kreis durch den Durchmesser. Die L-Form besteht aus zwei Blöcken, die jeweils durch eine Breite und eine Höhe definiert sind. Die Gesamtbreite ergibt sich aus der Summe der einzelnen Blöcke. Die U-Form verhält sich ähnlich, hat allerdings drei Blöcke anstatt zwei. " + 
+            "Die Ellipse ist durch eine Breite und eine Höhe definiert. Das Rechteck benötigt ebenfalls eine Breite und eine Höhe. Die L-Form besteht aus zwei Blöcken, die jeweils durch eine Breite und eine Höhe definiert sind. Die Gesamtbreite ergibt sich aus der Summe der einzelnen Blöcke. Die U-Form verhält sich ähnlich, hat allerdings drei Blöcke anstatt zwei. " + 
             "Möbel können einen Namen erhalten. " +
-            "Möbel, außder der Kreis, können rotiert werden indem man den kleinen Kreis innerhalb jedes Möbelstücks klickt, der sich zu Beginn immer am linken oberen Rand befindet. " +
+            "Möbel können rotiert werden indem man in den kleinen Kreis innerhalb jedes Möbelstücks klickt. " +
             "Möbelstücke die man in der Mülltonne ablegt, der rote Bereich am oberen rechten Bildschirmrand, werden gelöscht. "
         },
         creator: {
@@ -195,8 +192,8 @@ const loc = {
                 de: "Typ:"
             },
             defaultName: {
-                en: "Couch",
-                de: "Sofa"
+                en: "Table",
+                de: "Tisch"
             },
             width: {
                 en: "Width (mm):",
