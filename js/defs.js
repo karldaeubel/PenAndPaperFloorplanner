@@ -66,7 +66,7 @@ const settings = {
         h: 50
     },
     nodeTransSize: 50,
-    nodeExtendSize: 100,
+    nodeExtendSize: 150,
     nodeSnapDist: 100,
 
     furnitureRotateSize: 100,
