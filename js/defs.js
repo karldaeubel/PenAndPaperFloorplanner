@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 
 const Mode = {
     Room: "Room",
-    Furniture: "Furniture"
+    Furniture: "Furniture",
 };
 
 const MovableType = {
@@ -13,13 +13,13 @@ const MovableType = {
     Circle: "Circle",
     L: "L",
     U: "U",
-}
+};
 
 const OpenableType = {
     Left: "Left",
     Right: "Right",
     Double: "Double",
-}
+};
 
 const FurnitureType = {
     Rectangle: "Rectangle",

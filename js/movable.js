@@ -38,6 +38,30 @@ function handleSnap(mov, values, angle, diff) {
     return false;
 }
 
+function mouseUpForMovables(movables) {
+    for (let i = movables.length - 1; i >= 0; --i) {
+        const mov = movables[i];
+        if (mov.remove) {
+            if (mov.type === MovableType.Openable) {
+                if (mov.snap.edge) {
+                    for (let i = mov.snap.edge.snapOpenables.length - 1; i >= 0; --i) {
+                        if (mov.snap.edge.snapOpenables[i] === mov) {
+                            mov.snap.edge.snapOpenables.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+            movables.splice(i, 1);
+        } else {
+            mov.translate = false;
+            mov.rotate = false;
+            mov.delta.x = 0;
+            mov.delta.y = 0;
+        }
+    }
+}
+
 // An openable is a door or window, it can be moved and rotated
 class Openable extends Movable {
     constructor(type, x, y, w, h) {
