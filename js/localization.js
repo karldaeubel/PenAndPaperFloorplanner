@@ -36,7 +36,7 @@ const loc = {
             "Two corners can be merged together by placing a corner onto an existing corner. " +
             "Walls can be created between corners by clicking the outer circle of a corner. " +
             "The wall can then be connected to an existing corner or create a new corner at the current cursor location. " +
-            "Corners snap to other corners that are located vertically or horizontally. " +
+            "Corners snap to edges and corners that are located vertically or horizontally. " +
             "The snap distance is determined by the size of the outer circle. " +
             "The size of the center and the outer circle can be adjusted in the right menu. " +
             "Corners droped at the garbage bin at the top right corner will be removed. " +
@@ -50,7 +50,7 @@ const loc = {
             "Durch einen Klick auf den inneren Kreis kann eine Ecke verschoben werden. " +
             "Wände können zwischen Ecken erstellt werden indem man auf den äußeren Kreis einer Start-Ecke klickt. " +
             "Die erstellte Wand kann anschließend mit einer existierenden End-Ecke verbunden werden oder es kann eine neune End-Ecke bei der aktuellen Maus position erstellt werden. " +
-            "Ecken können automatisch anhand von anderen Ecken horizontal oder vertikal ausgerichtet werden. " +
+            "Ecken können automatisch anhand von Wänden und anderen Ecken horizontal oder vertikal ausgerichtet werden. " +
             "Die Entfernung dieser automatischen Fixierung ist von der größe des äußeren Kreises abhängig. " +
             "Die größe der Kreise einer Ecke kann im rechten Menü eingestellt werden. " +
             "Ecken die in der Mülltonne abgelegt werden, der rote Bereich am oberen rechten Bildschirmrand, werden gelöscht. " +
