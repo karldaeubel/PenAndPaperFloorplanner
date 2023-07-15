@@ -32,7 +32,7 @@ function loadMovable(mov, graph) {
         case MovableType.Rectangle:
         case MovableType.L:
         case MovableType.U: {
-            const newFur = new Rectangle(mov.name, mov.type, mov.p.x, mov.p.y, 100, 100);
+            const newFur = new Rectangle(mov.name, mov.mov.type, mov.p.x, mov.p.y, 100, 100);
             newFur.dims = mov.dims;
             newFur.angle = mov.angle;
             newFur.stroke = mov.mov.stroke;
