@@ -112,8 +112,8 @@ const loc = {
         },
         corner: {
             head: {
-                en: "Corner Size",
-                de: "Ecken Größe"
+                en: "Corner\xa0Size",
+                de: "Ecken\xa0Größe"
             },
             center: {
                 en: "Center:",
@@ -138,8 +138,8 @@ const loc = {
                 de: "Wohnzimmer"
             },
             height: {
-                en: "Height (mm):",
-                de: "Höhe (mm):"
+                en: "Height\xa0(mm):",
+                de: "Höhe\xa0(mm):"
             },
             add: {
                 en: "Add",
@@ -156,8 +156,8 @@ const loc = {
                 de: "Tür/Fenster"
             },
             width: {
-                en: "Width (mm):",
-                de: "Breite (mm):"
+                en: "Width\xa0(mm):",
+                de: "Breite\xa0(mm):"
             },
             type: {
                 en: "Type:",
@@ -196,12 +196,12 @@ const loc = {
                 de: "Tisch"
             },
             width: {
-                en: "Width (mm):",
-                de: "Breite (mm):"
+                en: "Width\xa0(mm):",
+                de: "Breite\xa0(mm):"
             },
             height: {
-                en: "Height (mm):",
-                de: "Höhe (mm):"
+                en: "Height\xa0(mm):",
+                de: "Höhe\xa0(mm):"
             },
             add: {
                 en: "Add",
