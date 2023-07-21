@@ -243,7 +243,10 @@ const graph = {
             if (node.snap.x !== null &&
                 node.snap.x !== node.snap.edge.id1 &&
                 node.snap.x !== node.snap.edge.id2 &&
-                (node.snap.y === null || axisDist.x <= axisDist.y)) {
+                (node.snap.y === null ||
+                    axisDist.x <= axisDist.y ||
+                    node.snap.y === node.snap.edge.id1 ||
+                    node.snap.y === node.snap.edge.id2)) {
                 const otherNode = this.nodes[node.snap.x];
                 const otherPos = (otherNode.p.x - node1.p.x) / (node2.p.x - node1.p.x);
                 if (otherPos > 0 && otherPos < 1) {
@@ -260,7 +263,10 @@ const graph = {
             } else if (node.snap.y !== null &&
                 node.snap.y !== node.snap.edge.id1 &&
                 node.snap.y !== node.snap.edge.id2 &&
-                (axisDist.x === null || axisDist.y < axisDist.x)) {
+                (node.snap.x === null ||
+                    axisDist.y < axisDist.x ||
+                    node.snap.x === node.snap.edge.id1 ||
+                    node.snap.x === node.snap.edge.id2)) {
                 const otherNode = this.nodes[node.snap.y];
                 const otherPos = (otherNode.p.y - node1.p.y) / (node2.p.y - node1.p.y);
                 if (otherPos > 0 && otherPos < 1) {
