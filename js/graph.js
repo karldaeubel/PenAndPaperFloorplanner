@@ -170,7 +170,7 @@ const graph = {
         return minId;
     },
     // snap functionality
-    handleNodeToNodeSnap: function(node, p, extendNode) {
+    handleNodeToNodeSnap: function (node, p, extendNode) {
         let minDist = null;
         for (const id in this.nodes) {
             const other = this.nodes[id];
@@ -183,7 +183,7 @@ const graph = {
                 node.delta = projection.from(other.p);
                 node.snap.x = other.id;
                 node.snap.y = other.id;
-    
+
                 if (!extendNode) {
                     node.p = { x: other.p.x, y: other.p.y };
                 }
@@ -191,25 +191,25 @@ const graph = {
         }
         return minDist !== null;
     },
-    handleNodeToEdgeSnap: function(node, p, extendNode) {
+    handleNodeToEdgeSnap: function (node, p, extendNode) {
         const clickPos = projection.to(p);
-    
+
         let minDist = null;
-    
+
         for (const id1 in this.edges) {
             for (const id2 in this.edges[id1]) {
                 const edge = this.edges[id1][id2];
                 if (!extendNode && (edge.id1 === node.id || edge.id2 === node.id)) {
                     continue;
                 }
-    
+
                 const node1 = this.nodes[edge.id1];
                 const node2 = this.nodes[edge.id2];
-    
+
                 const t =
                     ((node2.p.x - node1.p.x) * (clickPos.x - node1.p.x) + (node2.p.y - node1.p.y) * (clickPos.y - node1.p.y)) /
                     ((node2.p.x - node1.p.x) ** 2 + (node2.p.y - node1.p.y) ** 2);
-    
+
                 if (t < 0 || t > 1) {
                     continue;
                 }
@@ -218,12 +218,12 @@ const graph = {
                     distance(node2.p, node1.p));
                 if (dist < settings.nodeExtendSize && (!minDist || dist < minDist)) {
                     minDist = dist;
-    
+
                     const proj = {
                         x: node1.p.x + t * (node2.p.x - node1.p.x),
                         y: node1.p.y + t * (node2.p.y - node1.p.y)
                     };
-    
+
                     node.snap.edge = edge;
                     node.snap.pos = t;
                     node.delta = projection.from(proj);
@@ -233,13 +233,13 @@ const graph = {
                 }
             }
         }
-    
+
         if (minDist !== null) {
             const axisDist = this.handleNodeToNeighborSnap(node, p, extendNode, false);
-    
+
             const node1 = this.nodes[node.snap.edge.id1];
             const node2 = this.nodes[node.snap.edge.id2];
-    
+
             if (node.snap.x !== null &&
                 node.snap.x !== node.snap.edge.id1 &&
                 node.snap.x !== node.snap.edge.id2 &&
@@ -279,10 +279,10 @@ const graph = {
                 node.snap.y = null;
             }
         }
-    
+
         return minDist !== null;
     },
-    handleNodeToNeighborSnap: function(node, p, extendNode, change) {
+    handleNodeToNeighborSnap: function (node, p, extendNode, change) {
         const clickPos = projection.to(p);
         const minDist = { x: null, y: null };
         for (const id in this.nodes) {
@@ -311,10 +311,10 @@ const graph = {
                 node.snap.y = other.id;
             }
         }
-    
+
         return minDist;
     },
-    handleNodeSnap: function(node, p, extendNode) {
+    handleNodeSnap: function (node, p, extendNode) {
         node.snap = { x: null, y: null, edge: null, pos: null };
         if (this.handleNodeToNodeSnap(node, p, extendNode)) {
             return;
@@ -323,7 +323,7 @@ const graph = {
             return;
         }
         const minDist = this.handleNodeToNeighborSnap(node, p, extendNode, true);
-    
+
         // if no snapping happend
         if (minDist.x === null) {
             node.snap.x = null;
@@ -339,7 +339,7 @@ const graph = {
             }
             node.delta.y = p.y;
         }
-    },    
+    },
     // e, the click position; e is in screen space
     handleClick: function (e) {
         let selected = false;
@@ -409,7 +409,7 @@ const graph = {
         }
         return changed;
     },
-    handleUnclick: function(e) {
+    handleUnclick: function (e) {
         for (const id in this.nodes) {
             const node = this.nodes[id];
             if (node.remove && node.translate) {

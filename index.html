@@ -9,9 +9,7 @@
 
 <body>
     <div id="content">
-        <canvas id="canvas">
-            Your browser does not support the HTML 5 Canvas.
-        </canvas>
+        <canvas id="canvas"> Your browser does not support the HTML 5 Canvas. </canvas>
         <div id="sidebar">
             <div class="tab mode buttonRow">
                 <button type="button" id="roomButton" class="tabLinks mode"></button>
@@ -37,6 +35,7 @@
                     <tr>
                         <th id="labelHead" colspan="2"></th>
                     </tr>
+                    <form>
                         <tr>
                             <td><label id="labelNameInputLabel" for="labelNameInput"></label></td>
                             <td class="inputTD">
@@ -54,9 +53,11 @@
                                 <button id="addLabelButton" class="addButton"></button>
                             </td>
                         </tr>
+                    </form>
                     <tr>
                         <th id="openableHead" colspan="2"></th>
                     </tr>
+                    <form>
                         <tr>
                             <td><label id="openableWidthInputLabel" for="openableWidthInput"></label></td>
                             <td class="inputTD">
@@ -76,10 +77,12 @@
                                 <button id="addOpenableButton" class="addButton"></button>
                             </td>
                         </tr>
+                    </form>
                 </table>
             </div>
             <div id="furnitureTab" class="tabContent mode">
                 <table>
+                    <form>
                         <tr>
                             <td><label id="nameInputLabel" for="nameInput"></label></td>
                             <td class="inputTD">
@@ -162,6 +165,7 @@
                                 <button id="addFurnitureButton" class="addButton"></button>
                             </td>
                         </tr>
+                    </form>
                 </table>
             </div>
             <div id="bottomMenu" class="buttonRow">
