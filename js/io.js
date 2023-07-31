@@ -42,6 +42,13 @@ function loadMovable(mov, graph) {
     }
 }
 
+function createState() {
+    return JSON.stringify({ graph, labels, openables, furniture }, null, "");
+}
+function setState() {
+    state = createState();
+}
+
 document.getElementById("loadInput").addEventListener("change", (e) => {
     const file = e.target.files[0];
 
@@ -97,6 +104,8 @@ document.getElementById("loadInput").addEventListener("change", (e) => {
             }
         }
 
+        setState();
+
         drawMain();
     };
 });
@@ -114,6 +123,9 @@ document.getElementById("saveButton").addEventListener("click", () => {
     pom.click();
 
     document.body.removeChild(pom);
+
+    // TODO: this is too optimistic, cancel might have been selected
+    setState();
 });
 
 document.getElementById("helpButton").addEventListener("click", () => {
