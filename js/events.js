@@ -219,3 +219,11 @@ document.getElementById("addFurnitureButton").addEventListener("click", (e) => {
     console.log("add %s: %s", settings.type, furName);
     drawMain();
 });
+
+window.addEventListener("beforeunload", (e) => {
+    console.log(state);
+    if (state !== createState()) {
+        e.preventDefault();
+        return (e.returnValue = "");
+    }
+});

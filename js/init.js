@@ -116,5 +116,7 @@ function init() {
 
     setButtonContent();
 
+    setState();
+
     setSize();
 }

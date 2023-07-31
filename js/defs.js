@@ -73,6 +73,9 @@ const settings = {
     furnitureSnapAngle: 5
 };
 
+// state will lazily track changes since init or last save/load as string
+let state = null;
+
 const labels = [
 ];
 
