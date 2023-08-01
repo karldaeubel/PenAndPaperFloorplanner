@@ -28,11 +28,11 @@ jobs:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          VALIDATE_ALL_CODEBASE: true
+          # VALIDATE_ALL_CODEBASE: true
 
           # OR
 
-          # VALIDATE_CSS: true
+          VALIDATE_CSS: true
           # VALIDATE_HTML: true
           # VALIDATE_JAVASCRIPT_STANDARD: true
           # VALIDATE_JSCPD: true
