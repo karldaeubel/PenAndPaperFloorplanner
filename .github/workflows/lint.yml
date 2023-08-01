@@ -32,8 +32,8 @@ jobs:
 
           # OR
 
+          VALIDATE_MARKDOWN: true
           VALIDATE_CSS: true
           # VALIDATE_HTML: true
           # VALIDATE_JAVASCRIPT_STANDARD: true
           # VALIDATE_JSCPD: true
-          # VALIDATE_MARKDOWN: true

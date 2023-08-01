@@ -1,5 +1,5 @@
 body {
-    font: normal 15px Segoe UI, Segoe UI, sans-serif;
+    font: normal 15px, "Segoe UI", sans-serif;
 }
 
 table {
@@ -39,10 +39,7 @@ button.active {
 
 #content {
     position: absolute;
-    left: 0px;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
+    inset: 0;
     display: flex
 }
 
