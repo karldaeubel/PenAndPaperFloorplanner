@@ -14,6 +14,18 @@ class Movable {
         this.fill = "";
     }
 
+    getFill(isDisabled, highlight = false) {
+        return this.remove ? "red" : isDisabled ? "gray" : highlight && (this.translate || this.rotate) ? "green" : this.fill;
+    }
+    getStroke(isDisabled, highlight = false) {
+        return this.remove ? "red" : isDisabled ? "gray" : highlight && (this.translate || this.rotate) ? "green" : this.stroke;
+    }
+
+    setStyle(isDisabled, highlight = false) {
+        ctx.fillStyle = this.getFill(isDisabled, highlight);
+        ctx.strokeStyle = this.getStroke(isDisabled, highlight);
+    }
+
     toJSON() {
         return { type: this.type, stroke: this.stroke, fill: this.fill };
     }
@@ -36,6 +48,30 @@ function handleSnap(mov, values, angle, diff) {
         }
     }
     return false;
+}
+
+function mouseUpForMovables(movables) {
+    for (let i = movables.length - 1; i >= 0; --i) {
+        const mov = movables[i];
+        if (mov.remove) {
+            if (mov.type === MovableType.Openable) {
+                if (mov.snap.edge) {
+                    for (let i = mov.snap.edge.snapOpenables.length - 1; i >= 0; --i) {
+                        if (mov.snap.edge.snapOpenables[i] === mov) {
+                            mov.snap.edge.snapOpenables.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+            movables.splice(i, 1);
+        } else {
+            mov.translate = false;
+            mov.rotate = false;
+            mov.delta.x = 0;
+            mov.delta.y = 0;
+        }
+    }
 }
 
 // An openable is a door or window, it can be moved and rotated
@@ -234,8 +270,7 @@ class Openable extends Movable {
         ctx.translate(c.x, c.y);
         ctx.rotate(toRad(this.angle));
 
-        ctx.fillStyle = this.remove ? "red" : settings.mode === Mode.Room ? this.fill : "gray";
-        ctx.strokeStyle = this.remove ? "red" : settings.mode === Mode.Room ? this.stroke : "gray";
+        this.setStyle(settings.mode !== Mode.Room);
 
         switch (this.openableType) {
             case OpenableType.Left: {
@@ -476,8 +511,7 @@ class Rectangle extends Movable {
         ctx.translate(c.x, c.y);
         ctx.rotate(toRad(this.angle));
 
-        ctx.fillStyle = this.remove ? "red" : settings.mode !== Mode.Furniture ? "gray" : this.fill;
-        ctx.strokeStyle = this.remove ? "red" : settings.mode !== Mode.Furniture ? "gray" : this.stroke;
+        this.setStyle(settings.mode !== Mode.Furniture, true);
 
         ctx.beginPath();
 
@@ -503,9 +537,6 @@ class Rectangle extends Movable {
         ctx.closePath();
 
         ctx.stroke();
-        if (this.fill) {
-            ctx.fill();
-        }
 
         ctx.beginPath();
 
@@ -620,16 +651,11 @@ class Circle extends Movable {
 
         ctx.translate(this.c.x, this.c.y);
 
-        ctx.fillStyle = this.remove ? "red" : settings.mode !== Mode.Furniture ? "gray" : this.fill;
-        ctx.strokeStyle = this.remove ? "red" : settings.mode !== Mode.Furniture ? "gray" : this.stroke;
+        this.setStyle(settings.mode !== Mode.Furniture, true);
 
         ctx.beginPath();
         ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
         ctx.stroke();
-
-        if (this.fill) {
-            ctx.fill();
-        }
 
         ctx.beginPath();
 
@@ -779,16 +805,11 @@ class Ellipse extends Movable {
         ctx.translate(this.c.x, this.c.y);
         ctx.rotate(toRad(this.angle));
 
-        ctx.fillStyle = this.remove ? "red" : settings.mode !== Mode.Furniture ? "gray" : this.fill;
-        ctx.strokeStyle = this.remove ? "red" : settings.mode !== Mode.Furniture ? "gray" : this.stroke;
+        this.setStyle(settings.mode !== Mode.Furniture, true);
 
         ctx.beginPath();
         ctx.ellipse(0, 0, this.rX, this.rY, 0, 0, 2 * Math.PI);
         ctx.stroke();
-
-        if (this.fill) {
-            ctx.fill();
-        }
 
         ctx.beginPath();
 

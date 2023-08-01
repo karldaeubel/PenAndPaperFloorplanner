@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 
 const Mode = {
     Room: "Room",
-    Furniture: "Furniture"
+    Furniture: "Furniture",
 };
 
 const MovableType = {
@@ -13,13 +13,13 @@ const MovableType = {
     Circle: "Circle",
     L: "L",
     U: "U",
-}
+};
 
 const OpenableType = {
     Left: "Left",
     Right: "Right",
     Double: "Double",
-}
+};
 
 const FurnitureType = {
     Rectangle: "Rectangle",
@@ -66,12 +66,15 @@ const settings = {
         h: 50
     },
     nodeTransSize: 50,
-    nodeExtendSize: 100,
+    nodeExtendSize: 150,
     nodeSnapDist: 100,
 
     furnitureRotateSize: 100,
     furnitureSnapAngle: 5
 };
+
+// state will lazily track changes since init or last save/load as string
+let state = null;
 
 const labels = [
 ];
