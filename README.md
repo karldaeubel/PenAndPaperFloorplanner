@@ -15,5 +15,9 @@ The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no 
 - load and save floorplans
 
 # Screenshots
-![Example1](https://github.com/karldaeubel/PenAndPaperFloorplanner/assets/1245268/24cae45f-8df1-4039-8432-031a8551fa84)
-![Prewiew](https://github.com/karldaeubel/PenAndPaperFloorplanner/assets/1245268/a2d4a6b1-0040-4b9c-bd25-b5a18ae1a9d0)
+
+![Example1](images/PenAndPaperFloorplanner.png)
+
+![Usage](images/Usage.gif)
+
+![Preview](images/Preview.png)
