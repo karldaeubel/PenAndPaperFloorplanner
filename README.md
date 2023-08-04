@@ -20,7 +20,7 @@ The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no 
 - place and rotate furniture of 4 different generic types
 - load and save floorplans
 
-# Screenshots
+## Screenshots
 
 ![Example1](images/PenAndPaperFloorplanner.png)
 
