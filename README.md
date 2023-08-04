@@ -19,7 +19,10 @@ The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no 
 - place and rotate furniture of 4 different generic types
 - load and save floorplans
 
-## Screenshots
+# Screenshots
 
-![Example1](https://github.com/karldaeubel/PenAndPaperFloorplanner/assets/1245268/24cae45f-8df1-4039-8432-031a8551fa84)
-![Preview](https://github.com/karldaeubel/PenAndPaperFloorplanner/assets/1245268/a2d4a6b1-0040-4b9c-bd25-b5a18ae1a9d0)
+![Example1](images/PenAndPaperFloorplanner.png)
+
+![Usage](images/Usage.gif)
+
+![Preview](images/Preview.png)
