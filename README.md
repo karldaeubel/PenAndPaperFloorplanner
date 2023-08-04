@@ -1,5 +1,3 @@
-# Floorplanner
-
 <p align="center">
     <img style="width: 60%;"
     src="https://github.com/karldaeubel/PenAndPaperFloorplanner/assets/1245268/7da23427-5514-4b60-96df-23046855731b" alt="PenAndPaperFloorplanner">
