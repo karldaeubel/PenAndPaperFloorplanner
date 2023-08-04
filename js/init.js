@@ -100,7 +100,7 @@ function setSize() {
 
 function welcome() {
 
-    var message = '';
+    let message = "";
     message +="\n _____                              _ _____                      ______ _                        _                                            ";
     message +="\n|  __ \\             /\\             | |  __ \\                    |  ____| |                      | |                                        ";
     message +="\n| |__) |__ _ __    /  \\   _ __   __| | |__) |_ _ _ __   ___ _ __| |__  | | ___   ___  _ __ _ __ | | __ _ _ __  _ __   ___ _ __               ";
