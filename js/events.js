@@ -2,6 +2,7 @@
 
 document.getElementById("roomButton").addEventListener("click", changeToRoomMode);
 document.getElementById("furnitureButton").addEventListener("click", changeToFurnitureMode);
+document.getElementById("printButton").addEventListener("click", printFloor);
 
 function changeMode(e, mode) {
     const tabContent = document.getElementsByClassName("tabContent mode");
@@ -227,3 +228,27 @@ window.addEventListener("beforeunload", (e) => {
         return (e.returnValue = "");
     }
 });
+
+function printFloor() {
+    const dataUrl = document.getElementById('canvas').toDataURL();
+
+    let content = '<!DOCTYPE html>';
+    content += '<html>';
+    content += '<head><title>PenAndPaperFloorplanner</title></head>';
+    content += '<body>';
+    content += '<img src="' + dataUrl + '"';
+    content += '</body>';
+    content += '</html>';
+
+    console.log(screen);
+    const printWin = window.open('', '', 'width=' + screen.availWidth + ',height=' + screen.availHeight);
+    printWin.document.open();
+    printWin.document.write(content);
+
+    printWin.document.addEventListener('load', function() {
+        printWin.focus();
+        printWin.print();
+        printWin.document.close();
+        printWin.close();
+    }, true);
+}

@@ -3,6 +3,10 @@ function getText(element) {
 }
 
 const loc = {
+    printButton: {
+        en: "Print",
+        de: "Drucken"
+    },
     help: {
         helpButton: {
             en: "Help",

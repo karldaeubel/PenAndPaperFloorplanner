@@ -84,9 +84,10 @@ function setButtonContent() {
     document.getElementById("addFurnitureButton").textContent = getText(loc.furniture.add.add);
 
     // util
-    document.getElementById("saveButton").textContent = getText(loc.fileIO.saveButton);
-    document.getElementById("loadButton").textContent = getText(loc.fileIO.loadButton);
-    document.getElementById("helpButton").textContent = getText(loc.help.helpButton);
+    document.getElementById("saveButton").textContent  = getText(loc.fileIO.saveButton);
+    document.getElementById("loadButton").textContent  = getText(loc.fileIO.loadButton);
+    document.getElementById("helpButton").textContent  = getText(loc.help.helpButton);
+    document.getElementById("printButton").textContent = getText(loc.printButton);
 }
 
 window.addEventListener("resize", setSize);
