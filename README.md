@@ -6,6 +6,7 @@
 </p>
 
 [![Lint](https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/lint.yml/badge.svg)](https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/lint.yml)
+[![pages-build-deployment](https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/pages/pages-build-deployment)
 
 The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no overhead or registration.
 
