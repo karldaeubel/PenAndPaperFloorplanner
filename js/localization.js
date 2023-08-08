@@ -3,10 +3,6 @@ function getText(element) {
 }
 
 const loc = {
-    printButton: {
-        en: "Print",
-        de: "Drucken"
-    },
     help: {
         helpButton: {
             en: "Help",
@@ -95,6 +91,14 @@ const loc = {
         loadButton: {
             en: "Load",
             de: "Laden"
+        },
+        exportButton: {
+            en: "Export",
+            de: "Export",
+        },
+        printButton: {
+            en: "Print",
+            de: "Drucken"
         },
         errorAtFile: {
             en: "There was an error while loading file:",
