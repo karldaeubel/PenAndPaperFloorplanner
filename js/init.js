@@ -100,12 +100,34 @@ function setSize() {
     drawMain();
 }
 
+function welcome() {
+
+    let message = "";
+    message +="\n _____                              _ _____                      ______ _                        _                                            ";
+    message +="\n|  __ \\             /\\             | |  __ \\                    |  ____| |                      | |                                        ";
+    message +="\n| |__) |__ _ __    /  \\   _ __   __| | |__) |_ _ _ __   ___ _ __| |__  | | ___   ___  _ __ _ __ | | __ _ _ __  _ __   ___ _ __               ";
+    message +="\n|  ___/ _ \\ '_ \\  / /\\ \\ | '_ \\ / _` |  ___/ _` | '_ \\ / _ \\ '__|  __| | |/ _ \\ / _ \\| '__| '_ \\| |/ _` | '_ \\| '_ \\ / _ \\ '__|  ";
+    message +="\n| |  |  __/ | | |/ ____ \\| | | | (_| | |  | (_| | |_) |  __/ |  | |    | | (_) | (_) | |  | |_) | | (_| | | | | | | |  __/ |                 ";
+    message +="\n|_|   \\___|_| |_/_/    \\_\\_| |_|\\__,_|_|   \\__,_| .__/ \\___|_|  |_|    |_|\\___/ \\___/|_|  | .__/|_|\\__,_|_| |_|_| |_|\\___|_|        ";
+    message +="\n                                                | |                                       | |                                                 ";
+    message +="\n                                                |_|                                       |_|                                                 ";
+    message +="\n";
+    message +="\nReport issues: https://github.com/karldaeubel/PenAndPaperFloorplanner/issues/new";
+    message +="\nFork:          https://github.com/karldaeubel/PenAndPaperFloorplanner/fork";
+    message +="\n";
+
+    console.log(message);
+}
+
 init();
 
 function init() {
     if (navigator.language || navigator.userLanguage) {
         settings.language = (navigator.language || navigator.userLanguage).substring(0, 2);
     }
+
+    welcome();
+
     console.log("language:", settings.language);
 
     document.getElementById("roomButton").click();
