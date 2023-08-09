@@ -86,6 +86,8 @@ function setButtonContent() {
     // util
     document.getElementById("saveButton").textContent = getText(loc.fileIO.saveButton);
     document.getElementById("loadButton").textContent = getText(loc.fileIO.loadButton);
+    document.getElementById("exportButton").textContent = getText(loc.fileIO.exportButton);
+    document.getElementById("printButton").textContent = getText(loc.fileIO.printButton);
     document.getElementById("helpButton").textContent = getText(loc.help.helpButton);
 }
 

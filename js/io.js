@@ -128,6 +128,44 @@ document.getElementById("saveButton").addEventListener("click", () => {
     setState();
 });
 
+document.getElementById("exportButton").addEventListener("click", () => {
+    const pom = document.createElement("a");
+    pom.setAttribute("href", canvas.toDataURL());
+
+    pom.setAttribute("download", "house.png");
+
+    pom.style.display = "none";
+    document.body.appendChild(pom);
+
+    pom.click();
+
+    document.body.removeChild(pom);
+});
+
+document.getElementById("printButton").addEventListener("click", () => {
+    const dataUrl = canvas.toDataURL();
+
+    let content = "<!DOCTYPE html>";
+    content += "<html>";
+    content += "<head><title>PenAndPaperFloorplanner</title></head>";
+    content += "<body>";
+    content += "<img src=\"" + dataUrl + "\"";
+    content += "</body>";
+    content += "</html>";
+
+    const printWin = window.open("", "", "width=" + screen.availWidth + ",height=" + screen.availHeight);
+    printWin.document.open();
+    printWin.document.write(content);
+
+    printWin.document.addEventListener('load', function () {
+        printWin.focus();
+        printWin.print();
+        printWin.document.close();
+        printWin.close();
+    }, true);
+
+});
+
 document.getElementById("helpButton").addEventListener("click", () => {
     alert(
         getText(loc.help.welcome) + "\n\n" +

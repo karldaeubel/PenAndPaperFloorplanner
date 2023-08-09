@@ -22,6 +22,10 @@ function drawMain() {
     ctx.reset();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // fill background for export functionality
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     ctx.translate(projection.p.x, projection.p.y);
     ctx.scale(projection.scale, projection.scale);
 
