@@ -93,6 +93,14 @@ const loc = {
             en: "Load",
             de: "Laden"
         },
+        exportButton: {
+            en: "Export",
+            de: "Export",
+        },
+        printButton: {
+            en: "Print",
+            de: "Drucken"
+        },
         errorAtFile: {
             en: "There was an error while loading file:",
             de: "Beim Lesen folgender Datei ist ein Fehler aufgetreten:"

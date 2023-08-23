@@ -491,17 +491,41 @@ const graph = {
                 if ((!node1.remove && node1.translate) || (!node2.remove && node2.translate)) {
                     const node = node1.translate ? node2 : node1;
                     const other = node1.translate ? node1 : node2;
+                    const dist = distance(node1.p, node2.p);
                     const ul = { x: -projection.p.x / projection.scale, y: -projection.p.y / projection.scale };
                     const br = projection.to({ x: canvas.width, y: canvas.height });
-                    const borderPos = {
-                        x: Math.min(Math.max(node.p.x, ul.x), br.x),
-                        y: Math.min(Math.max(node.p.y, ul.y), br.y)
+                    const nodeScaling = settings.nodeTransSize / dist;
+                    const nodeBorder = {
+                        x: node.p.x * (1 - nodeScaling) + other.p.x * nodeScaling,
+                        y: node.p.y * (1 - nodeScaling) + other.p.y * nodeScaling,
                     };
-                    const sx = node.p.x === other.p.x ? 1 : (borderPos.x - other.p.x) / (node.p.x - other.p.x);
-                    const sy = node.p.y === other.p.y ? 1 : (borderPos.y - other.p.y) / (node.p.y - other.p.y);
+                    const otherBorder = {
+                        x: other.p.x * (1 - nodeScaling) + node.p.x * nodeScaling,
+                        y: other.p.y * (1 - nodeScaling) + node.p.y * nodeScaling,
+                    };
+                    const borderPos = {
+                        x: Math.min(Math.max(nodeBorder.x, ul.x), br.x),
+                        y: Math.min(Math.max(nodeBorder.y, ul.y), br.y)
+                    };
+                    const sx = nodeBorder.x === otherBorder.x ? 1 : (borderPos.x - otherBorder.x) / (nodeBorder.x - otherBorder.x);
+                    const sy = nodeBorder.y === otherBorder.y ? 1 : (borderPos.y - otherBorder.y) / (nodeBorder.y - otherBorder.y);
+                    const borderScaling = Math.min(sx, sy);
                     const scaling = Math.min(sx, sy) / 2;
-                    setFontSize(18, false);
-                    ctx.fillText(distance(node1.p, node2.p).toFixed(1), other.p.x * (1 - scaling) + node.p.x * scaling, other.p.y * (1 - scaling) + node.p.y * scaling);
+                    setFontSize(20, false);
+                    ctx.save();
+                    const b = {
+                        x: otherBorder.x * (1 - borderScaling) + nodeBorder.x * borderScaling,
+                        y: otherBorder.y * (1 - borderScaling) + nodeBorder.y * borderScaling,
+                    };
+                    const c = {
+                        x: otherBorder.x * (1 - scaling) + nodeBorder.x * scaling,
+                        y: otherBorder.y * (1 - scaling) + nodeBorder.y * scaling,
+                    };
+                    ctx.translate(c.x, c.y);
+                    const angle = Math.atan2(node.p.y - other.p.y, node.p.x - other.p.x);
+                    ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
+                    ctx.fillText(dist.toFixed(1), 0, 0, distance(otherBorder, b));
+                    ctx.restore();
                 }
                 restoreDefaultContext();
             }
@@ -549,8 +573,18 @@ const graph = {
                 ctx.lineTo(newPos.x, newPos.y);
                 ctx.stroke();
                 if (!node.remove) {
-                    setFontSize(18, false);
-                    ctx.fillText(distance(node.p, newPos).toFixed(1), (node.p.x + newPos.x) / 2, (node.p.y + newPos.y) / 2);
+                    setFontSize(20, false);
+                    const dist = distance(node.p, newPos);
+                    ctx.save();
+                    const c = {
+                        x: (node.p.x + newPos.x) / 2,
+                        y: (node.p.y + newPos.y) / 2,
+                    };
+                    ctx.translate(c.x, c.y);
+                    const angle = Math.atan2(node.p.y - newPos.y, node.p.x - newPos.x);
+                    ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
+                    ctx.fillText(dist.toFixed(1), 0, 0, dist - 2 * settings.nodeTransSize);
+                    ctx.restore();
                 }
             }
             restoreDefaultContext();
