@@ -71,7 +71,20 @@ function drawHelp() {
     setFontSize(40, false);
 
     ctx.beginPath();
-    ctx.fillText(settings.mode === Mode.Room ? getText(loc.room.help) : getText(loc.furniture.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+    switch (settings.mode) {
+        case Mode.Room: {
+            ctx.fillText(getText(loc.room.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+            break;
+        }
+        case Mode.Furniture: {
+            ctx.fillText(getText(loc.furniture.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+            break;
+        }
+        case Mode.Presentation: {
+            ctx.fillText(getText(loc.presentation.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+            break;
+        }
+    }
     ctx.stroke();
 
     ctx.fillStyle = "lightgray";
@@ -158,6 +171,10 @@ function drawScale() {
 }
 
 function drawDeletionField() {
+    // only display garbage bin if needed
+    if (settings.mode === Mode.Presentation) {
+        return;
+    }
     ctx.beginPath();
 
     ctx.strokeStyle = "red";

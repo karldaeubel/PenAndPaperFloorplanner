@@ -58,7 +58,20 @@ function drawHelp() {
     ctx.fillStyle = "gray";
     setFontSize(40, false);
     ctx.beginPath();
-    ctx.fillText(settings.mode === Mode.Room ? getText(loc.room.help) : getText(loc.furniture.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+    switch (settings.mode) {
+        case Mode.Room: {
+            ctx.fillText(getText(loc.room.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+            break;
+        }
+        case Mode.Furniture: {
+            ctx.fillText(getText(loc.furniture.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+            break;
+        }
+        case Mode.Presentation: {
+            ctx.fillText(getText(loc.presentation.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+            break;
+        }
+    }
     ctx.stroke();
     ctx.fillStyle = "lightgray";
     setFontSize(30, false);
@@ -120,6 +133,10 @@ function drawScale() {
     restoreDefaultContext();
 }
 function drawDeletionField() {
+    // only display garbage bin if needed
+    if (settings.mode === Mode.Presentation) {
+        return;
+    }
     ctx.beginPath();
     ctx.strokeStyle = "red";
     const a = projection.to({ x: canvas.width - settings.deleteDim.w, y: 0 });

@@ -5,6 +5,7 @@ var Mode;
 (function (Mode) {
     Mode[Mode["Room"] = 0] = "Room";
     Mode[Mode["Furniture"] = 1] = "Furniture";
+    Mode[Mode["Presentation"] = 2] = "Presentation";
 })(Mode || (Mode = {}));
 ;
 var MovableType;
@@ -76,7 +77,8 @@ const settings = {
     nodeExtendSize: 150,
     nodeSnapDist: 100,
     furnitureRotateSize: 100,
-    furnitureSnapAngle: 5
+    furnitureSnapAngle: 5,
+    showEdgeLabels: false,
 };
 // state will lazily track changes since init or last save/load as string
 let state = null;

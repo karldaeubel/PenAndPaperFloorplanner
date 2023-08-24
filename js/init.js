@@ -26,6 +26,10 @@ function setNodeExtendSize() {
     transSlider.value = String(settings.nodeTransSize);
     drawMain();
 }
+function resetEdgeLabelCheckBox() {
+    settings.showEdgeLabels = false;
+    document.getElementById("edgeLabelCheckbox").checked = false;
+}
 function setButtonContent() {
     // room
     document.getElementById("roomButton").textContent = getText(loc.room.category);
@@ -58,6 +62,10 @@ function setButtonContent() {
     document.getElementById("UWidthInputLabel").textContent = getText(loc.furniture.add.width);
     document.getElementById("UHeightInputLabel").textContent = getText(loc.furniture.add.height);
     document.getElementById("addFurnitureButton").textContent = getText(loc.furniture.add.add);
+    // presentation
+    document.getElementById("presentationButton").textContent = getText(loc.presentation.category);
+    document.getElementById("presentationOptionsHead").textContent = getText(loc.presentation.option.head);
+    document.getElementById("edgeLabelCheckboxLabel").textContent = getText(loc.presentation.option.shwoEdgeLabel);
     // util
     document.getElementById("saveButton").textContent = getText(loc.fileIO.saveButton);
     document.getElementById("loadButton").textContent = getText(loc.fileIO.loadButton);
@@ -101,4 +109,5 @@ function init() {
     setButtonContent();
     setState();
     setSize();
+    resetEdgeLabelCheckBox();
 }
