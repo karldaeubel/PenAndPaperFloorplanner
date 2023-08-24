@@ -221,5 +221,25 @@ const loc = {
                 de: "Bitte geben Sie nur positive Zahlen für die Breite und Höhe ein."
             },
         },
-    }
+    },
+    presentation: {
+        category: {
+            en: "Presentation",
+            de: "Präsentation"
+        },
+        help: {
+            en: "File Utilities On The Right.",
+            de: "Datei Funktionalität auf der rechten Seite."
+        },
+        option: {
+            head: {
+                en: "Options",
+                de: "Optionen"
+            },
+            shwoEdgeLabel: {
+                en: "Show wall length",
+                de: "Zeige Wandlänge"
+            }
+        },
+    },
 };

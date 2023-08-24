@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 enum Mode {
     Room,
     Furniture,
+    Presentation,
 };
 
 enum MovableType {
@@ -84,7 +85,9 @@ interface Settings {
     nodeSnapDist: number,
 
     readonly furnitureRotateSize: number,
-    readonly furnitureSnapAngle: number
+    readonly furnitureSnapAngle: number,
+
+    showEdgeLabels: boolean,
 };
 
 const settings: Settings = {
@@ -104,7 +107,9 @@ const settings: Settings = {
     nodeSnapDist: 100,
 
     furnitureRotateSize: 100,
-    furnitureSnapAngle: 5
+    furnitureSnapAngle: 5,
+
+    showEdgeLabels: false,
 };
 
 type optionalPoint = { x: optionalNumber, y: optionalNumber };

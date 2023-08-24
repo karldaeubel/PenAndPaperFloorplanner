@@ -54,7 +54,7 @@ function mouseUpForMovables(movables) {
         if (mov.remove) {
             if (mov.type === MovableType.Openable) {
                 const openable = mov;
-                if (openable.snap.edge) {
+                if (openable.snap.edge !== null) {
                     for (let i = openable.snap.edge.snapOpenables.length - 1; i >= 0; --i) {
                         if (openable.snap.edge.snapOpenables[i] === mov) {
                             openable.snap.edge.snapOpenables.splice(i, 1);
@@ -129,7 +129,7 @@ class Openable extends Movable {
         return false;
     }
     handleClick(e) {
-        if (!this.snap.edge && this.pointInRotCircle(projection.to(e), this.getRotateSize() / 2)) {
+        if (this.snap.edge === null && this.pointInRotCircle(projection.to(e), this.getRotateSize() / 2)) {
             this.rotate = true;
             this.delta.x = e.x;
             this.delta.y = e.y;
@@ -171,7 +171,7 @@ class Openable extends Movable {
                 const orientationDist = ((node2.p.x - node1.p.x) * (node1.p.y - clickPos.y) - (node1.p.x - clickPos.x) * (node2.p.y - node1.p.y)) /
                     distance(node2.p, node1.p);
                 const dist = Math.abs(orientationDist);
-                if (dist < settings.nodeExtendSize && (!minDist || dist < minDist)) {
+                if (dist < settings.nodeExtendSize && (minDist === null || dist < minDist)) {
                     minDist = dist;
                     minEdge = edge;
                     minT = t;
@@ -189,7 +189,7 @@ class Openable extends Movable {
         }
         this.snap.pos = minT;
         this.snap.orientation = minOrientation;
-        if (this.snap.edge && this.snap.edge !== minEdge) {
+        if (this.snap.edge !== null && this.snap.edge !== minEdge) {
             for (let i = this.snap.edge.snapOpenables.length - 1; i >= 0; --i) {
                 if (this.snap.edge.snapOpenables[i] === this) {
                     this.snap.edge.snapOpenables.splice(i, 1);
@@ -199,7 +199,7 @@ class Openable extends Movable {
         }
         if (this.snap.edge !== minEdge) {
             this.snap.edge = minEdge;
-            if (this.snap.edge) {
+            if (this.snap.edge !== null) {
                 this.snap.edge.snapOpenables.push(this);
             }
         }
@@ -286,7 +286,7 @@ class Openable extends Movable {
             ctx.beginPath();
             ctx.rect(-this.dim.w / 2, -this.dim.h, this.dim.w, this.dim.h);
             ctx.stroke();
-            if (!this.snap.edge) {
+            if (this.snap.edge === null) {
                 ctx.beginPath();
                 ctx.arc(-this.dim.w / 2 + rotateSize / 2, -this.dim.h + rotateSize / 2, rotateSize / 2, 0, 2 * Math.PI);
                 ctx.stroke();
@@ -297,7 +297,7 @@ class Openable extends Movable {
             ctx.beginPath();
             ctx.fillText(String(this.dim.w), 0, -this.dim.h + rotateSize * 2, this.dim.w);
             ctx.stroke();
-            if (this.snap.edge && this.snap.pos && this.snap.orientation) {
+            if (this.snap.edge !== null && this.snap.pos !== null && this.snap.orientation !== null) {
                 const node1 = graph.nodes[this.snap.edge.id1];
                 const node2 = graph.nodes[this.snap.edge.id2];
                 const dist = distance(node1.p, node2.p);
@@ -444,7 +444,7 @@ class Rectangle extends Movable {
         const minDim = this.getMinDim();
         ctx.translate(c.x, c.y);
         ctx.rotate(toRad(this.angle));
-        this.setStyle(settings.mode !== Mode.Furniture, true);
+        this.setStyle(settings.mode === Mode.Room, true);
         if (this.dims.length > 0) {
             ctx.beginPath();
             let currX = -maxDim.w / 2;
@@ -558,7 +558,7 @@ class Circle extends Movable {
     draw() {
         ctx.save();
         ctx.translate(this.c.x, this.c.y);
-        this.setStyle(settings.mode !== Mode.Furniture, true);
+        this.setStyle(settings.mode === Mode.Room, true);
         ctx.beginPath();
         ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
         ctx.stroke();
@@ -689,7 +689,7 @@ class Ellipse extends Movable {
         ctx.save();
         ctx.translate(this.c.x, this.c.y);
         ctx.rotate(toRad(this.angle));
-        this.setStyle(settings.mode !== Mode.Furniture, true);
+        this.setStyle(settings.mode === Mode.Room, true);
         ctx.beginPath();
         ctx.ellipse(0, 0, this.rX, this.rY, 0, 0, 2 * Math.PI);
         ctx.stroke();

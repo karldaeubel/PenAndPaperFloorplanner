@@ -13,15 +13,30 @@ function resetElements(type) {
 // room or furniture mode
 document.getElementById("roomButton").addEventListener("click", changeToRoomMode);
 document.getElementById("furnitureButton").addEventListener("click", changeToFurnitureMode);
+document.getElementById("presentationButton").addEventListener("click", changeToPresentationMode);
 function changeMode(e, mode) {
     resetElements("mode");
     settings.mode = mode;
-    document.getElementById(mode === Mode.Room ? "roomTab" : "furnitureTab").style.display = "block";
+    switch (mode) {
+        case Mode.Room: {
+            document.getElementById("roomTab").style.display = "block";
+            break;
+        }
+        case Mode.Furniture: {
+            document.getElementById("furnitureTab").style.display = "block";
+            break;
+        }
+        case Mode.Presentation: {
+            document.getElementById("presentationTab").style.display = "block";
+            break;
+        }
+    }
     e.currentTarget.className += " active";
     drawMain();
 }
 function changeToRoomMode(e) { changeMode(e, Mode.Room); }
 function changeToFurnitureMode(e) { changeMode(e, Mode.Furniture); }
+function changeToPresentationMode(e) { changeMode(e, Mode.Presentation); }
 // openable type tabs
 document.getElementById("leftOpenableButton").addEventListener("click", changeToLeftOpenableType);
 document.getElementById("rightOpenableButton").addEventListener("click", changeToRightOpenableType);
@@ -171,4 +186,8 @@ window.addEventListener("beforeunload", (e) => {
         return (e.returnValue = "");
     }
     return true;
+});
+document.getElementById("edgeLabelCheckbox").addEventListener("change", (e) => {
+    settings.showEdgeLabels = e.target.checked;
+    drawMain();
 });

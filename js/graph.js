@@ -166,7 +166,7 @@ const graph = {
         let minId = null;
         for (const node of Object.values(this.nodes)) {
             const dist = distance(p, node.p);
-            if (!minDist || dist < minDist) {
+            if (minDist === null || dist < minDist) {
                 minDist = dist;
                 minId = node.id;
             }
@@ -525,6 +525,20 @@ const graph = {
                     const angle = Math.atan2(node.p.y - other.p.y, node.p.x - other.p.x);
                     ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
                     ctx.fillText(dist.toFixed(1), 0, 0, distance(otherBorder, b));
+                    ctx.restore();
+                }
+                else if (settings.showEdgeLabels) {
+                    const dist = distance(node1.p, node2.p);
+                    setFontSize(18, false);
+                    ctx.save();
+                    const c = {
+                        x: (node1.p.x + node2.p.x) / 2,
+                        y: (node1.p.y + node2.p.y) / 2,
+                    };
+                    ctx.translate(c.x, c.y);
+                    const angle = Math.atan2(node2.p.y - node1.p.y, node2.p.x - node1.p.x);
+                    ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
+                    ctx.fillText(dist.toFixed(0), 0, 0, dist);
                     ctx.restore();
                 }
                 restoreDefaultContext();
