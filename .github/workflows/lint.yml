@@ -35,5 +35,5 @@ jobs:
           VALIDATE_MARKDOWN: true
           VALIDATE_CSS: true
           # VALIDATE_HTML: true
-          # VALIDATE_JAVASCRIPT_STANDARD: true
-          # VALIDATE_JSCPD: true
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_ES: true
