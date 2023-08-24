@@ -1,33 +1,40 @@
+"use strict";
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
-const Mode = {
-    Room: "Room",
-    Furniture: "Furniture",
-};
-
-const MovableType = {
-    Openable: "Openable",
-    Rectangle: "Rectangle",
-    Ellipse: "Ellipse",
-    Circle: "Circle",
-    L: "L",
-    U: "U",
-};
-
-const OpenableType = {
-    Left: "Left",
-    Right: "Right",
-    Double: "Double",
-};
-
-const FurnitureType = {
-    Rectangle: "Rectangle",
-    Circle: "Circle",
-    L: "L",
-    U: "U",
-};
-
+var Mode;
+(function (Mode) {
+    Mode[Mode["Room"] = 0] = "Room";
+    Mode[Mode["Furniture"] = 1] = "Furniture";
+})(Mode || (Mode = {}));
+;
+var MovableType;
+(function (MovableType) {
+    MovableType[MovableType["Openable"] = 0] = "Openable";
+    MovableType[MovableType["Rectangle"] = 1] = "Rectangle";
+    MovableType[MovableType["Ellipse"] = 2] = "Ellipse";
+    MovableType[MovableType["Circle"] = 3] = "Circle";
+    MovableType[MovableType["L"] = 4] = "L";
+    MovableType[MovableType["U"] = 5] = "U";
+})(MovableType || (MovableType = {}));
+;
+var OpenableType;
+(function (OpenableType) {
+    OpenableType[OpenableType["Left"] = 0] = "Left";
+    OpenableType[OpenableType["Right"] = 1] = "Right";
+    OpenableType[OpenableType["Double"] = 2] = "Double";
+})(OpenableType || (OpenableType = {}));
+;
+var FurnitureType;
+(function (FurnitureType) {
+    FurnitureType[FurnitureType["Rectangle"] = 0] = "Rectangle";
+    FurnitureType[FurnitureType["Circle"] = 1] = "Circle";
+    FurnitureType[FurnitureType["L"] = 2] = "L";
+    FurnitureType[FurnitureType["U"] = 3] = "U";
+})(FurnitureType || (FurnitureType = {}));
+;
+;
+;
+;
 const projection = {
     scale: 0.1,
     p: {
@@ -52,7 +59,7 @@ const projection = {
         };
     }
 };
-
+;
 const settings = {
     language: "en",
     mode: Mode.Room,
@@ -68,19 +75,11 @@ const settings = {
     nodeTransSize: 50,
     nodeExtendSize: 150,
     nodeSnapDist: 100,
-
     furnitureRotateSize: 100,
     furnitureSnapAngle: 5
 };
-
 // state will lazily track changes since init or last save/load as string
 let state = null;
-
-const labels = [
-];
-
-const openables = [
-];
-
-const furniture = [
-];
+const labels = [];
+const openables = [];
+const furniture = [];

@@ -1,8 +1,14 @@
-"use strict";
-function getText(element) {
-    const key = settings.language;
+
+interface Localization {
+    en: string,
+    de: string,
+}
+
+function getText(element: Localization): string {
+    const key = settings.language as keyof typeof element;
     return key in element ? element[key] : element.en;
 }
+
 const loc = {
     help: {
         helpButton: {

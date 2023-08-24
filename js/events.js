@@ -1,83 +1,48 @@
+"use strict";
+// utils
+function resetElements(type) {
+    const tabContents = document.getElementsByClassName("tabContent " + type);
+    for (const tabContent of tabContents) {
+        tabContent.style.display = "none";
+    }
+    const tabLinks = document.getElementsByClassName("tabLinks " + type);
+    for (const tabLink of tabLinks) {
+        tabLink.className = tabLink.className.replace(" active", "");
+    }
+}
 // room or furniture mode
-
 document.getElementById("roomButton").addEventListener("click", changeToRoomMode);
 document.getElementById("furnitureButton").addEventListener("click", changeToFurnitureMode);
-
 function changeMode(e, mode) {
-    const tabContent = document.getElementsByClassName("tabContent mode");
-    for (let i = 0; i < tabContent.length; i++) {
-        tabContent[i].style.display = "none";
-    }
-
-    const tabLinks = document.getElementsByClassName("tabLinks mode");
-    for (let i = 0; i < tabLinks.length; i++) {
-        tabLinks[i].className = tabLinks[i].className.replace(" active", "");
-    }
-
+    resetElements("mode");
     settings.mode = mode;
-
     document.getElementById(mode === Mode.Room ? "roomTab" : "furnitureTab").style.display = "block";
     e.currentTarget.className += " active";
-
     drawMain();
 }
-
-function changeToRoomMode(e) {
-    changeMode(e, Mode.Room);
-}
-
-function changeToFurnitureMode(e) {
-    changeMode(e, Mode.Furniture);
-}
-
+function changeToRoomMode(e) { changeMode(e, Mode.Room); }
+function changeToFurnitureMode(e) { changeMode(e, Mode.Furniture); }
 // openable type tabs
-
 document.getElementById("leftOpenableButton").addEventListener("click", changeToLeftOpenableType);
 document.getElementById("rightOpenableButton").addEventListener("click", changeToRightOpenableType);
 document.getElementById("doubleOpenableButton").addEventListener("click", changeToDoubleOpenableType);
-
 function changeOpenableType(e, type) {
-    const tabContent = document.getElementsByClassName("tabContent openableType");
-    for (let i = 0; i < tabContent.length; i++) {
-        tabContent[i].style.display = "none";
-    }
-
-    const tabLinks = document.getElementsByClassName("tabLinks openableType");
-    for (let i = 0; i < tabLinks.length; i++) {
-        tabLinks[i].className = tabLinks[i].className.replace(" active", "");
-    }
-
+    resetElements("openableType");
     settings.openableType = type;
-
     e.currentTarget.className += " active";
-
     drawMain();
 }
-
 function changeToLeftOpenableType(e) { changeOpenableType(e, OpenableType.Left); }
 function changeToRightOpenableType(e) { changeOpenableType(e, OpenableType.Right); }
 function changeToDoubleOpenableType(e) { changeOpenableType(e, OpenableType.Double); }
-
 // furniture type tabs
-
 document.getElementById("rectangleButton").addEventListener("click", changeToRectangleType);
 document.getElementById("circleButton").addEventListener("click", changeToCircleType);
 document.getElementById("LButton").addEventListener("click", changeToLType);
 document.getElementById("UButton").addEventListener("click", changeToUType);
-
 function changeFurnitureType(e, type) {
-    const tabContent = document.getElementsByClassName("tabContent furnitureType");
-    for (let i = 0; i < tabContent.length; i++) {
-        tabContent[i].style.display = "none";
-    }
-
-    const tabLinks = document.getElementsByClassName("tabLinks furnitureType");
-    for (let i = 0; i < tabLinks.length; i++) {
-        tabLinks[i].className = tabLinks[i].className.replace(" active", "");
-    }
-
+    resetElements("furnitureType");
     settings.type = type;
-
     switch (type) {
         case FurnitureType.Rectangle:
             document.getElementById("rectangleTab").style.display = "contents";
@@ -92,17 +57,13 @@ function changeFurnitureType(e, type) {
             document.getElementById("UTab").style.display = "contents";
             break;
     }
-
     e.currentTarget.className += " active";
-
     drawMain();
 }
-
 function changeToRectangleType(e) { changeFurnitureType(e, FurnitureType.Rectangle); }
 function changeToCircleType(e) { changeFurnitureType(e, FurnitureType.Circle); }
 function changeToLType(e) { changeFurnitureType(e, FurnitureType.L); }
 function changeToUType(e) { changeFurnitureType(e, FurnitureType.U); }
-
 function validNumericInput(...values) {
     for (const value of values) {
         if (isNaN(value) || value < 1) {
@@ -111,14 +72,11 @@ function validNumericInput(...values) {
     }
     return true;
 }
-
 // Room Mode
-
 document.getElementById("addLabelButton").addEventListener("click", (e) => {
     e.preventDefault();
     const labelName = document.getElementById("labelNameInput").value;
     const labelHeight = document.getElementById("labelHeightInput").valueAsNumber;
-
     if (!validNumericInput(labelHeight) || !labelName) {
         alert(getText(loc.room.label.inputError));
         return;
@@ -129,29 +87,22 @@ document.getElementById("addLabelButton").addEventListener("click", (e) => {
     console.log("add Label:", labelName);
     drawMain();
 });
-
 document.getElementById("addOpenableButton").addEventListener("click", (e) => {
     e.preventDefault();
     const openableWidth = document.getElementById("openableWidthInput").valueAsNumber;
-
     if (!validNumericInput(openableWidth)) {
         alert(getText(loc.room.openable.inputError));
         return;
     }
-
     const start = projection.to({ x: 10, y: 100 });
     openables.push(new Openable(settings.openableType, start.x, start.y, openableWidth, 180));
     console.log("add Openable:", settings.openableType);
     drawMain();
 });
-
 // Furniture Mode
-
 document.getElementById("addFurnitureButton").addEventListener("click", (e) => {
     e.preventDefault();
-
     const furName = document.getElementById("nameInput").value;
-
     switch (settings.type) {
         case FurnitureType.Rectangle: {
             const furWidth = document.getElementById("widthInput").valueAsNumber;
@@ -180,7 +131,6 @@ document.getElementById("addFurnitureButton").addEventListener("click", (e) => {
         case FurnitureType.L: {
             const LWidth1 = document.getElementById("LWidthInput1").valueAsNumber;
             const LHeight1 = document.getElementById("LHeightInput1").valueAsNumber;
-
             const LWidth2 = document.getElementById("LWidthInput2").valueAsNumber;
             const LHeight2 = document.getElementById("LHeightInput2").valueAsNumber;
             if (!validNumericInput(LWidth1, LHeight1, LWidth2, LHeight2)) {
@@ -196,13 +146,10 @@ document.getElementById("addFurnitureButton").addEventListener("click", (e) => {
         case FurnitureType.U: {
             const UWidth1 = document.getElementById("UWidthInput1").valueAsNumber;
             const UHeight1 = document.getElementById("UHeightInput1").valueAsNumber;
-
             const UWidth2 = document.getElementById("UWidthInput2").valueAsNumber;
             const UHeight2 = document.getElementById("UHeightInput2").valueAsNumber;
-
             const UWidth3 = document.getElementById("UWidthInput3").valueAsNumber;
             const UHeight3 = document.getElementById("UHeightInput3").valueAsNumber;
-
             if (!validNumericInput(UWidth1, UHeight1, UWidth2, UHeight2, UWidth3, UHeight3)) {
                 alert(getText(loc.furniture.add.inputError));
                 return;
@@ -215,15 +162,13 @@ document.getElementById("addFurnitureButton").addEventListener("click", (e) => {
             break;
         }
     }
-
     console.log("add %s: %s", settings.type, furName);
     drawMain();
 });
-
 window.addEventListener("beforeunload", (e) => {
-    console.log(state);
     if (state !== createState()) {
         e.preventDefault();
         return (e.returnValue = "");
     }
+    return true;
 });
