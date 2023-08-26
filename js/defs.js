@@ -10,19 +10,19 @@ var Mode;
 ;
 var MovableType;
 (function (MovableType) {
-    MovableType[MovableType["Openable"] = 0] = "Openable";
-    MovableType[MovableType["Rectangle"] = 1] = "Rectangle";
-    MovableType[MovableType["Ellipse"] = 2] = "Ellipse";
-    MovableType[MovableType["Circle"] = 3] = "Circle";
-    MovableType[MovableType["L"] = 4] = "L";
-    MovableType[MovableType["U"] = 5] = "U";
+    MovableType["Openable"] = "Openable";
+    MovableType["Rectangle"] = "Rectangle";
+    MovableType["Ellipse"] = "Ellipse";
+    MovableType["Circle"] = "Circle";
+    MovableType["L"] = "L";
+    MovableType["U"] = "U";
 })(MovableType || (MovableType = {}));
 ;
 var OpenableType;
 (function (OpenableType) {
-    OpenableType[OpenableType["Left"] = 0] = "Left";
-    OpenableType[OpenableType["Right"] = 1] = "Right";
-    OpenableType[OpenableType["Double"] = 2] = "Double";
+    OpenableType["Left"] = "Left";
+    OpenableType["Right"] = "Right";
+    OpenableType["Double"] = "Double";
 })(OpenableType || (OpenableType = {}));
 ;
 var FurnitureType;
