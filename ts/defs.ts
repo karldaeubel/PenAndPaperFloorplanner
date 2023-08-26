@@ -8,18 +8,18 @@ enum Mode {
 };
 
 enum MovableType {
-    Openable,
-    Rectangle,
-    Ellipse,
-    Circle,
-    L,
-    U,
+    Openable = "Openable",
+    Rectangle = "Rectangle",
+    Ellipse = "Ellipse",
+    Circle = "Circle",
+    L = "L",
+    U = "U",
 };
 
 enum OpenableType {
-    Left,
-    Right,
-    Double,
+    Left = "Left",
+    Right = "Right",
+    Double = "Double",
 };
 
 enum FurnitureType {
