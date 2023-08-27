@@ -12,11 +12,13 @@ The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no 
 
 ## Features
 
+- import existing floorplans (image files only)
 - create floorplans by placing corners and walls
 - add doors and windows
 - give rooms a label
 - place and rotate furniture of 4 different generic types
 - load and save floorplans
+- export and print floorplans
 
 ## Screenshots
 
