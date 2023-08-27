@@ -81,11 +81,12 @@ function zoomEvent(e: WheelEvent) {
 
 function zoom(p: Point, factor: optionalNumber) {
     if (factor !== null) {
-        const newScale = projection.scale * factor;
+        const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+        const newScale = proj.scale * factor;
         if (newScale > settings.minZoom && newScale < settings.maxZoom) {
-            projection.scale = newScale;
-            projection.p.x = p.x - (p.x - projection.p.x) * factor;
-            projection.p.y = p.y - (p.y - projection.p.y) * factor;
+            proj.scale = newScale;
+            proj.p.x = p.x - (p.x - proj.p.x) * factor;
+            proj.p.y = p.y - (p.y - proj.p.y) * factor;
 
             drawMain();
         }
@@ -105,7 +106,20 @@ function mouseDoubleClick(e: Point) {
 function mouseDown(e: Point) {
     let selected = false;
 
-    if (settings.mode === Mode.Furniture) {
+    if (settings.mode === Mode.Floorplan) {
+        if (floorplanImage.handleClick(e)) {
+            selected = true;
+        }
+
+        if (!selected) {
+            floorplanProjection.drag = true;
+            floorplanProjection.delta.x = e.x;
+            floorplanProjection.delta.y = e.y;
+        }
+
+        drawMain();
+        return;
+    } else if (settings.mode === Mode.Furniture) {
         for (const fur of furniture) {
             if (fur.handleClick(e)) {
                 selected = true;
@@ -146,7 +160,26 @@ function mouseDown(e: Point) {
 function mouseMove(e: Point) {
     let changed = false;
 
-    if (settings.mode === Mode.Furniture) {
+    if (settings.mode === Mode.Floorplan) {
+        if (floorplanImage.handleMove(e)) {
+            changed = true;
+        }
+
+        if (floorplanProjection.drag) {
+            changed = true;
+
+            floorplanProjection.p.x += (e.x - floorplanProjection.delta.x);
+            floorplanProjection.p.y += (e.y - floorplanProjection.delta.y);
+
+            floorplanProjection.delta.x = e.x;
+            floorplanProjection.delta.y = e.y;
+        }
+
+        if (changed) {
+            drawMain();
+        }
+        return;
+    } else if (settings.mode === Mode.Furniture) {
         for (const fur of furniture) {
             if (fur.handleMove(e)) {
                 changed = true;
@@ -184,13 +217,19 @@ function mouseMove(e: Point) {
 }
 
 function mouseUp(e: Point) {
-    if (settings.mode === Mode.Furniture) {
+    if (settings.mode === Mode.Floorplan) {
+        floorplanImage.handleUnclick();
+    } else if (settings.mode === Mode.Furniture) {
         mouseUpForMovables(furniture);
     } else if (settings.mode === Mode.Room) {
         graph.handleUnclick(e);
         mouseUpForMovables(openables);
         mouseUpForMovables(labels);
     }
+
+    floorplanProjection.drag = false;
+    floorplanProjection.delta.x = 0;
+    floorplanProjection.delta.y = 0;
 
     projection.drag = false;
     projection.delta.x = 0;

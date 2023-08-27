@@ -116,6 +116,34 @@ const loc = {
             de: "Fehlermeldung:"
         }
     },
+    floorplan: {
+        category: {
+            en: "Floorplan",
+            de: "Grundriss"
+        },
+        help: {
+            en: "Load A Floorplan On The Right.",
+            de: "Füge einen Grundriss rechts hinzu."
+        },
+        option: {
+            distance: {
+                en: "Length\xa0(mm):",
+                de: "Länge\xa0(mm):"
+            },
+            inputError: {
+                en: "Please input only positive numbers for length.",
+                de: "Bitte geben Sie nur positive Zahlen für die Länge ein."
+            },
+        },
+        loadButton: {
+            en: "Load Floorplan",
+            de: "Grundriss Laden"
+        },
+        clearButton: {
+            en: "Clear",
+            de: "Löschen"
+        }
+    },
     room: {
         category: {
             en: "Room",

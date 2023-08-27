@@ -11,6 +11,7 @@ function resetElements(type) {
     }
 }
 // room or furniture mode
+document.getElementById("floorplanButton").addEventListener("click", changeToFloorplanMode);
 document.getElementById("roomButton").addEventListener("click", changeToRoomMode);
 document.getElementById("furnitureButton").addEventListener("click", changeToFurnitureMode);
 document.getElementById("presentationButton").addEventListener("click", changeToPresentationMode);
@@ -18,6 +19,10 @@ function changeMode(e, mode) {
     resetElements("mode");
     settings.mode = mode;
     switch (mode) {
+        case Mode.Floorplan: {
+            document.getElementById("floorplanTab").style.display = "block";
+            break;
+        }
         case Mode.Room: {
             document.getElementById("roomTab").style.display = "block";
             break;
@@ -34,6 +39,7 @@ function changeMode(e, mode) {
     e.currentTarget.className += " active";
     drawMain();
 }
+function changeToFloorplanMode(e) { changeMode(e, Mode.Floorplan); }
 function changeToRoomMode(e) { changeMode(e, Mode.Room); }
 function changeToFurnitureMode(e) { changeMode(e, Mode.Furniture); }
 function changeToPresentationMode(e) { changeMode(e, Mode.Presentation); }
@@ -87,6 +93,39 @@ function validNumericInput(...values) {
     }
     return true;
 }
+// Floorplan Mode
+document.getElementById("distanceInput").addEventListener("input", (e) => {
+    const dist = e.target.valueAsNumber;
+    if (!validNumericInput(dist)) {
+        alert(getText(loc.floorplan.option.inputError));
+        return;
+    }
+    floorplanImage.distance = dist;
+    drawMain();
+});
+document.getElementById("loadFloorplan").addEventListener("change", (e) => {
+    const files = e.target.files;
+    const file = files?.item(0);
+    if (!file) {
+        return;
+    }
+    var img = new Image();
+    img.onload = (onLoadResult) => {
+        const image = onLoadResult.target;
+        floorplanImage.image = image;
+        drawMain();
+    };
+    img.onerror = () => {
+        // TODO(kda): add better error text.
+        alert(getText(loc.fileIO.errorAtFile) + ".\n\n" + getText(loc.fileIO.errorMessage));
+        // console.error("The provided file couldn't be loaded as an Image media");
+    };
+    img.src = URL.createObjectURL(file);
+});
+document.getElementById("clearFloorplanButton").addEventListener("click", () => {
+    floorplanImage.reset();
+    drawMain();
+});
 // Room Mode
 document.getElementById("addLabelButton").addEventListener("click", (e) => {
     e.preventDefault();

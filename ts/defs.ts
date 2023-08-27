@@ -2,6 +2,7 @@ const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanva
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
 enum Mode {
+    Floorplan,
     Room,
     Furniture,
     Presentation,
@@ -48,6 +49,31 @@ interface Projection {
 };
 const projection: Projection = {
     scale: 0.1,
+    p: {
+        x: 0,
+        y: 0
+    },
+    drag: false,
+    delta: {
+        x: 0,
+        y: 0
+    },
+    to: function (q) {
+        return {
+            x: (q.x - this.p.x) / this.scale,
+            y: (q.y - this.p.y) / this.scale
+        };
+    },
+    from: function (q) {
+        return {
+            x: this.p.x + q.x * this.scale,
+            y: this.p.y + q.y * this.scale
+        };
+    }
+};
+
+const floorplanProjection: Projection = {
+    scale: 1,
     p: {
         x: 0,
         y: 0

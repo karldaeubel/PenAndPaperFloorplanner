@@ -43,6 +43,13 @@ function resetEdgeLabelCheckBox() {
 }
 
 function setButtonContent() {
+    // floorplan
+    document.getElementById("floorplanButton")!.textContent = getText(loc.floorplan.category);
+
+    document.getElementById("distanceInputLabel")!.textContent = getText(loc.floorplan.option.distance);
+    document.getElementById("loadFloorplanButton")!.textContent = getText(loc.floorplan.loadButton);
+    document.getElementById("clearFloorplanButton")!.textContent = getText(loc.floorplan.clearButton);
+
     // room
     document.getElementById("roomButton")!.textContent = getText(loc.room.category);
 
@@ -138,6 +145,8 @@ function init() {
         settings.language = navigator.language.substring(0, 2);
     }
     console.log("language:", settings.language);
+
+    document.getElementById("distanceInput")!.dispatchEvent(new Event("input"));
 
     document.getElementById("roomButton")!.click();
 

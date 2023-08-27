@@ -13,9 +13,27 @@
         <canvas id="canvas"> Your browser does not support the HTML 5 Canvas. </canvas>
         <div id="sidebar">
             <div class="tab mode buttonRow">
+                <button type="button" id="floorplanButton" class="tabLinks mode"></button>
                 <button type="button" id="roomButton" class="tabLinks mode"></button>
                 <button type="button" id="furnitureButton" class="tabLinks mode"></button>
                 <button type="button" id="presentationButton" class="tabLinks mode"></button>
+            </div>
+            <div id="floorplanTab" class="tabContent mode">
+                <table>
+                    <tr>
+                        <td><label id="distanceInputLabel" for="distanceInput"></label></td>
+                        <td class="inputTD">
+                            <input type="number" id="distanceInput" class="w100pc" min="1" value="1000" required="">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label id="loadFloorplanButton" class="loadInputClass w50pc" for="loadFloorplan"></label>
+                            <input type="file" id="loadFloorplan" class="loadFileClass">
+                            <button id="clearFloorplanButton" class="addButton w50pc"></button>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div id="roomTab" class="tabContent mode">
                 <table>
@@ -184,7 +202,7 @@
             <div id="bottomMenu" class="buttonRow">
                 <button type="button" id="saveButton"></button>
                 <label id="loadButton" class="loadInputClass" for="loadInput"></label>
-                <input type="file" id="loadInput">
+                <input type="file" id="loadInput" class="loadFileClass">
                 <button type="button" id="exportButton"></button>
                 <button type="button" id="printButton"></button>
             </div>
@@ -197,6 +215,7 @@
     <script src="js/defs.js"></script>
     <script src="js/localization.js"></script>
     <script src="js/graph.js"></script>
+    <script src="js/image.js"></script>
     <script src="js/movable.js"></script>
     <script src="js/draw.js"></script>
     <script src="js/io.js"></script>

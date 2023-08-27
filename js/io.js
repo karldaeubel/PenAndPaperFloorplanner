@@ -112,7 +112,7 @@ document.getElementById("loadInput").addEventListener("change", (e) => {
 document.getElementById("saveButton").addEventListener("click", () => {
     const pom = document.createElement("a");
     pom.setAttribute("href", "data:text/plain;charset=utf-8," +
-        encodeURIComponent(JSON.stringify({ graph, labels, openables, furniture }, null, " ")));
+        encodeURIComponent(JSON.stringify({ graph, labels, openables, furniture, floorplanImage }, null, " ")));
     pom.setAttribute("download", "house.json");
     pom.style.display = "none";
     document.body.appendChild(pom);

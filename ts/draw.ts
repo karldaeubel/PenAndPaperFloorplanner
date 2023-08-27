@@ -1,10 +1,12 @@
 // utils
 function setFontSize(size: number, fixed: boolean = true) {
-    ctx.font = (size / (fixed ? 1 : projection.scale)) + "px Segoe UI, Segoe UI, sans-serif";
+    const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+    ctx.font = (size / (fixed ? 1 : proj.scale)) + "px Segoe UI, Segoe UI, sans-serif";
 }
 
 function restoreDefaultContext() {
-    ctx.lineWidth = 1.5 / projection.scale;
+    const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+    ctx.lineWidth = 1.5 / proj.scale;
     setFontSize(15);
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
@@ -26,16 +28,30 @@ function drawMain() {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    if (settings.mode === Mode.Floorplan) {
+        ctx.translate(floorplanProjection.p.x, floorplanProjection.p.y);
+        ctx.scale(floorplanProjection.scale, floorplanProjection.scale);
+
+        // global properties
+        restoreDefaultContext();
+
+        floorplanImage.draw();
+
+        return;
+    }
+
     ctx.translate(projection.p.x, projection.p.y);
     ctx.scale(projection.scale, projection.scale);
 
     // global properties
     restoreDefaultContext();
 
+    floorplanImage.draw();
+
     drawScale();
     drawDeletionField();
 
-    if (Object.keys(graph.nodes).length === 0 && furniture.length === 0 && openables.length === 0 && labels.length === 0) {
+    if (Object.keys(graph.nodes).length === 0 && furniture.length === 0 && openables.length === 0 && labels.length === 0 && floorplanImage.image === null) {
         drawHelp();
     } else {
         for (let i = labels.length - 1; i >= 0; i--) {
@@ -72,6 +88,10 @@ function drawHelp() {
 
     ctx.beginPath();
     switch (settings.mode) {
+        case Mode.Floorplan: {
+            ctx.fillText(getText(loc.floorplan.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
+            break;
+        }
         case Mode.Room: {
             ctx.fillText(getText(loc.room.help), (ul.x + br.x) / 2, (ul.y + br.y) / 2);
             break;
