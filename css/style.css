@@ -29,7 +29,7 @@ button {
     border: none;
     outline: none;
     cursor: default;
-    padding: 0px 0px;
+    padding: 0px;
     transition: 0.3s;
 }
 
