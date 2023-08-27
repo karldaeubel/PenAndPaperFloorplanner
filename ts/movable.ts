@@ -1,4 +1,5 @@
 // A movable is an abstract object that can be translated and rotated on the canvas
+type MovableJSON = { type: MovableType, stroke: string, fill: string };
 class Movable {
     type: MovableType;
     delta: Point;
@@ -23,10 +24,10 @@ class Movable {
         this.fill = "";
     }
 
-    getFill(isDisabled: boolean, highlight: boolean = false) {
+    getFill(isDisabled: boolean, highlight: boolean = false): string {
         return this.remove ? "red" : isDisabled ? "gray" : highlight && (this.translate || this.rotate) ? "green" : this.fill;
     }
-    getStroke(isDisabled: boolean, highlight: boolean = false) {
+    getStroke(isDisabled: boolean, highlight: boolean = false): string {
         return this.remove ? "red" : isDisabled ? "gray" : highlight && (this.translate || this.rotate) ? "green" : this.stroke;
     }
 
@@ -35,17 +36,17 @@ class Movable {
         ctx.strokeStyle = this.getStroke(isDisabled, highlight);
     }
 
-    movableToJSON() {
+    movableToJSON(): MovableJSON {
         return { type: this.type, stroke: this.stroke, fill: this.fill };
     }
 }
 
 // snap utility
-function snap(angle: number, value: number, diff: number) {
+function snap(angle: number, value: number, diff: number): boolean {
     return angle % value < diff || angle % value > value - diff;
 }
 
-function handleSnap(mov: Rectangle | Ellipse, values: number[], angle: number, diff: number) {
+function handleSnap(mov: Rectangle | Ellipse, values: number[], angle: number, diff: number): boolean {
     for (const value of values) {
         if (snap(angle, value, diff)) {
             mov.angle = value % 360;
@@ -85,12 +86,14 @@ function mouseUpForMovables(movables: (Rectangle | Circle | Ellipse | Openable)[
 }
 
 // An openable is a door or window, it can be moved and rotated
+type OpenableSnapType = { edge: Edge | null, pos: optionalNumber, orientation: optionalNumber };
+type OpenableJSON = { mov: MovableJSON, openableType: OpenableType, p: Point, dim: Dim, angle: number, snap: OpenableSnapType };
 class Openable extends Movable {
     openableType: OpenableType;
     p: Point;
     dim: Dim;
     angle: number;
-    snap: { edge: Edge | null, pos: optionalNumber, orientation: optionalNumber };
+    snap: OpenableSnapType;
 
     constructor(type: OpenableType, x: number, y: number, w: number, h: number) {
         super(MovableType.Openable);
@@ -111,33 +114,33 @@ class Openable extends Movable {
         }
     }
 
-    center() {
+    center(): Point {
         return {
             x: this.p.x + this.dim.w / 2,
             y: this.p.y
         };
     }
 
-    handle() {
+    handle(): Point {
         return {
             x: this.p.x,
             y: this.p.y - this.dim.h
         }
     }
 
-    pointInRotCircle(other: Point, radius: number) {
+    pointInRotCircle(other: Point, radius: number): boolean {
         const pRot = rotate(this.center(), other, -this.angle);
         return pointInCircle(translate(this.handle(), { w: radius, h: radius }), radius, pRot);
     }
 
-    getRotateSize() {
+    getRotateSize(): number {
         if (this.dim.w / 2 <= settings.furnitureRotateSize || this.dim.h / 2 <= settings.furnitureRotateSize) {
             return Math.min(this.dim.w, this.dim.h) / 2;
         }
         return settings.furnitureRotateSize;
     }
 
-    pointInRotRectangle(other: Point) {
+    pointInRotRectangle(other: Point): boolean {
         const pRot = rotate(this.center(), other, -this.angle);
         const h = this.handle();
         if (h.x <= pRot.x && h.x + this.dim.w >= pRot.x && h.y <= pRot.y && h.y + this.dim.h >= pRot.y) {
@@ -146,7 +149,7 @@ class Openable extends Movable {
         return false;
     }
 
-    handleClick(e: Point) {
+    handleClick(e: Point): boolean {
         if (this.snap.edge === null && this.pointInRotCircle(projection.to(e), this.getRotateSize() / 2)) {
             this.rotate = true;
             this.delta.x = e.x;
@@ -161,7 +164,7 @@ class Openable extends Movable {
         return false;
     }
 
-    handleSnap(values: number[], angle: number, diff: number) {
+    handleSnap(values: number[], angle: number, diff: number): boolean {
         for (const value of values) {
             if (snap(angle, value, diff)) {
                 this.angle = value % 360;
@@ -249,7 +252,7 @@ class Openable extends Movable {
         }
     }
 
-    handleMove(e: Point, graph: Graph) {
+    handleMove(e: Point, graph: Graph): boolean {
         let changed = false;
         if (this.translate) {
             changed = true;
@@ -386,12 +389,13 @@ class Openable extends Movable {
         ctx.restore();
     }
 
-    toJSON() {
+    toJSON(): OpenableJSON {
         return { mov: super.movableToJSON(), openableType: this.openableType, p: this.p, dim: this.dim, angle: this.angle, snap: this.snap };
     }
 }
 
 // A generalized rectangle with multiple segments of different dimensions, it can be moved and rotated
+type RectangleJSON = { mov: MovableJSON, name: string, p: Point, dims: Dim[], angle: number };;
 class Rectangle extends Movable {
     name: string;
     p: Point;
@@ -412,7 +416,7 @@ class Rectangle extends Movable {
         this.angle = 0;
     }
 
-    getMaxDim() {
+    getMaxDim(): Dim {
         let result = { w: 0, h: 0 };
         for (const dim of this.dims) {
             result.w += dim.w;
@@ -421,7 +425,7 @@ class Rectangle extends Movable {
         return result;
     }
 
-    getMinDim() {
+    getMinDim(): Dim {
         let result = { w: 0, h: Number.MAX_VALUE };
         for (const dim of this.dims) {
             result.w += dim.w;
@@ -430,7 +434,7 @@ class Rectangle extends Movable {
         return result;
     }
 
-    center() {
+    center(): Point {
         const maxDim = this.getMaxDim();
         return {
             x: this.p.x + maxDim.w / 2,
@@ -438,12 +442,12 @@ class Rectangle extends Movable {
         };
     }
 
-    pointInRotCircle(other: Point, radius: number) {
+    pointInRotCircle(other: Point, radius: number): boolean {
         const pRot = rotate(this.center(), other, -this.angle);
         return pointInCircle(translate(this.p, { w: radius, h: radius }), radius, pRot);
     }
 
-    getRotateSize() {
+    getRotateSize(): number {
         const minDim = this.getMinDim();
         if (minDim.w / 2 <= settings.furnitureRotateSize || minDim.h / 2 <= settings.furnitureRotateSize) {
             return Math.min(minDim.w, minDim.h) / 2;
@@ -451,7 +455,7 @@ class Rectangle extends Movable {
         return settings.furnitureRotateSize;
     }
 
-    pointInRotRectangle(other: Point) {
+    pointInRotRectangle(other: Point): boolean {
         const pRot = rotate(this.center(), other, -this.angle);
         let currX = this.p.x;
         for (const dim of this.dims) {
@@ -470,11 +474,11 @@ class Rectangle extends Movable {
         setFontSize(Math.min(Math.min(160, minDim.h), minDim.w / textDim.width));
     }
 
-    angleSnapPoint() {
+    angleSnapPoint(): Point {
         return this.p;
     }
 
-    handleClick(e: Point) {
+    handleClick(e: Point): boolean {
         if (this.pointInRotCircle(projection.to(e), this.getRotateSize() / 2)) {
             this.rotate = true;
             this.delta.x = e.x;
@@ -489,7 +493,7 @@ class Rectangle extends Movable {
         return false;
     }
 
-    handleMove(e: Point) {
+    handleMove(e: Point): boolean {
         let changed = false;
         if (this.translate) {
             changed = true;
@@ -606,12 +610,13 @@ class Rectangle extends Movable {
         ctx.restore();
     }
 
-    toJSON() {
+    toJSON(): RectangleJSON {
         return { mov: super.movableToJSON(), name: this.name, p: this.p, dims: this.dims, angle: this.angle };
     }
 }
 
 // A circle, it can be moved and rotated
+type CircleJSON = { mov: MovableJSON, name: string, c: Point, r: number };
 class Circle extends Movable {
     name: string;
     c: Point;
@@ -627,11 +632,11 @@ class Circle extends Movable {
         this.r = r;
     }
 
-    center() {
+    center(): Point {
         return this.c;
     }
 
-    getDimSize() {
+    getDimSize(): number {
         if (this.r <= settings.furnitureRotateSize) {
             return this.r;
         }
@@ -644,7 +649,7 @@ class Circle extends Movable {
         setFontSize(Math.min(Math.min(160, 2 * this.r), 2 * this.r / textDim.width));
     }
 
-    handleClick(e: Point) {
+    handleClick(e: Point): boolean {
         if (pointInCircle(this.c, this.r, projection.to(e))) {
             this.translate = true;
             this.delta.x = e.x;
@@ -654,7 +659,7 @@ class Circle extends Movable {
         return false;
     }
 
-    handleMove(e: Point) {
+    handleMove(e: Point): boolean {
         let changed = false;
         if (this.translate) {
             changed = true;
@@ -710,12 +715,13 @@ class Circle extends Movable {
         ctx.restore();
     }
 
-    toJSON() {
+    toJSON(): CircleJSON {
         return { mov: super.movableToJSON(), name: this.name, c: this.c, r: this.r };
     }
 }
 
 // An ellipse, it can be moved and rotated
+type EllipseJSON = { mov: MovableJSON, name: string, c: Point, rX: number, rY: number, angle: number };
 class Ellipse extends Movable {
     name: string;
     c: Point;
@@ -739,42 +745,42 @@ class Ellipse extends Movable {
         this.angle = 0;
     }
 
-    center() {
+    center(): Point {
         return this.c;
     }
 
-    getF1() {
+    getF1(): Point {
         return this.rX < this.rY ? { x: this.c.x, y: this.c.y - this.f } : { x: this.c.x - this.f, y: this.c.y };
     }
 
-    getF2() {
+    getF2(): Point {
         return this.rX < this.rY ? { x: this.c.x, y: this.c.y + this.f } : { x: this.c.x + this.f, y: this.c.y };
     }
 
-    getRotateSize() {
+    getRotateSize(): number {
         if (this.z <= settings.furnitureRotateSize) {
             return this.z;
         }
         return settings.furnitureRotateSize;
     }
 
-    getDimSize() {
+    getDimSize(): number {
         if (this.rX <= settings.furnitureRotateSize || this.rY <= settings.furnitureRotateSize) {
             return Math.min(this.rX, this.rY);
         }
         return settings.furnitureRotateSize;
     }
 
-    pointInEllipse(p: Point) {
+    pointInEllipse(p: Point): boolean {
         return distance(p, this.getF1()) + distance(p, this.getF2()) <= 2 * Math.max(this.rX, this.rY);
     }
 
-    pointInRotCircle(other: Point, radius: number) {
+    pointInRotCircle(other: Point, radius: number): boolean {
         const pRot = rotate(this.center(), other, -this.angle);
         return pointInCircle(this.angleSnapPoint(), radius, pRot);
     }
 
-    pointInRotEllipse(other: Point) {
+    pointInRotEllipse(other: Point): boolean {
         const pRot = rotate(this.center(), other, -this.angle);
         return this.pointInEllipse(pRot);
     }
@@ -785,11 +791,11 @@ class Ellipse extends Movable {
         setFontSize(Math.min(Math.min(160, 2 * this.rY), 2 * this.rX / textDim.width));
     }
 
-    angleSnapPoint() {
+    angleSnapPoint(): Point {
         return this.getF2();
     }
 
-    handleClick(e: Point) {
+    handleClick(e: Point): boolean {
         if (this.rX !== this.rY && this.pointInRotCircle(projection.to(e), this.getRotateSize() / 2)) {
             this.rotate = true;
             this.delta.x = e.x;
@@ -804,7 +810,7 @@ class Ellipse extends Movable {
         return false;
     }
 
-    handleMove(e: Point) {
+    handleMove(e: Point): boolean {
         let changed = false;
         if (this.translate) {
             changed = true;
@@ -894,7 +900,7 @@ class Ellipse extends Movable {
         ctx.restore();
     }
 
-    toJSON() {
+    toJSON(): EllipseJSON {
         return { mov: super.movableToJSON(), name: this.name, c: this.c, rX: this.rX, rY: this.rY, angle: this.angle };
     }
 }

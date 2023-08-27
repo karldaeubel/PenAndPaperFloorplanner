@@ -1,3 +1,4 @@
+type FloorplanImageJSON = { image: string, distance: number, node1: CornerJSON, node2: CornerJSON };
 interface FloorplanImage {
     image: HTMLImageElement | null,
     distance: number,
@@ -14,6 +15,8 @@ interface FloorplanImage {
     draw: () => void,
     drawEdge: () => void,
     drawNodes: () => void,
+
+    toJSON: () => FloorplanImageJSON | {},
 }
 
 const floorplanImage: FloorplanImage = {
@@ -122,4 +125,23 @@ const floorplanImage: FloorplanImage = {
 
         restoreDefaultContext();
     },
+    toJSON: function (): FloorplanImageJSON | {} {
+        if (this.image !== null) {
+            const tmpCanvas = document.createElement('canvas') as HTMLCanvasElement;
+            const tmpCtx = tmpCanvas.getContext('2d') as CanvasRenderingContext2D;
+            tmpCanvas.style.display = "none";
+            tmpCanvas.height = this.image.naturalHeight;
+            tmpCanvas.width = this.image.naturalWidth;
+            tmpCtx.drawImage(this.image, 0, 0);
+            const dataURL = tmpCanvas.toDataURL();
+
+            return {
+                image: dataURL,
+                distance: this.distance,
+                node1: this.node1,
+                node2: this.node2,
+            }
+        }
+        return {};
+    }
 };

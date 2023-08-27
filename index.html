@@ -10,7 +10,7 @@
 
 <body>
     <div id="content">
-        <canvas id="canvas"> Your browser does not support the HTML 5 Canvas. </canvas>
+        <canvas id="canvas"> Your browser does not support the HTML 5 Canvas.</canvas>
         <div id="sidebar">
             <div class="tab mode buttonRow">
                 <button type="button" id="floorplanButton" class="tabLinks mode"></button>
@@ -28,9 +28,13 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <label id="loadFloorplanButton" class="loadInputClass w50pc" for="loadFloorplan"></label>
+                            <label id="loadFloorplanButton" class="loadInputClass w100pc" for="loadFloorplan" style="padding: 2px 0px;text-align: center;"></label>
                             <input type="file" id="loadFloorplan" class="loadFileClass">
-                            <button id="clearFloorplanButton" class="addButton w50pc"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button id="clearFloorplanButton" class="addButton"></button>
                         </td>
                     </tr>
                 </table>

@@ -138,16 +138,14 @@ document.getElementById("loadFloorplan")!.addEventListener("change", (e: Event) 
         return;
     }
 
-    var img = new Image();
+    let img = new Image();
     img.onload = (onLoadResult) => {
         const image = onLoadResult.target as HTMLImageElement;
         floorplanImage.image = image;
         drawMain();
     };
     img.onerror = () => {
-        // TODO(kda): add better error text.
-        alert(getText(loc.fileIO.errorAtFile) + ".\n\n" + getText(loc.fileIO.errorMessage));
-        // console.error("The provided file couldn't be loaded as an Image media");
+        alert(getText(loc.fileIO.errorAtFile) + " " + file.name + ".");
     };
     img.src = URL.createObjectURL(file);
 });

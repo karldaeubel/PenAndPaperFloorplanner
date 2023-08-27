@@ -18,14 +18,50 @@ const loc = {
             de: "Wilkommen zum Pen And Paper Floorplanner. Einem einfachen 2D Raumplaner ohne Schnickschnack und ohne Registrierung, direkt im Browser."
         },
         intro: {
-            en: "This tool is designed to create floor plans and arrange furniture into created rooms.",
-            de: "Mit Hilfe dieser Anwendung können Grundrisse erstellt und mit Möbeln eingerichtet werden."
+            en: "This tool is designed to import/create floor plans and arrange furniture into created rooms.",
+            de: "Mit Hilfe dieser Anwendung können Grundrisse importiert/erstellt und mit Möbeln eingerichtet werden."
         },
         explanation: {
-            en: "There are two modes to choose from. The room mode lets you create a floor plan and the furniture mode can be used to decorate the created rooms.",
-            de: "Es gibt zwei Modi zwischen denen man wählen kann. " +
-                "Zum einen der Raum-Modus: Hier können Grundrisse erstellen werden. " +
-                "Und zum anderen der Möbel-Modus: Hier können die erstellten Grundrisse eingerichtet werden."
+            en: "There are four modes to choose from.\n" +
+                "Floorplan-Mode: Import an existing floorplan.\n" +
+                "Room-Mode: Create a floor plan from scratch.\n" +
+                "Furniture-Mode: Decorate created rooms.\n" +
+                "Display-Mode: Visual overview of the current progress.\n\n" +
+                "At the bottom of the right menu the following actions can be performed.\n" +
+                "Save: Save the entire project.\n" +
+                "Load: Load a saved project.\n" +
+                "Export: Export the current view to an image.\n" +
+                "Print: Print the current view.",
+            de: "Es gibt vier Modi zwischen denen man wählen kann.\n" +
+                "Grundriss-Modus: Importiere existierende Grundrisse.\n" +
+                "Raum-Modus: Grundrisse erstellen.\n" +
+                "Möbel-Modus: Richte erstellte Grundrisse ein.\n" +
+                "Vorschau-Modus: Betrachte den bisher gemachten Fortschritt.\n\n" +
+                "Am unteren Rand des rechten Menüs sind folgende Aktionen möglich:\n" +
+                "Speichern: Ein komplettes Projekt speichern.\n" +
+                "Laden: Ein gespeichertes Projekt laden.\n" +
+                "Export: Exportiere die aktuelle Ansicht als Bild.\n" +
+                "Drucken: Drucke die aktuelle Ansicht."
+        },
+        introFloorplan: {
+            en: "Floorplan-Mode:",
+            de: "Grundriss-Modus:"
+        },
+        explanationFloorplan: {
+            en: "In this mode an existing floorplan can be imported. Currently only image-files are supported (that means in particular that pdf files do not work). " +
+                "After the floorplan is loaded using the corresponding button on the right, the scaling of the floorplan has to be adjusted. " +
+                "This can be achieved by using the provided link (two half-circles connected by a line). " +
+                "First, move the corners of the link to a known distance in the floorplan (e.g. the length of a wall of known length or a provided scale). " +
+                "Second, adjust the length of the link in the right menu to the known distance. " +
+                "Afterwards the mode can be switched and the floorplan in the correct scale is displayed. " +
+                "The floorplan can also be removed in the right menu if needed.",
+            de: "In diesem Modus können existierende Grundrisse importiert werden. Aktuell sind lediglich Bilddateien unterstützt (das bedeutet insbesondere, dass keine pdf Dateien funktionieren). " +
+                "Nachdem der Grundriss importiert wurde, indem der entsprechende Knopf im rechten Menü geklickt wurde, muss die Skalierung angepasst werden. " +
+                "Das kann mit der gegebenen Strecke (zwei verbundene Halbkreise) erreicht werden. " +
+                "Zuerst müssen die Endpunkte der Strecke auf eine bekannten Abstand auf dem Grundriss verschoben werden (zum Beispiel einer bekannten Wandlänge oder einer Skala). " +
+                "Danach muss die Länge der Strecke auf den bekannten Abstand im rechten Menü eingestellt werden. " +
+                "Anschließend kann der Modus gewechselt werden und der Grundriss wird im korreten Maßstab angezeigt. " +
+                "Der Grundriss kann bei Bedarf gelöscht werden."
         },
         introRoom: {
             en: "Room-Mode:",
@@ -79,9 +115,17 @@ const loc = {
                 "Möbel können rotiert werden indem man in den kleinen Kreis innerhalb jedes Möbelstücks klickt. " +
                 "Möbelstücke die man in der Mülltonne ablegt, der rote Bereich am oberen rechten Bildschirmrand, werden gelöscht. "
         },
+        introDisplay: {
+            en: "Display-Mode:",
+            de: "Vorschau-Modus:"
+        },
+        explanationDisplay: {
+            en: "In this mode unused visual clutter is removed to provide a clean presentation of the created floorplan.",
+            de: "In diesem Modus werden unnötige Elemente der Anzeige entfernt um eine saubere Präsentation des erstellten Grundrisses anzuzeigen."
+        },
         creator: {
-            en: "Created by: Karl Däubel",
-            de: "Author: Karl Däubel"
+            en: "Created by: Karl Däubel and Denny Korsukéwitz",
+            de: "Author: Karl Däubel and Denny Korsukéwitz"
         }
     },
     fileIO: {
@@ -134,8 +178,8 @@ const loc = {
             de: "Grundriss Laden"
         },
         clearButton: {
-            en: "Clear",
-            de: "Löschen"
+            en: "Clear Floorplan",
+            de: "Grudriss Löschen"
         }
     },
     room: {
@@ -252,8 +296,8 @@ const loc = {
     },
     presentation: {
         category: {
-            en: "Presentation",
-            de: "Präsentation"
+            en: "Display",
+            de: "Vorschau"
         },
         help: {
             en: "File Utilities On The Right.",
@@ -261,11 +305,11 @@ const loc = {
         },
         option: {
             head: {
-                en: "Options",
-                de: "Optionen"
+                en: "Global Options",
+                de: "Globale Einstellungen"
             },
             shwoEdgeLabel: {
-                en: "Show wall length",
+                en: "Show Wall Length",
                 de: "Zeige Wandlänge"
             }
         },

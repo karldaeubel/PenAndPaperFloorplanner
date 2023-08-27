@@ -36,55 +36,35 @@ var FurnitureType;
 ;
 ;
 ;
+class Projection {
+    scale;
+    p;
+    drag;
+    delta;
+    constructor(scale) {
+        this.scale = scale;
+        this.p = { x: 0, y: 0 };
+        this.drag = false;
+        this.delta = { x: 0, y: 0 };
+    }
+    to(q) {
+        return {
+            x: (q.x - this.p.x) / this.scale,
+            y: (q.y - this.p.y) / this.scale
+        };
+    }
+    ;
+    from(q) {
+        return {
+            x: this.p.x + q.x * this.scale,
+            y: this.p.y + q.y * this.scale
+        };
+    }
+    ;
+}
 ;
-const projection = {
-    scale: 0.1,
-    p: {
-        x: 0,
-        y: 0
-    },
-    drag: false,
-    delta: {
-        x: 0,
-        y: 0
-    },
-    to: function (q) {
-        return {
-            x: (q.x - this.p.x) / this.scale,
-            y: (q.y - this.p.y) / this.scale
-        };
-    },
-    from: function (q) {
-        return {
-            x: this.p.x + q.x * this.scale,
-            y: this.p.y + q.y * this.scale
-        };
-    }
-};
-const floorplanProjection = {
-    scale: 1,
-    p: {
-        x: 0,
-        y: 0
-    },
-    drag: false,
-    delta: {
-        x: 0,
-        y: 0
-    },
-    to: function (q) {
-        return {
-            x: (q.x - this.p.x) / this.scale,
-            y: (q.y - this.p.y) / this.scale
-        };
-    },
-    from: function (q) {
-        return {
-            x: this.p.x + q.x * this.scale,
-            y: this.p.y + q.y * this.scale
-        };
-    }
-};
+const projection = new Projection(0.1);
+const floorplanProjection = new Projection(1);
 ;
 const settings = {
     language: "en",

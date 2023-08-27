@@ -29,6 +29,9 @@ function drawMain() {
         // global properties
         restoreDefaultContext();
         floorplanImage.draw();
+        if (floorplanImage.image === null) {
+            drawHelp();
+        }
         return;
     }
     ctx.translate(projection.p.x, projection.p.y);
@@ -64,8 +67,9 @@ function drawMain() {
     }
 }
 function drawHelp() {
-    const ul = { x: -projection.p.x / projection.scale, y: -projection.p.y / projection.scale };
-    const br = projection.to({ x: canvas.width, y: canvas.height });
+    const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+    const ul = { x: -proj.p.x / proj.scale, y: -proj.p.y / proj.scale };
+    const br = proj.to({ x: canvas.width, y: canvas.height });
     ctx.fillStyle = "gray";
     setFontSize(40, false);
     ctx.beginPath();

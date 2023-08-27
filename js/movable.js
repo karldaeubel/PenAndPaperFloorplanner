@@ -1,5 +1,4 @@
 "use strict";
-// A movable is an abstract object that can be translated and rotated on the canvas
 class Movable {
     type;
     delta;
@@ -73,7 +72,6 @@ function mouseUpForMovables(movables) {
         }
     }
 }
-// An openable is a door or window, it can be moved and rotated
 class Openable extends Movable {
     openableType;
     p;
@@ -323,7 +321,7 @@ class Openable extends Movable {
         return { mov: super.movableToJSON(), openableType: this.openableType, p: this.p, dim: this.dim, angle: this.angle, snap: this.snap };
     }
 }
-// A generalized rectangle with multiple segments of different dimensions, it can be moved and rotated
+;
 class Rectangle extends Movable {
     name;
     p;
@@ -501,7 +499,6 @@ class Rectangle extends Movable {
         return { mov: super.movableToJSON(), name: this.name, p: this.p, dims: this.dims, angle: this.angle };
     }
 }
-// A circle, it can be moved and rotated
 class Circle extends Movable {
     name;
     c;
@@ -582,7 +579,6 @@ class Circle extends Movable {
         return { mov: super.movableToJSON(), name: this.name, c: this.c, r: this.r };
     }
 }
-// An ellipse, it can be moved and rotated
 class Ellipse extends Movable {
     name;
     c;

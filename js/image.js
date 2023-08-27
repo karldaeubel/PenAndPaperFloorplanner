@@ -91,4 +91,22 @@ const floorplanImage = {
         ctx.fill();
         restoreDefaultContext();
     },
+    toJSON: function () {
+        if (this.image !== null) {
+            const tmpCanvas = document.createElement('canvas');
+            const tmpCtx = tmpCanvas.getContext('2d');
+            tmpCanvas.style.display = "none";
+            tmpCanvas.height = this.image.naturalHeight;
+            tmpCanvas.width = this.image.naturalWidth;
+            tmpCtx.drawImage(this.image, 0, 0);
+            const dataURL = tmpCanvas.toDataURL();
+            return {
+                image: dataURL,
+                distance: this.distance,
+                node1: this.node1,
+                node2: this.node2,
+            };
+        }
+        return {};
+    }
 };

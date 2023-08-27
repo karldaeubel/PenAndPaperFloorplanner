@@ -1,40 +1,40 @@
 "use strict";
-function loadOpenable(mov, graph) {
-    const newOpenable = new Openable(mov.openableType, mov.p.x, mov.p.y, mov.dim.w, mov.dim.h);
-    newOpenable.angle = mov.angle;
-    newOpenable.snap.pos = mov.snap.pos;
-    newOpenable.snap.orientation = mov.snap.orientation;
-    if (mov.snap.edge) {
-        newOpenable.snap.edge = graph.edges[mov.snap.edge.id1][mov.snap.edge.id2];
+function loadOpenable(openable, graph) {
+    const newOpenable = new Openable(openable.openableType, openable.p.x, openable.p.y, openable.dim.w, openable.dim.h);
+    newOpenable.angle = openable.angle;
+    newOpenable.snap.pos = openable.snap.pos;
+    newOpenable.snap.orientation = openable.snap.orientation;
+    if (openable.snap.edge) {
+        newOpenable.snap.edge = graph.edges[openable.snap.edge.id1][openable.snap.edge.id2];
         newOpenable.snap.edge.snapOpenables.push(newOpenable);
     }
-    newOpenable.stroke = mov.mov.stroke;
-    newOpenable.fill = mov.mov.fill;
+    newOpenable.stroke = openable.mov.stroke;
+    newOpenable.fill = openable.mov.fill;
     return newOpenable;
 }
-function loadCircle(mov) {
-    const newCircle = new Circle(mov.name, mov.c.x, mov.c.y, mov.r);
-    newCircle.stroke = mov.mov.stroke;
-    newCircle.fill = mov.mov.fill;
+function loadCircle(circle) {
+    const newCircle = new Circle(circle.name, circle.c.x, circle.c.y, circle.r);
+    newCircle.stroke = circle.mov.stroke;
+    newCircle.fill = circle.mov.fill;
     return newCircle;
 }
-function loadEllipse(mov) {
-    const newEllipse = new Ellipse(mov.name, mov.c.x, mov.c.y, mov.rX, mov.rY);
-    newEllipse.stroke = mov.mov.stroke;
-    newEllipse.fill = mov.mov.fill;
-    newEllipse.angle = mov.angle;
+function loadEllipse(ellipse) {
+    const newEllipse = new Ellipse(ellipse.name, ellipse.c.x, ellipse.c.y, ellipse.rX, ellipse.rY);
+    newEllipse.stroke = ellipse.mov.stroke;
+    newEllipse.fill = ellipse.mov.fill;
+    newEllipse.angle = ellipse.angle;
     return newEllipse;
 }
-function loadRectangle(mov) {
-    const newFur = new Rectangle(mov.name, mov.mov.type, mov.p.x, mov.p.y, 100, 100);
-    newFur.dims = mov.dims;
-    newFur.angle = mov.angle;
-    newFur.stroke = mov.mov.stroke;
-    newFur.fill = mov.mov.fill;
+function loadRectangle(rect) {
+    const newFur = new Rectangle(rect.name, rect.mov.type, rect.p.x, rect.p.y, 100, 100);
+    newFur.dims = rect.dims;
+    newFur.angle = rect.angle;
+    newFur.stroke = rect.mov.stroke;
+    newFur.fill = rect.mov.fill;
     return newFur;
 }
 function createState() {
-    return JSON.stringify({ graph, labels, openables, furniture }, null, "");
+    return JSON.stringify({ graph, labels, openables, furniture, floorplanImage }, null, "");
 }
 function setState() {
     state = createState();
@@ -62,6 +62,7 @@ document.getElementById("loadInput").addEventListener("change", (e) => {
         labels.length = 0;
         openables.length = 0;
         furniture.length = 0;
+        floorplanImage.reset();
         if (floorPlanner.graph) {
             graph.count = floorPlanner.graph.count;
             for (const id in floorPlanner.graph.nodes) {
@@ -104,6 +105,25 @@ document.getElementById("loadInput").addEventListener("change", (e) => {
                     }
                 }
             }
+        }
+        if (floorPlanner.floorplanImage && floorPlanner.floorplanImage.image) {
+            const floorplanImageJson = floorPlanner.floorplanImage;
+            const img = new Image();
+            img.onload = (onLoadResult) => {
+                const image = onLoadResult.target;
+                floorplanImage.image = image;
+                setState();
+                drawMain();
+            };
+            img.onerror = () => {
+                alert(getText(loc.fileIO.errorAtFile) + ".");
+            };
+            img.src = floorplanImageJson.image;
+            floorplanImage.distance = floorplanImageJson.distance;
+            const node1 = floorplanImageJson.node1;
+            floorplanImage.node1 = new CornerNode(node1.id, node1.p.x, node1.p.y);
+            const node2 = floorplanImageJson.node2;
+            floorplanImage.node2 = new CornerNode(node2.id, node2.p.x, node2.p.y);
         }
         setState();
         drawMain();
@@ -155,9 +175,13 @@ document.getElementById("helpButton").addEventListener("click", () => {
     alert(getText(loc.help.welcome) + "\n\n" +
         getText(loc.help.intro) + "\n\n" +
         getText(loc.help.explanation) + "\n\n" +
+        getText(loc.help.introFloorplan) + "\n" +
+        getText(loc.help.explanationFloorplan) + "\n\n" +
         getText(loc.help.introRoom) + "\n" +
         getText(loc.help.explanationRoom) + "\n\n" +
         getText(loc.help.introFurniture) + "\n" +
         getText(loc.help.explanationFurniture) + "\n\n" +
+        getText(loc.help.introDisplay) + "\n" +
+        getText(loc.help.explanationDisplay) + "\n\n" +
         getText(loc.help.creator) + "\n\n");
 });

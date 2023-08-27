@@ -15,7 +15,7 @@ function restoreDefaultContext() {
     ctx.strokeStyle = "black";
 }
 
-function willRemove(p: Point) {
+function willRemove(p: Point): boolean {
     return p.x >= canvas.width - settings.deleteDim.w && p.x <= canvas.width && p.y >= 0 && p.y <= settings.deleteDim.h;
 }
 
@@ -36,6 +36,10 @@ function drawMain() {
         restoreDefaultContext();
 
         floorplanImage.draw();
+
+        if (floorplanImage.image === null) {
+            drawHelp();
+        }
 
         return;
     }
@@ -80,8 +84,9 @@ function drawMain() {
 }
 
 function drawHelp() {
-    const ul = { x: -projection.p.x / projection.scale, y: -projection.p.y / projection.scale };
-    const br = projection.to({ x: canvas.width, y: canvas.height });
+    const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+    const ul = { x: -proj.p.x / proj.scale, y: -proj.p.y / proj.scale };
+    const br = proj.to({ x: canvas.width, y: canvas.height });
 
     ctx.fillStyle = "gray";
     setFontSize(40, false);
