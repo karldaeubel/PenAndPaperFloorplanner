@@ -1,42 +1,42 @@
-function loadOpenable(mov: Openable & { mov: Movable }, graph: Graph): Openable {
-    const newOpenable = new Openable(mov.openableType, mov.p.x, mov.p.y, mov.dim.w, mov.dim.h);
-    newOpenable.angle = mov.angle;
+function loadOpenable(openable: OpenableJSON, graph: Graph): Openable {
+    const newOpenable = new Openable(openable.openableType, openable.p.x, openable.p.y, openable.dim.w, openable.dim.h);
+    newOpenable.angle = openable.angle;
 
-    newOpenable.snap.pos = mov.snap.pos;
-    newOpenable.snap.orientation = mov.snap.orientation;
-    if (mov.snap.edge) {
-        newOpenable.snap.edge = graph.edges[mov.snap.edge.id1]![mov.snap.edge.id2]!;
+    newOpenable.snap.pos = openable.snap.pos;
+    newOpenable.snap.orientation = openable.snap.orientation;
+    if (openable.snap.edge) {
+        newOpenable.snap.edge = graph.edges[openable.snap.edge.id1]![openable.snap.edge.id2]!;
         newOpenable.snap.edge.snapOpenables.push(newOpenable);
     }
 
-    newOpenable.stroke = mov.mov.stroke;
-    newOpenable.fill = mov.mov.fill;
+    newOpenable.stroke = openable.mov.stroke;
+    newOpenable.fill = openable.mov.fill;
     return newOpenable;
 }
-function loadCircle(mov: Circle & { mov: Movable }): Circle {
-    const newCircle = new Circle(mov.name, mov.c.x, mov.c.y, mov.r);
-    newCircle.stroke = mov.mov.stroke;
-    newCircle.fill = mov.mov.fill;
+function loadCircle(circle: CircleJSON): Circle {
+    const newCircle = new Circle(circle.name, circle.c.x, circle.c.y, circle.r);
+    newCircle.stroke = circle.mov.stroke;
+    newCircle.fill = circle.mov.fill;
     return newCircle;
 }
-function loadEllipse(mov: Ellipse & { mov: Movable }): Ellipse {
-    const newEllipse = new Ellipse(mov.name, mov.c.x, mov.c.y, mov.rX, mov.rY);
-    newEllipse.stroke = mov.mov.stroke;
-    newEllipse.fill = mov.mov.fill;
-    newEllipse.angle = mov.angle;
+function loadEllipse(ellipse: EllipseJSON): Ellipse {
+    const newEllipse = new Ellipse(ellipse.name, ellipse.c.x, ellipse.c.y, ellipse.rX, ellipse.rY);
+    newEllipse.stroke = ellipse.mov.stroke;
+    newEllipse.fill = ellipse.mov.fill;
+    newEllipse.angle = ellipse.angle;
     return newEllipse;
 }
-function loadRectangle(mov: Rectangle & { mov: Movable }): Rectangle {
-    const newFur = new Rectangle(mov.name, mov.mov.type, mov.p.x, mov.p.y, 100, 100);
-    newFur.dims = mov.dims;
-    newFur.angle = mov.angle;
-    newFur.stroke = mov.mov.stroke;
-    newFur.fill = mov.mov.fill;
+function loadRectangle(rect: RectangleJSON): Rectangle {
+    const newFur = new Rectangle(rect.name, rect.mov.type, rect.p.x, rect.p.y, 100, 100);
+    newFur.dims = rect.dims;
+    newFur.angle = rect.angle;
+    newFur.stroke = rect.mov.stroke;
+    newFur.fill = rect.mov.fill;
     return newFur;
 }
 
 function createState(): string {
-    return JSON.stringify({ graph, labels, openables, furniture }, null, "");
+    return JSON.stringify({ graph, labels, openables, furniture, floorplanImage }, null, "");
 }
 function setState() {
     state = createState();
@@ -68,17 +68,18 @@ document.getElementById("loadInput")!.addEventListener("change", (e: Event) => {
         labels.length = 0;
         openables.length = 0;
         furniture.length = 0;
+        floorplanImage.reset();
 
         if (floorPlanner.graph) {
             graph.count = floorPlanner.graph.count;
             for (const id in floorPlanner.graph.nodes) {
-                const node = floorPlanner.graph.nodes[id];
+                const node = floorPlanner.graph.nodes[id] as CornerJSON;
                 graph.nodes[node.id] = new CornerNode(node.id, node.p.x, node.p.y);
             }
 
             for (const i in floorPlanner.graph.edges) {
                 for (const j in floorPlanner.graph.edges[i]) {
-                    const edge = floorPlanner.graph.edges[i][j];
+                    const edge = floorPlanner.graph.edges[i][j] as EdgeJSON;
                     graph.addEdge(edge.id1, edge.id2);
                 }
             }
@@ -86,13 +87,13 @@ document.getElementById("loadInput")!.addEventListener("change", (e: Event) => {
 
         if (floorPlanner.labels) {
             for (const label of floorPlanner.labels) {
-                labels.push(loadRectangle(label));
+                labels.push(loadRectangle(label as RectangleJSON));
             }
         }
 
         if (floorPlanner.openables) {
             for (const openable of floorPlanner.openables) {
-                openables.push(loadOpenable(openable, graph));
+                openables.push(loadOpenable(openable as OpenableJSON, graph));
             }
         }
 
@@ -100,21 +101,45 @@ document.getElementById("loadInput")!.addEventListener("change", (e: Event) => {
             for (const fur of floorPlanner.furniture) {
                 switch (fur.mov.type) {
                     case MovableType.Circle: {
-                        furniture.push(loadCircle(fur));
+                        furniture.push(loadCircle(fur as CircleJSON));
                         break;
                     }
                     case MovableType.Ellipse: {
-                        furniture.push(loadEllipse(fur));
+                        furniture.push(loadEllipse(fur as EllipseJSON));
                         break;
                     }
                     case MovableType.Rectangle:
                     case MovableType.L:
                     case MovableType.U: {
-                        furniture.push(loadRectangle(fur));
+                        furniture.push(loadRectangle(fur as RectangleJSON));
                         break;
                     }
                 }
             }
+        }
+
+        if (floorPlanner.floorplanImage && floorPlanner.floorplanImage.image) {
+            const floorplanImageJson = floorPlanner.floorplanImage as FloorplanImageJSON;
+            const img = new Image();
+            img.onload = (onLoadResult) => {
+                const image = onLoadResult.target as HTMLImageElement;
+                floorplanImage.image = image;
+
+                setState();
+                drawMain();
+            };
+            img.onerror = () => {
+                alert(getText(loc.fileIO.errorAtFile) + ".");
+            };
+            img.src = floorplanImageJson.image;
+
+            floorplanImage.distance = floorplanImageJson.distance;
+
+            const node1 = floorplanImageJson.node1;
+            floorplanImage.node1 = new CornerNode(node1.id, node1.p.x, node1.p.y);
+
+            const node2 = floorplanImageJson.node2;
+            floorplanImage.node2 = new CornerNode(node2.id, node2.p.x, node2.p.y);
         }
 
         setState();
@@ -126,7 +151,7 @@ document.getElementById("loadInput")!.addEventListener("change", (e: Event) => {
 document.getElementById("saveButton")!.addEventListener("click", () => {
     const pom = document.createElement("a");
     pom.setAttribute("href", "data:text/plain;charset=utf-8," +
-        encodeURIComponent(JSON.stringify({ graph, labels, openables, furniture }, null, " ")));
+        encodeURIComponent(JSON.stringify({ graph, labels, openables, furniture, floorplanImage }, null, " ")));
 
     pom.setAttribute("download", "house.json");
 
@@ -185,9 +210,18 @@ document.getElementById("helpButton")!.addEventListener("click", () => {
         getText(loc.help.welcome) + "\n\n" +
         getText(loc.help.intro) + "\n\n" +
         getText(loc.help.explanation) + "\n\n" +
+
+        getText(loc.help.introFloorplan) + "\n" +
+        getText(loc.help.explanationFloorplan) + "\n\n" +
+
         getText(loc.help.introRoom) + "\n" +
         getText(loc.help.explanationRoom) + "\n\n" +
+
         getText(loc.help.introFurniture) + "\n" +
         getText(loc.help.explanationFurniture) + "\n\n" +
+
+        getText(loc.help.introDisplay) + "\n" +
+        getText(loc.help.explanationDisplay) + "\n\n" +
+
         getText(loc.help.creator) + "\n\n");
 });

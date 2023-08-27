@@ -3,9 +3,10 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 var Mode;
 (function (Mode) {
-    Mode[Mode["Room"] = 0] = "Room";
-    Mode[Mode["Furniture"] = 1] = "Furniture";
-    Mode[Mode["Presentation"] = 2] = "Presentation";
+    Mode[Mode["Floorplan"] = 0] = "Floorplan";
+    Mode[Mode["Room"] = 1] = "Room";
+    Mode[Mode["Furniture"] = 2] = "Furniture";
+    Mode[Mode["Presentation"] = 3] = "Presentation";
 })(Mode || (Mode = {}));
 ;
 var MovableType;
@@ -35,31 +36,35 @@ var FurnitureType;
 ;
 ;
 ;
-;
-const projection = {
-    scale: 0.1,
-    p: {
-        x: 0,
-        y: 0
-    },
-    drag: false,
-    delta: {
-        x: 0,
-        y: 0
-    },
-    to: function (q) {
+class Projection {
+    scale;
+    p;
+    drag;
+    delta;
+    constructor(scale) {
+        this.scale = scale;
+        this.p = { x: 0, y: 0 };
+        this.drag = false;
+        this.delta = { x: 0, y: 0 };
+    }
+    to(q) {
         return {
             x: (q.x - this.p.x) / this.scale,
             y: (q.y - this.p.y) / this.scale
         };
-    },
-    from: function (q) {
+    }
+    ;
+    from(q) {
         return {
             x: this.p.x + q.x * this.scale,
             y: this.p.y + q.y * this.scale
         };
     }
-};
+    ;
+}
+;
+const projection = new Projection(0.1);
+const floorplanProjection = new Projection(1);
 ;
 const settings = {
     language: "en",

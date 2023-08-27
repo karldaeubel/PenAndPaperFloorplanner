@@ -2,6 +2,7 @@ const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanva
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
 enum Mode {
+    Floorplan,
     Room,
     Furniture,
     Presentation,
@@ -38,38 +39,34 @@ interface Dim {
     h: number,
 };
 
-interface Projection {
-    scale: number,
-    p: Point,
-    drag: boolean,
-    delta: Point,
-    readonly to: (q: Point) => Point,
-    readonly from: (q: Point) => Point,
-};
-const projection: Projection = {
-    scale: 0.1,
-    p: {
-        x: 0,
-        y: 0
-    },
-    drag: false,
-    delta: {
-        x: 0,
-        y: 0
-    },
-    to: function (q) {
+class Projection {
+    scale: number;
+    p: Point;
+    drag: boolean;
+    delta: Point;
+
+    constructor(scale: number) {
+        this.scale = scale;
+        this.p = { x: 0, y: 0 };
+        this.drag = false;
+        this.delta = { x: 0, y: 0 };
+    }
+    to(q: Point): Point {
         return {
             x: (q.x - this.p.x) / this.scale,
             y: (q.y - this.p.y) / this.scale
         };
-    },
-    from: function (q) {
+    };
+    from(q: Point): Point {
         return {
             x: this.p.x + q.x * this.scale,
             y: this.p.y + q.y * this.scale
         };
-    }
+    };
 };
+
+const projection = new Projection(0.1);
+const floorplanProjection = new Projection(1);
 
 interface Settings {
     language: string,

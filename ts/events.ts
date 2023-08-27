@@ -12,6 +12,7 @@ function resetElements(type: string) {
 }
 
 // room or furniture mode
+document.getElementById("floorplanButton")!.addEventListener("click", changeToFloorplanMode);
 document.getElementById("roomButton")!.addEventListener("click", changeToRoomMode);
 document.getElementById("furnitureButton")!.addEventListener("click", changeToFurnitureMode);
 document.getElementById("presentationButton")!.addEventListener("click", changeToPresentationMode);
@@ -22,6 +23,10 @@ function changeMode(e: MouseEvent, mode: Mode) {
     settings.mode = mode;
 
     switch (mode) {
+        case Mode.Floorplan: {
+            document.getElementById("floorplanTab")!.style.display = "block";
+            break;
+        }
         case Mode.Room: {
             document.getElementById("roomTab")!.style.display = "block";
             break;
@@ -40,6 +45,7 @@ function changeMode(e: MouseEvent, mode: Mode) {
     drawMain();
 }
 
+function changeToFloorplanMode(e: MouseEvent) { changeMode(e, Mode.Floorplan); }
 function changeToRoomMode(e: MouseEvent) { changeMode(e, Mode.Room); }
 function changeToFurnitureMode(e: MouseEvent) { changeMode(e, Mode.Furniture); }
 function changeToPresentationMode(e: MouseEvent) { changeMode(e, Mode.Presentation); }
@@ -109,6 +115,46 @@ function validNumericInput(...values: number[]) {
     }
     return true;
 }
+
+// Floorplan Mode
+
+document.getElementById("distanceInput")!.addEventListener("input", (e) => {
+    const dist = (e.target as HTMLInputElement).valueAsNumber;
+
+    if (!validNumericInput(dist)) {
+        alert(getText(loc.floorplan.option.inputError));
+        return;
+    }
+    floorplanImage.distance = dist;
+
+    drawMain();
+});
+
+document.getElementById("loadFloorplan")!.addEventListener("change", (e: Event) => {
+    const files = (e.target as HTMLInputElement).files;
+    const file = files?.item(0);
+
+    if (!file) {
+        return;
+    }
+
+    let img = new Image();
+    img.onload = (onLoadResult) => {
+        const image = onLoadResult.target as HTMLImageElement;
+        floorplanImage.image = image;
+        drawMain();
+    };
+    img.onerror = () => {
+        alert(getText(loc.fileIO.errorAtFile) + " " + file.name + ".");
+    };
+    img.src = URL.createObjectURL(file);
+});
+
+document.getElementById("clearFloorplanButton")!.addEventListener("click", () => {
+    floorplanImage.reset();
+
+    drawMain();
+});
 
 // Room Mode
 

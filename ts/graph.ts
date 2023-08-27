@@ -1,4 +1,5 @@
 type CornerSnap = { x: optionalNumber, y: optionalNumber, edge: Edge | null, pos: optionalNumber };
+type CornerJSON = { id: number, p: Point };
 class CornerNode {
     id: number;
     p: Point;
@@ -29,11 +30,12 @@ class CornerNode {
         this.remove = false;
     }
 
-    toJSON() {
+    toJSON(): CornerJSON {
         return { id: this.id, p: this.p };
     }
 }
 
+type EdgeJSON = { id1: number, id2: number, stroke: string };
 class Edge {
     id1: number;
     id2: number;
@@ -45,7 +47,7 @@ class Edge {
         this.stroke = "black";
         this.snapOpenables = [];
     }
-    toJSON() {
+    toJSON(): EdgeJSON {
         return { id1: this.id1, id2: this.id2, stroke: this.stroke };
     }
 }
