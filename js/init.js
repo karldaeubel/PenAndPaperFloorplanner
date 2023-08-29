@@ -30,6 +30,23 @@ function resetEdgeLabelCheckBox() {
     settings.showEdgeLabels = false;
     document.getElementById("edgeLabelCheckbox").checked = false;
 }
+function addElem(parent, type, text = null) {
+    const elem = document.createElement(type);
+    if (text !== null) {
+        elem.textContent = getText(text);
+    }
+    parent.appendChild(elem);
+    return elem;
+}
+function addListEntry(parent, type, head, short) {
+    const elem = document.createElement(type);
+    const headElem = document.createElement("b");
+    headElem.textContent = getText(head) + ": ";
+    const shortElem = document.createTextNode(getText(short));
+    elem.appendChild(headElem);
+    elem.appendChild(shortElem);
+    parent.appendChild(elem);
+}
 function setButtonContent() {
     // floorplan
     document.getElementById("floorplanButton").textContent = getText(loc.floorplan.category);
@@ -76,7 +93,34 @@ function setButtonContent() {
     document.getElementById("loadButton").textContent = getText(loc.fileIO.loadButton);
     document.getElementById("exportButton").textContent = getText(loc.fileIO.exportButton);
     document.getElementById("printButton").textContent = getText(loc.fileIO.printButton);
-    document.getElementById("helpButton").textContent = getText(loc.help.helpButton);
+    document.getElementById("helpOpen").textContent = getText(loc.help.helpOpen);
+    // help
+    const helpText = document.getElementById("helpText");
+    addElem(helpText, "h2", loc.help.welcome);
+    addElem(helpText, "p", loc.help.intro);
+    addElem(helpText, "p", loc.help.explanationMode);
+    const modeList = addElem(helpText, "ul");
+    addListEntry(modeList, "li", loc.help.introFloorplan, loc.help.shortFloorplan);
+    addListEntry(modeList, "li", loc.help.introRoom, loc.help.shortRoom);
+    addListEntry(modeList, "li", loc.help.introFurniture, loc.help.shortFurniture);
+    addListEntry(modeList, "li", loc.help.introDisplay, loc.help.shortDisplay);
+    addElem(helpText, "p", loc.help.explanationUtil);
+    const utilList = addElem(helpText, "ul");
+    addListEntry(utilList, "li", loc.fileIO.saveButton, loc.fileIO.saveShort);
+    addListEntry(utilList, "li", loc.fileIO.loadButton, loc.fileIO.loadShort);
+    addListEntry(utilList, "li", loc.fileIO.exportButton, loc.fileIO.exportShort);
+    addListEntry(utilList, "li", loc.fileIO.printButton, loc.fileIO.printShort);
+    addElem(helpText, "h3", loc.help.introFloorplan);
+    addElem(helpText, "p", loc.help.explanationFloorplan);
+    addElem(helpText, "h3", loc.help.introRoom);
+    addElem(helpText, "p", loc.help.explanationRoom);
+    addElem(helpText, "h3", loc.help.introFurniture);
+    addElem(helpText, "p", loc.help.explanationFurniture);
+    addElem(helpText, "h3", loc.help.introDisplay);
+    addElem(helpText, "p", loc.help.explanationDisplay);
+    const creatorElem = addElem(helpText, "p");
+    addElem(creatorElem, "b", loc.help.creator);
+    document.getElementById("helpClose").textContent = getText(loc.help.helpClose);
 }
 window.addEventListener("resize", setSize);
 function setSize() {

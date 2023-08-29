@@ -171,17 +171,11 @@ document.getElementById("printButton").addEventListener("click", () => {
         }, true);
     }
 });
-document.getElementById("helpButton").addEventListener("click", () => {
-    alert(getText(loc.help.welcome) + "\n\n" +
-        getText(loc.help.intro) + "\n\n" +
-        getText(loc.help.explanation) + "\n\n" +
-        getText(loc.help.introFloorplan) + "\n" +
-        getText(loc.help.explanationFloorplan) + "\n\n" +
-        getText(loc.help.introRoom) + "\n" +
-        getText(loc.help.explanationRoom) + "\n\n" +
-        getText(loc.help.introFurniture) + "\n" +
-        getText(loc.help.explanationFurniture) + "\n\n" +
-        getText(loc.help.introDisplay) + "\n" +
-        getText(loc.help.explanationDisplay) + "\n\n" +
-        getText(loc.help.creator) + "\n\n");
+document.getElementById("helpOpen").addEventListener("click", () => {
+    const helpDialog = document.getElementById("helpDialog");
+    helpDialog.showModal();
+});
+document.getElementById("helpClose").addEventListener("click", () => {
+    const helpDialog = document.getElementById("helpDialog");
+    helpDialog.close();
 });

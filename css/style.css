@@ -151,6 +151,10 @@ button.active {
     align-items: center;
 }
 
+.h100pc {
+    height: 100%;
+}
+
 .w100pc {
     width: 100%;
 }
@@ -161,4 +165,19 @@ button.active {
 
 .w33pc {
     width: 33%;
+}
+
+#helpDialog {
+    border: 3px solid #4caf50;
+    width: 50%;
+    height: 90%;
+}
+
+#helpBox {
+    display: flex;
+    flex-direction: column;
+}
+
+#helpText {
+    overflow: auto;
 }
