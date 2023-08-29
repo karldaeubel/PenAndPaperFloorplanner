@@ -67,6 +67,10 @@ button.active {
     width: 100%;
 }
 
+#loadFloorplanButton {
+    padding: 2px 0;
+}
+
 .tab.mode {
     overflow: hidden;
     border: 1px solid #ccc;
@@ -119,6 +123,7 @@ button.active {
     outline: none;
     cursor: pointer;
     transition: 0.3s;
+    text-align: center;
 }
 
 .loadInputClass:hover {
