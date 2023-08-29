@@ -5,47 +5,41 @@ function getText(element) {
 }
 const loc = {
     help: {
-        helpButton: {
+        helpOpen: {
             en: "Help",
             de: "Hilfe"
+        },
+        helpClose: {
+            en: "Ok",
+            de: "Ok"
         },
         findHelp: {
             en: "More Help At The Bottom Right Corner.",
             de: "Mehr Hilfe am unteren rechten Rand."
         },
         welcome: {
-            en: "Welcome to the Pen And Paper Floorplanner. An easy to use 2D floorplanner webapp with no overhead or registration.",
-            de: "Wilkommen zum Pen And Paper Floorplanner. Einem einfachen 2D Raumplaner ohne Schnickschnack und ohne Registrierung, direkt im Browser."
+            en: "Welcome to the Pen And Paper Floorplanner.",
+            de: "Willkommen zum Pen And Paper Floorplanner."
         },
         intro: {
-            en: "This tool is designed to import/create floor plans and arrange furniture into created rooms.",
-            de: "Mit Hilfe dieser Anwendung können Grundrisse importiert/erstellt und mit Möbeln eingerichtet werden."
+            en: "The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no overhead or registration. This tool is designed to import/create floor plans and arrange furniture into created rooms.",
+            de: "Der Pen And Paper Floorplanner ist ein einfacher 2D Raumplaner ohne Schnickschnack und ohne Registrierung, direkt im Browser. Mit Hilfe dieser Anwendung können Grundrisse importiert/erstellt und mit Möbeln eingerichtet werden."
         },
-        explanation: {
-            en: "There are four modes to choose from.\n" +
-                "Floorplan-Mode: Import an existing floorplan.\n" +
-                "Room-Mode: Create a floor plan from scratch.\n" +
-                "Furniture-Mode: Decorate created rooms.\n" +
-                "Display-Mode: Visual overview of the current progress.\n\n" +
-                "At the bottom of the right menu the following actions can be performed.\n" +
-                "Save: Save the entire project.\n" +
-                "Load: Load a saved project.\n" +
-                "Export: Export the current view to an image.\n" +
-                "Print: Print the current view.",
-            de: "Es gibt vier Modi zwischen denen man wählen kann.\n" +
-                "Grundriss-Modus: Importiere existierende Grundrisse.\n" +
-                "Raum-Modus: Grundrisse erstellen.\n" +
-                "Möbel-Modus: Richte erstellte Grundrisse ein.\n" +
-                "Vorschau-Modus: Betrachte den bisher gemachten Fortschritt.\n\n" +
-                "Am unteren Rand des rechten Menüs sind folgende Aktionen möglich:\n" +
-                "Speichern: Ein komplettes Projekt speichern.\n" +
-                "Laden: Ein gespeichertes Projekt laden.\n" +
-                "Export: Exportiere die aktuelle Ansicht als Bild.\n" +
-                "Drucken: Drucke die aktuelle Ansicht."
+        explanationMode: {
+            en: "There are four modes to choose from:",
+            de: "Es gibt vier Modi zwischen denen man wählen kann:"
+        },
+        explanationUtil: {
+            en: "At the bottom of the right menu the following actions can be performed:",
+            de: "Am unteren Rand des rechten Menüs sind folgende Aktionen möglich:"
         },
         introFloorplan: {
-            en: "Floorplan-Mode:",
-            de: "Grundriss-Modus:"
+            en: "Floorplan-Mode",
+            de: "Grundriss-Modus"
+        },
+        shortFloorplan: {
+            en: "Import an existing floorplan.",
+            de: "Importiere existierende Grundrisse."
         },
         explanationFloorplan: {
             en: "In this mode an existing floorplan can be imported. Currently only image-files are supported (that means in particular that pdf files do not work). " +
@@ -64,8 +58,12 @@ const loc = {
                 "Der Grundriss kann bei Bedarf gelöscht werden."
         },
         introRoom: {
-            en: "Room-Mode:",
-            de: "Raum-Modus:"
+            en: "Room-Mode",
+            de: "Raum-Modus"
+        },
+        shortRoom: {
+            en: "Create a floor plan from scratch.",
+            de: "Grundrisse erstellen."
         },
         explanationRoom: {
             en: "The two main elements in this mode are corners and walls. " +
@@ -98,8 +96,12 @@ const loc = {
                 "Sie können an Wänden ausgerichtet werden und positionieren sich anschießend automatisch. Türen/Fenster können gelöscht werden indem diese in die Mülltonne verschoben werden. ",
         },
         introFurniture: {
-            en: "Furniture-Mode:",
-            de: "Möbel-Modus:"
+            en: "Furniture-Mode",
+            de: "Möbel-Modus"
+        },
+        shortFurniture: {
+            en: "Decorate created rooms.",
+            de: "Richte erstellte Grundrisse ein.",
         },
         explanationFurniture: {
             en: "In this mode furniture can be created, dragged and rotated. " +
@@ -116,8 +118,12 @@ const loc = {
                 "Möbelstücke die man in der Mülltonne ablegt, der rote Bereich am oberen rechten Bildschirmrand, werden gelöscht. "
         },
         introDisplay: {
-            en: "Display-Mode:",
-            de: "Vorschau-Modus:"
+            en: "Display-Mode",
+            de: "Vorschau-Modus"
+        },
+        shortDisplay: {
+            en: "Visual overview of the current progress.",
+            de: "Betrachte den bisher gemachten Fortschritt."
         },
         explanationDisplay: {
             en: "In this mode unused visual clutter is removed to provide a clean presentation of the created floorplan.",
@@ -125,7 +131,7 @@ const loc = {
         },
         creator: {
             en: "Created by: Karl Däubel and Denny Korsukéwitz",
-            de: "Author: Karl Däubel and Denny Korsukéwitz"
+            de: "Authoren: Karl Däubel and Denny Korsukéwitz"
         }
     },
     fileIO: {
@@ -133,17 +139,33 @@ const loc = {
             en: "Save",
             de: "Speichern"
         },
+        saveShort: {
+            en: "Save the entire project.",
+            de: "Ein komplettes Projekt speichern."
+        },
         loadButton: {
             en: "Load",
             de: "Laden"
+        },
+        loadShort: {
+            en: "Load a saved project.",
+            de: "Ein gespeichertes Projekt laden."
         },
         exportButton: {
             en: "Export",
             de: "Export",
         },
+        exportShort: {
+            en: "Export the current view to an image.",
+            de: "Exportiere die aktuelle Ansicht als Bild."
+        },
         printButton: {
             en: "Print",
             de: "Drucken"
+        },
+        printShort: {
+            en: "Print the current view.",
+            de: "Drucke die aktuelle Ansicht."
         },
         errorAtFile: {
             en: "There was an error while loading file:",
