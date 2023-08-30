@@ -15,6 +15,10 @@ document.getElementById("floorplanButton").addEventListener("click", changeToFlo
 document.getElementById("roomButton").addEventListener("click", changeToRoomMode);
 document.getElementById("furnitureButton").addEventListener("click", changeToFurnitureMode);
 document.getElementById("presentationButton").addEventListener("click", changeToPresentationMode);
+function clickFloorplan() { document.getElementById("floorplanButton").click(); }
+function clickRoom() { document.getElementById("roomButton").click(); }
+function clickFurniture() { document.getElementById("furnitureButton").click(); }
+function clickDisplay() { document.getElementById("presentationButton").click(); }
 function changeMode(e, mode) {
     resetElements("mode");
     settings.mode = mode;

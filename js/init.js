@@ -46,6 +46,13 @@ function addListEntry(parent, type, head, short) {
     elem.appendChild(headElem);
     elem.appendChild(shortElem);
     parent.appendChild(elem);
+    return headElem;
+}
+function addAttr(elem, attr) {
+    for (const [key, value] of Object.entries(attr)) {
+        elem.setAttribute(key, value);
+    }
+    return elem;
 }
 function setButtonContent() {
     // floorplan
@@ -100,26 +107,25 @@ function setButtonContent() {
     addElem(helpText, "p", loc.help.intro);
     addElem(helpText, "p", loc.help.explanationMode);
     const modeList = addElem(helpText, "ul");
-    addListEntry(modeList, "li", loc.help.introFloorplan, loc.help.shortFloorplan);
-    addListEntry(modeList, "li", loc.help.introRoom, loc.help.shortRoom);
-    addListEntry(modeList, "li", loc.help.introFurniture, loc.help.shortFurniture);
-    addListEntry(modeList, "li", loc.help.introDisplay, loc.help.shortDisplay);
+    addAttr(addListEntry(modeList, "li", loc.help.introFloorplan, loc.help.shortFloorplan), { "class": "helpLink" }).addEventListener("click", clickFloorplan);
+    addAttr(addListEntry(modeList, "li", loc.help.introRoom, loc.help.shortRoom), { "class": "helpLink" }).addEventListener("click", clickRoom);
+    addAttr(addListEntry(modeList, "li", loc.help.introFurniture, loc.help.shortFurniture), { "class": "helpLink" }).addEventListener("click", clickFurniture);
+    addAttr(addListEntry(modeList, "li", loc.help.introDisplay, loc.help.shortDisplay), { "class": "helpLink" }).addEventListener("click", clickDisplay);
     addElem(helpText, "p", loc.help.explanationUtil);
     const utilList = addElem(helpText, "ul");
     addListEntry(utilList, "li", loc.fileIO.saveButton, loc.fileIO.saveShort);
     addListEntry(utilList, "li", loc.fileIO.loadButton, loc.fileIO.loadShort);
     addListEntry(utilList, "li", loc.fileIO.exportButton, loc.fileIO.exportShort);
     addListEntry(utilList, "li", loc.fileIO.printButton, loc.fileIO.printShort);
-    addElem(helpText, "h3", loc.help.introFloorplan);
+    addAttr(addElem(helpText, "h3", loc.help.introFloorplan), { "class": "helpLink" }).addEventListener("click", clickFloorplan);
     addElem(helpText, "p", loc.help.explanationFloorplan);
-    addElem(helpText, "h3", loc.help.introRoom);
+    addAttr(addElem(helpText, "h3", loc.help.introRoom), { "class": "helpLink" }).addEventListener("click", clickRoom);
     addElem(helpText, "p", loc.help.explanationRoom);
-    addElem(helpText, "h3", loc.help.introFurniture);
+    addAttr(addElem(helpText, "h3", loc.help.introFurniture), { "class": "helpLink" }).addEventListener("click", clickFurniture);
     addElem(helpText, "p", loc.help.explanationFurniture);
-    addElem(helpText, "h3", loc.help.introDisplay);
+    addAttr(addElem(helpText, "h3", loc.help.introDisplay), { "class": "helpLink" }).addEventListener("click", clickDisplay);
     addElem(helpText, "p", loc.help.explanationDisplay);
-    const creatorElem = addElem(helpText, "p");
-    addElem(creatorElem, "b", loc.help.creator);
+    addElem(addElem(helpText, "p"), "b", loc.help.creator);
     document.getElementById("helpClose").textContent = getText(loc.help.helpClose);
 }
 window.addEventListener("resize", setSize);
@@ -152,7 +158,7 @@ function init() {
     }
     console.log("language:", settings.language);
     document.getElementById("distanceInput").dispatchEvent(new Event("input"));
-    document.getElementById("roomButton").click();
+    clickRoom();
     document.getElementById("leftOpenableButton").click();
     document.getElementById("circleButton").click();
     initNodeSize();
