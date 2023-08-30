@@ -17,6 +17,11 @@ document.getElementById("roomButton")!.addEventListener("click", changeToRoomMod
 document.getElementById("furnitureButton")!.addEventListener("click", changeToFurnitureMode);
 document.getElementById("presentationButton")!.addEventListener("click", changeToPresentationMode);
 
+function clickFloorplan() { document.getElementById("floorplanButton")!.click(); }
+function clickRoom() { document.getElementById("roomButton")!.click(); }
+function clickFurniture() { document.getElementById("furnitureButton")!.click(); }
+function clickDisplay() { document.getElementById("presentationButton")!.click(); }
+
 function changeMode(e: MouseEvent, mode: Mode) {
     resetElements("mode");
 

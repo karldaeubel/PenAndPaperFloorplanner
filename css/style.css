@@ -176,6 +176,7 @@ button.active {
     border: 3px solid #4caf50;
     width: 50%;
     height: 90%;
+    border-radius: 10px;
 }
 
 #helpBox {
@@ -185,4 +186,10 @@ button.active {
 
 #helpText {
     overflow: auto;
+}
+
+.helpLink:hover {
+    background-color: #4caf50;
+    border-radius: 5px;
+    cursor: pointer;
 }
