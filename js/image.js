@@ -2,13 +2,13 @@
 const floorplanImage = {
     image: null,
     distance: 1000,
-    node1: new CornerNode(0, 20, 20),
-    node2: new CornerNode(1, 1000 + 20, 20),
+    node1: new CornerNode(0, 0, -20),
+    node2: new CornerNode(1, 1000, -20),
     nodeSize: 15,
     reset: function () {
         this.image = null;
-        this.node1 = new CornerNode(0, 20, 20);
-        this.node2 = new CornerNode(1, this.distance + 20, 20);
+        this.node1 = new CornerNode(0, 0, -20);
+        this.node2 = new CornerNode(1, this.distance, -20);
     },
     // e, the click position; e is in screen space
     handleClick: function (e) {

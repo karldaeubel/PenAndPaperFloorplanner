@@ -112,7 +112,10 @@ function drawHelp() {
     ctx.fillText(getText(loc.help.findHelp), (ul.x + br.x) / 2, ul.y * 4 / 10 + br.y * 6 / 10);
     ctx.stroke();
     // remove help
-    const del = proj.to({ x: settings.deleteDim.w, y: settings.deleteDim.h });
+    const a = projection.to({ x: canvas.width - settings.deleteDim.w, y: 0 });
+    const d = projection.to({ x: canvas.width, y: settings.deleteDim.h });
+    const w = d.x - a.x;
+    const h = d.y - a.y;
     ctx.beginPath();
     ctx.fillStyle = "red";
     setFontSize(20, false);
@@ -122,10 +125,10 @@ function drawHelp() {
         case Mode.Floorplan:
             break;
         case Mode.Room:
-            ctx.fillText(getText(loc.room.removeHelp), br.x - del.x, ul.y + del.y);
+            ctx.fillText(getText(loc.room.removeHelp), br.x - w, ul.y + h);
             break;
         case Mode.Furniture:
-            ctx.fillText(getText(loc.furniture.removeHelp), br.x - del.x, ul.y + del.y);
+            ctx.fillText(getText(loc.furniture.removeHelp), br.x - w, ul.y + h);
             break;
         case Mode.Presentation:
             break;

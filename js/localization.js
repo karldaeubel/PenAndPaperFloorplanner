@@ -215,7 +215,7 @@ const loc = {
         },
         removeHelp: {
             en: "Remove Corners Here 🡵",
-            de: "Ecken hier Löschen 🡵"
+            de: "Ecken hier löschen 🡵"
         },
         corner: {
             head: {
@@ -291,7 +291,7 @@ const loc = {
         },
         removeHelp: {
             en: "Remove Furniture Here 🡵",
-            de: "Möbel hier Löschen 🡵"
+            de: "Möbel hier löschen 🡵"
         },
         add: {
             name: {
