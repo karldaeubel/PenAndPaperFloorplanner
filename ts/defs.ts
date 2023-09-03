@@ -45,9 +45,9 @@ class Projection {
     drag: boolean;
     delta: Point;
 
-    constructor(scale: number) {
+    constructor(scale: number, x: number = 0, y: number = 0) {
         this.scale = scale;
-        this.p = { x: 0, y: 0 };
+        this.p = { x: x, y: y };
         this.drag = false;
         this.delta = { x: 0, y: 0 };
     }
@@ -66,7 +66,7 @@ class Projection {
 };
 
 const projection = new Projection(0.1);
-const floorplanProjection = new Projection(1);
+const floorplanProjection = new Projection(1, 50, 50);
 
 interface Settings {
     language: string,
