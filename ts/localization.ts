@@ -20,8 +20,8 @@ const loc = {
             de: "Ok"
         },
         findHelp: {
-            en: "More Help At The Bottom Right Corner.",
-            de: "Mehr Hilfe am unteren rechten Rand."
+            en: "More Help At The Bottom Of The Right Menu.",
+            de: "Mehr Hilfe am unteren Rand des rechten Menüs."
         },
         welcome: {
             en: "Welcome to the Pen And Paper Floorplanner.",
@@ -115,7 +115,7 @@ const loc = {
                 "The ellipse is determined by a width and a height. The rectangle also requires width and height. The L-Shape has two block segments, both defined by width and height. The overall width is the sum of the two segment widths. The U-Shape behaves similarly but has three segments instead of two. " +
                 "All types of furniture can have a name. " +
                 "Furniture can be rotated by clicking the small circle within a piece of furniture. " +
-                "Furniture dropped at the grabage bin at the top right corner will be removed. ",
+                "Furniture dropped at the garbage bin at the top right corner will be removed. ",
             de: "In diesem Modus können Möbel erstellt, verschoben und rotiert werden. " +
                 "Möbel können im rechten Menü erstellt werden. Es gibt 4 verschiedene Typen von Möbeln. " +
                 "Die Ellipse ist durch eine Breite und eine Höhe definiert. Das Rechteck benötigt ebenfalls eine Breite und eine Höhe. Die L-Form besteht aus zwei Blöcken, die jeweils durch eine Breite und eine Höhe definiert sind. Die Gesamtbreite ergibt sich aus der Summe der einzelnen Blöcke. Die U-Form verhält sich ähnlich, hat allerdings drei Blöcke anstatt zwei. " +
@@ -219,6 +219,10 @@ const loc = {
             en: "Double Click Here!",
             de: "Hier Doppelklicken!"
         },
+        removeHelp: {
+            en: "Remove Corners Here 🡵",
+            de: "Ecken hier löschen 🡵"
+        },
         corner: {
             head: {
                 en: "Corner\xa0Size",
@@ -290,6 +294,10 @@ const loc = {
         help: {
             en: "Add Furniture On The Right.",
             de: "Füge Möbel rechts hinzu."
+        },
+        removeHelp: {
+            en: "Remove Furniture Here 🡵",
+            de: "Möbel hier löschen 🡵"
         },
         add: {
             name: {

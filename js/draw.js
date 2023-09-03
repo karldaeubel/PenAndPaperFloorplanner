@@ -7,6 +7,7 @@ function setFontSize(size, fixed = true) {
 function restoreDefaultContext() {
     const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
     ctx.lineWidth = 1.5 / proj.scale;
+    ctx.lineJoin = "miter";
     setFontSize(15);
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
@@ -15,6 +16,18 @@ function restoreDefaultContext() {
 }
 function willRemove(p) {
     return p.x >= canvas.width - settings.deleteDim.w && p.x <= canvas.width && p.y >= 0 && p.y <= settings.deleteDim.h;
+}
+function handleRemove(p, elem) {
+    if (willRemove(p)) {
+        elem.remove = true;
+        settings.isRemove = true;
+    }
+    else {
+        if (elem.remove) {
+            settings.isRemove = false;
+        }
+        elem.remove = false;
+    }
 }
 // main
 function drawMain() {
@@ -92,10 +105,31 @@ function drawHelp() {
         }
     }
     ctx.stroke();
+    // find help
     ctx.fillStyle = "lightgray";
     setFontSize(30, false);
     ctx.beginPath();
     ctx.fillText(getText(loc.help.findHelp), (ul.x + br.x) / 2, ul.y * 4 / 10 + br.y * 6 / 10);
+    ctx.stroke();
+    // remove help
+    const del = proj.to({ x: settings.deleteDim.w, y: settings.deleteDim.h });
+    ctx.beginPath();
+    ctx.fillStyle = "red";
+    setFontSize(20, false);
+    ctx.textAlign = "right";
+    ctx.textBaseline = "top";
+    switch (settings.mode) {
+        case Mode.Floorplan:
+            break;
+        case Mode.Room:
+            ctx.fillText(getText(loc.room.removeHelp), br.x - del.x, ul.y + del.y);
+            break;
+        case Mode.Furniture:
+            ctx.fillText(getText(loc.furniture.removeHelp), br.x - del.x, ul.y + del.y);
+            break;
+        case Mode.Presentation:
+            break;
+    }
     ctx.stroke();
     restoreDefaultContext();
 }
@@ -156,15 +190,38 @@ function drawDeletionField() {
     if (settings.mode === Mode.Presentation) {
         return;
     }
-    ctx.beginPath();
-    ctx.strokeStyle = "red";
     const a = projection.to({ x: canvas.width - settings.deleteDim.w, y: 0 });
     const d = projection.to({ x: canvas.width, y: settings.deleteDim.h });
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "red";
+    ctx.beginPath();
     ctx.rect(a.x, a.y, d.x - a.x, d.y - a.y);
-    ctx.moveTo(a.x, a.y);
-    ctx.lineTo(d.x, d.y);
-    ctx.moveTo(a.x, d.y);
-    ctx.lineTo(d.x, a.y);
     ctx.stroke();
+    const w = d.x - a.x;
+    const h = d.y - a.y;
+    // body
+    ctx.beginPath();
+    ctx.moveTo(a.x + .2 * w, a.y + .3 * h);
+    ctx.lineTo(a.x + .25 * w, a.y + .93 * h);
+    ctx.lineTo(a.x + .75 * w, a.y + .93 * h);
+    ctx.lineTo(a.x + .8 * w, a.y + .3 * h);
+    ctx.closePath();
+    ctx.stroke();
+    // stripes
+    for (const i of [.375, .5, .625]) {
+        ctx.beginPath();
+        ctx.rect(a.x + (i - .03) * w, a.y + .38 * h, .06 * w, .47 * h);
+        ctx.stroke();
+    }
+    if (!settings.isRemove) {
+        // head
+        ctx.beginPath();
+        ctx.rect(a.x + .15 * w, a.y + .15 * h, .7 * w, .1 * h);
+        ctx.stroke();
+        // handle
+        ctx.beginPath();
+        ctx.rect(a.x + .4 * w, a.y + .07 * h, .2 * w, .06 * h);
+        ctx.stroke();
+    }
     restoreDefaultContext();
 }

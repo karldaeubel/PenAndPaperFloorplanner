@@ -207,5 +207,6 @@ function mouseUp(e) {
     projection.drag = false;
     projection.delta.x = 0;
     projection.delta.y = 0;
+    settings.isRemove = false;
     drawMain();
 }

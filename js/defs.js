@@ -78,6 +78,7 @@ const settings = {
         w: 50,
         h: 50
     },
+    isRemove: false,
     nodeTransSize: 50,
     nodeExtendSize: 150,
     nodeSnapDist: 100,

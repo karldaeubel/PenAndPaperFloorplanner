@@ -64,11 +64,15 @@ document.getElementById("loadInput").addEventListener("change", (e) => {
         furniture.length = 0;
         floorplanImage.reset();
         if (floorPlanner.graph) {
-            graph.count = floorPlanner.graph.count;
+            let maxId = -1;
             for (const id in floorPlanner.graph.nodes) {
                 const node = floorPlanner.graph.nodes[id];
+                if (maxId < node.id) {
+                    maxId = node.id;
+                }
                 graph.nodes[node.id] = new CornerNode(node.id, node.p.x, node.p.y);
             }
+            graph.count = maxId + 1;
             for (const i in floorPlanner.graph.edges) {
                 for (const j in floorPlanner.graph.edges[i]) {
                     const edge = floorPlanner.graph.edges[i][j];
