@@ -235,5 +235,7 @@ function mouseUp(e: Point) {
     projection.delta.x = 0;
     projection.delta.y = 0;
 
+    settings.isRemove = false;
+
     drawMain();
 }

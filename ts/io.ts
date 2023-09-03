@@ -71,11 +71,15 @@ document.getElementById("loadInput")!.addEventListener("change", (e: Event) => {
         floorplanImage.reset();
 
         if (floorPlanner.graph) {
-            graph.count = floorPlanner.graph.count;
+            let maxId = -1;
             for (const id in floorPlanner.graph.nodes) {
                 const node = floorPlanner.graph.nodes[id] as CornerJSON;
+                if (maxId < node.id) {
+                    maxId = node.id;
+                }
                 graph.nodes[node.id] = new CornerNode(node.id, node.p.x, node.p.y);
             }
+            graph.count = maxId + 1;
 
             for (const i in floorPlanner.graph.edges) {
                 for (const j in floorPlanner.graph.edges[i]) {

@@ -59,6 +59,7 @@ type Edges = {
         [key2: number]: Edge,
     },
 };
+type GraphJSON = { nodes: CornerNodes, edges: Edges };
 interface Graph {
     count: number,
     nodes: CornerNodes,
@@ -86,6 +87,8 @@ interface Graph {
     drawEdges: () => void,
     drawNodes: () => void,
     drawExtend: () => void,
+
+    toJSON: () => GraphJSON,
 };
 
 const graph: Graph = {
@@ -457,21 +460,13 @@ const graph: Graph = {
                     }
                 }
 
-                if (willRemove(e)) {
-                    node.remove = true;
-                } else {
-                    node.remove = false;
-                }
+                handleRemove(e, node);
             } else if (node.extend) {
                 changed = true;
 
                 this.handleNodeSnap(node, e, true);
 
-                if (willRemove(e)) {
-                    node.remove = true;
-                } else {
-                    node.remove = false;
-                }
+                handleRemove(e, node);
             }
         }
         return changed;
@@ -686,5 +681,8 @@ const graph: Graph = {
 
             restoreDefaultContext();
         }
-    }
+    },
+    toJSON: function (): GraphJSON {
+        return { nodes: this.nodes, edges: this.edges };
+    },
 };

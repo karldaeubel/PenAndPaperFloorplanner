@@ -77,6 +77,8 @@ interface Settings {
     readonly minZoom: number,
     readonly maxZoom: number,
     readonly deleteDim: Dim,
+    isRemove: boolean,
+
     nodeTransSize: number,
     nodeExtendSize: number,
     nodeSnapDist: number,
@@ -99,6 +101,7 @@ const settings: Settings = {
         w: 50,
         h: 50
     },
+    isRemove: false,
     nodeTransSize: 50,
     nodeExtendSize: 150,
     nodeSnapDist: 100,

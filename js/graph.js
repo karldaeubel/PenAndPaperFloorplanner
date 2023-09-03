@@ -398,22 +398,12 @@ const graph = {
                         }
                     }
                 }
-                if (willRemove(e)) {
-                    node.remove = true;
-                }
-                else {
-                    node.remove = false;
-                }
+                handleRemove(e, node);
             }
             else if (node.extend) {
                 changed = true;
                 this.handleNodeSnap(node, e, true);
-                if (willRemove(e)) {
-                    node.remove = true;
-                }
-                else {
-                    node.remove = false;
-                }
+                handleRemove(e, node);
             }
         }
         return changed;
@@ -603,5 +593,8 @@ const graph = {
             }
             restoreDefaultContext();
         }
-    }
+    },
+    toJSON: function () {
+        return { nodes: this.nodes, edges: this.edges };
+    },
 };

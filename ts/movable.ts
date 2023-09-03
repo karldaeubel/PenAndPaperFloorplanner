@@ -259,11 +259,7 @@ class Openable extends Movable {
 
             this.handleEdgeSnap(e, graph);
 
-            if (willRemove(e)) {
-                this.remove = true;
-            } else {
-                this.remove = false;
-            }
+            handleRemove(e, this);
         } else if (this.rotate) {
             changed = true;
             const a = angleBetweenPoints(projection.from(this.center()),
@@ -504,11 +500,7 @@ class Rectangle extends Movable {
             this.delta.x = e.x;
             this.delta.y = e.y;
 
-            if (willRemove(e)) {
-                this.remove = true;
-            } else {
-                this.remove = false;
-            }
+            handleRemove(e, this);
         } else if (this.rotate) {
             changed = true;
             const a = angleBetweenPoints(projection.from(this.center()),
@@ -670,11 +662,7 @@ class Circle extends Movable {
             this.delta.x = e.x;
             this.delta.y = e.y;
 
-            if (willRemove(e)) {
-                this.remove = true;
-            } else {
-                this.remove = false;
-            }
+            handleRemove(e, this);
         }
 
         return changed;
@@ -821,11 +809,7 @@ class Ellipse extends Movable {
             this.delta.x = e.x;
             this.delta.y = e.y;
 
-            if (willRemove(e)) {
-                this.remove = true;
-            } else {
-                this.remove = false;
-            }
+            handleRemove(e, this);
         } else if (this.rotate) {
             changed = true;
             const a = angleBetweenPoints(projection.from(this.center()),
