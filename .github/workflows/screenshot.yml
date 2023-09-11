@@ -23,7 +23,7 @@ jobs:
           plugin_screenshot_url: https://xkcd.com
           plugin_screenshot_selector: "#comic img"
 
-      - name: Screenshot PenAndPaperFloorplanner
+      - name: Screenshot PenAndPaperFloorplanner content
         uses: lowlighter/metrics@latest
         with:
           filename: images/screenshot.PenAndPaperFloorplanner.svg
@@ -32,4 +32,38 @@ jobs:
           plugin_screenshot: yes
           # plugin_screenshot_title: PenAndPaperFloorplanner
           plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner
-          # plugin_screenshot_selector: "#comic img"
+          plugin_screenshot_selector: "#content"
+
+      - name: Screenshot PenAndPaperFloorplanner content
+        uses: lowlighter/metrics@latest
+        with:
+          filename: images/screenshot.PenAndPaperFloorplanner.content.svg
+          token: NOT_NEEDED
+          base: ""
+          plugin_screenshot: yes
+          # plugin_screenshot_title: PenAndPaperFloorplanner
+          plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner
+          plugin_screenshot_selector: "#content"
+          # plugin_screenshot_viewport: {
+          #   "width": 1280,
+          #   "height": 1280
+          # }
+          plugin_screenshot_wait: 2000
+          plugin_screenshot_background: yes
+
+      - name: Screenshot PenAndPaperFloorplanner content viewport
+        uses: lowlighter/metrics@latest
+        with:
+          filename: images/screenshot.PenAndPaperFloorplanner.content.viewport.svg
+          token: NOT_NEEDED
+          base: ""
+          plugin_screenshot: yes
+          # plugin_screenshot_title: PenAndPaperFloorplanner
+          plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner
+          plugin_screenshot_selector: "#content"
+          plugin_screenshot_viewport: {
+            "width": 1280,
+            "height": 1280
+          }
+          plugin_screenshot_wait: 2000
+          plugin_screenshot_background: yes
