@@ -2,11 +2,11 @@
 name: Screenshot
 on:
   push:
-    paths:
-      - 'index.html'
-      - 'css/**'
-      - 'js/**'
-      - 'ts/**'
+    # paths:
+    #   - 'index.html'
+    #   - 'css/**'
+    #   - 'js/**'
+    #   - 'ts/**'
   pull_request:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
@@ -17,7 +17,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Screenshot PenAndPaperFloorplanner content
+      - name: Screenshot PenAndPaperFloorplanner
         uses: lowlighter/metrics@latest
         with:
           filename: images/Screenshot.svg
@@ -27,9 +27,7 @@ jobs:
           plugin_screenshot_title: Latest Screenshot
           plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner
           plugin_screenshot_selector: "#content"
-          # plugin_screenshot_viewport: {
-          #   "width": 1280,
-          #   "height": 1280
-          # }
+          plugin_screenshot_viewport: |
+              { "width": 1920, "height": 1080 }
           # plugin_screenshot_wait: 2000
           # plugin_screenshot_background: yes
