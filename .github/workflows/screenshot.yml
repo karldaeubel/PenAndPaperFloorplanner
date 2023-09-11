@@ -1,0 +1,35 @@
+---
+name: Lint
+on:
+  push:
+  pull_request:
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  screenshot:
+    name: Screenshot
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Screenshot XKCD
+        uses: lowlighter/metrics@latest
+        with:
+          filename: images/screenshot.svg
+          token: NOT_NEEDED
+          base: ""
+          plugin_screenshot: yes
+          plugin_screenshot_title: XKCD of the day
+          plugin_screenshot_url: https://xkcd.com
+          plugin_screenshot_selector: "#comic img"
+
+      - name: Screenshot PenAndPaperFloorplanner
+        uses: lowlighter/metrics@latest
+        with:
+          filename: images/screenshot.PenAndPaperFloorplanner.svg
+          token: NOT_NEEDED
+          base: ""
+          plugin_screenshot: yes
+          plugin_screenshot_title: PenAndPaperFloorplanner
+          plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner/
+          # plugin_screenshot_selector: "#comic img"
