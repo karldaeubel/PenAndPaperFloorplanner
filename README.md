@@ -27,3 +27,5 @@ The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no 
 ![Usage](images/Usage.gif)
 
 ![Preview](images/Preview.png)
+
+![Screenshot](images/Screenshot.svg)
