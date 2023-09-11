@@ -24,7 +24,7 @@ jobs:
           token: NOT_NEEDED
           base: ""
           plugin_screenshot: yes
-          # plugin_screenshot_title: PenAndPaperFloorplanner
+          plugin_screenshot_title: PenAndPaperFloorplanner-${{ matrix.os }}
           plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner
           plugin_screenshot_selector: "#content"
           # plugin_screenshot_viewport: {
