@@ -1,5 +1,5 @@
 ---
-name: Lint
+name: Screenshot
 on:
   push:
   pull_request:
@@ -19,7 +19,7 @@ jobs:
           token: NOT_NEEDED
           base: ""
           plugin_screenshot: yes
-          plugin_screenshot_title: XKCD of the day
+          # plugin_screenshot_title: XKCD of the day
           plugin_screenshot_url: https://xkcd.com
           plugin_screenshot_selector: "#comic img"
 
@@ -30,6 +30,6 @@ jobs:
           token: NOT_NEEDED
           base: ""
           plugin_screenshot: yes
-          plugin_screenshot_title: PenAndPaperFloorplanner
-          plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner/
+          # plugin_screenshot_title: PenAndPaperFloorplanner
+          plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner
           # plugin_screenshot_selector: "#comic img"
