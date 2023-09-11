@@ -8,36 +8,19 @@ on:
 jobs:
   screenshot:
     name: Screenshot
-    runs-on: ubuntu-latest
     permissions:
       contents: write
+    # runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - name: Screenshot XKCD
-        uses: lowlighter/metrics@latest
-        with:
-          filename: images/screenshot.svg
-          token: NOT_NEEDED
-          base: ""
-          plugin_screenshot: yes
-          # plugin_screenshot_title: XKCD of the day
-          plugin_screenshot_url: https://xkcd.com
-          plugin_screenshot_selector: "#comic img"
-
       - name: Screenshot PenAndPaperFloorplanner content
         uses: lowlighter/metrics@latest
         with:
-          filename: images/screenshot.PenAndPaperFloorplanner.svg
-          token: NOT_NEEDED
-          base: ""
-          plugin_screenshot: yes
-          # plugin_screenshot_title: PenAndPaperFloorplanner
-          plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner
-          plugin_screenshot_selector: "#content"
-
-      - name: Screenshot PenAndPaperFloorplanner content
-        uses: lowlighter/metrics@latest
-        with:
-          filename: images/screenshot.PenAndPaperFloorplanner.content.svg
+          filename: images/screenshot.${{ matrix.os }}.svg
           token: NOT_NEEDED
           base: ""
           plugin_screenshot: yes
@@ -48,20 +31,5 @@ jobs:
           #   "width": 1280,
           #   "height": 1280
           # }
-          plugin_screenshot_wait: 2000
-          plugin_screenshot_background: yes
-
-      - name: Screenshot PenAndPaperFloorplanner content viewport
-        uses: lowlighter/metrics@latest
-        with:
-          filename: images/screenshot.PenAndPaperFloorplanner.content.viewport.svg
-          token: NOT_NEEDED
-          base: ""
-          plugin_screenshot: yes
-          # plugin_screenshot_title: PenAndPaperFloorplanner
-          plugin_screenshot_url: https://karldaeubel.github.io/PenAndPaperFloorplanner
-          plugin_screenshot_selector: "#content"
-          plugin_screenshot_viewport: |
-              { "width": 1280, "height": 400 }
-          plugin_screenshot_wait: 2000
-          plugin_screenshot_background: yes
+          # plugin_screenshot_wait: 2000
+          # plugin_screenshot_background: yes
