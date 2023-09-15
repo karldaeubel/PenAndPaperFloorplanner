@@ -73,6 +73,7 @@ interface Graph {
 
     reset: () => void,
 
+    nextEdgeToSegment: (center: Point, p: Point) => Point | null,
     closestNodeToClick: (p: Point) => optionalNumber,
     handleNodeToNodeSnap: (node: CornerNode, p: Point, extendNode: boolean) => boolean,
     handleNodeToEdgeSnap: (node: CornerNode, p: Point, extendNode: boolean) => boolean,
@@ -209,6 +210,26 @@ const graph: Graph = {
         this.count = 0;
         this.nodes = {};
         this.edges = {};
+    },
+    nextEdgeToSegment: function (center: Point, p: Point): Point | null {
+        let result: Point | null = null;
+        let minDist: optionalNumber = null;
+        for (const outEdges of Object.values(this.edges)) {
+            for (const edge of Object.values(outEdges)) {
+                const node1 = this.nodes[edge.id1]!;
+                const node2 = this.nodes[edge.id2]!;
+
+                const intersectionPoint: Point | null = getIntersectionPoint(center, p, node1.p, node2.p);
+                if (intersectionPoint !== null) {
+                    const dist = distance(intersectionPoint, p);
+                    if (minDist === null || dist < minDist) {
+                        minDist = dist;
+                        result = intersectionPoint;
+                    }
+                }
+            }
+        }
+        return result;
     },
     // p, the position to check; p is in node position space
     closestNodeToClick: function (p: Point): optionalNumber {

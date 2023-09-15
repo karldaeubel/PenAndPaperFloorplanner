@@ -31,3 +31,15 @@ function angleBetweenPoints(p1, p2, p3) {
 function pointInCircle(c, r, p) {
     return distance(c, p) <= r;
 }
+function getIntersectionPoint(center, border, wall1, wall2) {
+    const denom = (center.x - border.x) * (wall1.y - wall2.y) - (center.y - border.y) * (wall1.x - wall2.x);
+    if (denom === 0) {
+        return null;
+    }
+    const t = ((center.x - wall1.x) * (wall1.y - wall2.y) - (center.y - wall1.y) * (wall1.x - wall2.x)) / denom;
+    const u = ((center.x - wall1.x) * (center.y - border.y) - (center.y - wall1.y) * (center.x - border.x)) / denom;
+    if (t > 1 && u >= 0 && u <= 1) {
+        return { x: center.x + t * (border.x - center.x), y: center.y + t * (border.y - center.y) };
+    }
+    return null;
+}

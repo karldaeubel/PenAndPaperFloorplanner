@@ -36,3 +36,17 @@ function angleBetweenPoints(p1: Point, p2: Point, p3: Point): number {
 function pointInCircle(c: Point, r: number, p: Point): boolean {
     return distance(c, p) <= r;
 }
+
+function getIntersectionPoint(center: Point, border: Point, wall1: Point, wall2: Point): Point | null {
+    const denom = (center.x - border.x) * (wall1.y - wall2.y) - (center.y - border.y) * (wall1.x - wall2.x);
+    if (denom === 0) {
+        return null;
+    }
+    const t = ((center.x - wall1.x) * (wall1.y - wall2.y) - (center.y - wall1.y) * (wall1.x - wall2.x)) / denom;
+    const u = ((center.x - wall1.x) * (center.y - border.y) - (center.y - wall1.y) * (center.x - border.x)) / denom;
+
+    if (t > 1 && u >= 0 && u <= 1) {
+        return { x: center.x + t * (border.x - center.x), y: center.y + t * (border.y - center.y) };
+    }
+    return null;
+}
