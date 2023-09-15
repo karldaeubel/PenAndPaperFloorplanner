@@ -14,8 +14,8 @@ const loc = {
             de: "Ok"
         },
         findHelp: {
-            en: "More Help At The Bottom Of The Right Menu.",
-            de: "Mehr Hilfe am unteren Rand des rechten Menüs."
+            en: "More Help 🡲",
+            de: "Mehr Hilfe 🡲"
         },
         welcome: {
             en: "Welcome to the Pen And Paper Floorplanner.",
@@ -214,8 +214,8 @@ const loc = {
             de: "Hier Doppelklicken!"
         },
         removeHelp: {
-            en: "Remove Corners Here 🡵",
-            de: "Ecken hier löschen 🡵"
+            en: "Remove Objects Here 🡵",
+            de: "Objekte hier löschen 🡵"
         },
         corner: {
             head: {

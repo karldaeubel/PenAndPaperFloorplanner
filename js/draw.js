@@ -106,10 +106,14 @@ function drawHelp() {
     }
     ctx.stroke();
     // find help
-    ctx.fillStyle = "lightgray";
-    setFontSize(30, false);
+    const helpRect = document.getElementById("helpOpen").getBoundingClientRect();
+    const helpAnchor = proj.to({ x: helpRect.x, y: helpRect.y + helpRect.height / 2 });
     ctx.beginPath();
-    ctx.fillText(getText(loc.help.findHelp), (ul.x + br.x) / 2, ul.y * 4 / 10 + br.y * 6 / 10);
+    setFontSize(30, false);
+    ctx.fillStyle = "green";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(getText(loc.help.findHelp), br.x, helpAnchor.y);
     ctx.stroke();
     // remove help
     const a = projection.to({ x: canvas.width - settings.deleteDim.w, y: 0 });
@@ -227,4 +231,22 @@ function drawDeletionField() {
         ctx.stroke();
     }
     restoreDefaultContext();
+}
+function drawDistanceToNextWall(center, border) {
+    const intersectionPoint = graph.nextEdgeToSegment(center, border);
+    if (intersectionPoint !== null) {
+        ctx.beginPath();
+        ctx.moveTo(border.x, border.y);
+        ctx.lineTo(intersectionPoint.x, intersectionPoint.y);
+        ctx.stroke();
+        const dist = distance(border, intersectionPoint);
+        ctx.save();
+        ctx.translate((border.x + intersectionPoint.x) / 2, (border.y + intersectionPoint.y) / 2);
+        const angle = Math.atan2(border.y - intersectionPoint.y, border.x - intersectionPoint.x);
+        ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
+        ctx.beginPath();
+        ctx.fillText(dist.toFixed(1), 0, 0, dist);
+        ctx.stroke();
+        ctx.restore();
+    }
 }
