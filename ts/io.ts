@@ -71,11 +71,15 @@ document.getElementById("loadInput")!.addEventListener("change", (e: Event) => {
         floorplanImage.reset();
 
         if (floorPlanner.graph) {
-            graph.count = floorPlanner.graph.count;
+            let maxId = -1;
             for (const id in floorPlanner.graph.nodes) {
                 const node = floorPlanner.graph.nodes[id] as CornerJSON;
+                if (maxId < node.id) {
+                    maxId = node.id;
+                }
                 graph.nodes[node.id] = new CornerNode(node.id, node.p.x, node.p.y);
             }
+            graph.count = maxId + 1;
 
             for (const i in floorPlanner.graph.edges) {
                 for (const j in floorPlanner.graph.edges[i]) {
@@ -205,23 +209,12 @@ document.getElementById("printButton")!.addEventListener("click", () => {
     }
 });
 
-document.getElementById("helpButton")!.addEventListener("click", () => {
-    alert(
-        getText(loc.help.welcome) + "\n\n" +
-        getText(loc.help.intro) + "\n\n" +
-        getText(loc.help.explanation) + "\n\n" +
+document.getElementById("helpOpen")!.addEventListener("click", () => {
+    const helpDialog = document.getElementById("helpDialog") as HTMLDialogElement;
+    helpDialog.showModal();
+});
 
-        getText(loc.help.introFloorplan) + "\n" +
-        getText(loc.help.explanationFloorplan) + "\n\n" +
-
-        getText(loc.help.introRoom) + "\n" +
-        getText(loc.help.explanationRoom) + "\n\n" +
-
-        getText(loc.help.introFurniture) + "\n" +
-        getText(loc.help.explanationFurniture) + "\n\n" +
-
-        getText(loc.help.introDisplay) + "\n" +
-        getText(loc.help.explanationDisplay) + "\n\n" +
-
-        getText(loc.help.creator) + "\n\n");
+document.getElementById("helpClose")!.addEventListener("click", () => {
+    const helpDialog = document.getElementById("helpDialog") as HTMLDialogElement;
+    helpDialog.close();
 });

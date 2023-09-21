@@ -30,6 +30,30 @@ function resetEdgeLabelCheckBox() {
     settings.showEdgeLabels = false;
     document.getElementById("edgeLabelCheckbox").checked = false;
 }
+function addElem(parent, type, text = null) {
+    const elem = document.createElement(type);
+    if (text !== null) {
+        elem.textContent = getText(text);
+    }
+    parent.appendChild(elem);
+    return elem;
+}
+function addListEntry(parent, type, head, short) {
+    const elem = document.createElement(type);
+    const headElem = document.createElement("b");
+    headElem.textContent = getText(head) + ": ";
+    const shortElem = document.createTextNode(getText(short));
+    elem.appendChild(headElem);
+    elem.appendChild(shortElem);
+    parent.appendChild(elem);
+    return headElem;
+}
+function addAttr(elem, attr) {
+    for (const [key, value] of Object.entries(attr)) {
+        elem.setAttribute(key, value);
+    }
+    return elem;
+}
 function setButtonContent() {
     // floorplan
     document.getElementById("floorplanButton").textContent = getText(loc.floorplan.category);
@@ -76,7 +100,33 @@ function setButtonContent() {
     document.getElementById("loadButton").textContent = getText(loc.fileIO.loadButton);
     document.getElementById("exportButton").textContent = getText(loc.fileIO.exportButton);
     document.getElementById("printButton").textContent = getText(loc.fileIO.printButton);
-    document.getElementById("helpButton").textContent = getText(loc.help.helpButton);
+    document.getElementById("helpOpen").textContent = getText(loc.help.helpOpen);
+    // help
+    const helpText = document.getElementById("helpText");
+    addElem(helpText, "h2", loc.help.welcome);
+    addElem(helpText, "p", loc.help.intro);
+    addElem(helpText, "p", loc.help.explanationMode);
+    const modeList = addElem(helpText, "ul");
+    addAttr(addListEntry(modeList, "li", loc.help.introFloorplan, loc.help.shortFloorplan), { "class": "helpLink" }).addEventListener("click", clickFloorplan);
+    addAttr(addListEntry(modeList, "li", loc.help.introRoom, loc.help.shortRoom), { "class": "helpLink" }).addEventListener("click", clickRoom);
+    addAttr(addListEntry(modeList, "li", loc.help.introFurniture, loc.help.shortFurniture), { "class": "helpLink" }).addEventListener("click", clickFurniture);
+    addAttr(addListEntry(modeList, "li", loc.help.introDisplay, loc.help.shortDisplay), { "class": "helpLink" }).addEventListener("click", clickDisplay);
+    addElem(helpText, "p", loc.help.explanationUtil);
+    const utilList = addElem(helpText, "ul");
+    addListEntry(utilList, "li", loc.fileIO.saveButton, loc.fileIO.saveShort);
+    addListEntry(utilList, "li", loc.fileIO.loadButton, loc.fileIO.loadShort);
+    addListEntry(utilList, "li", loc.fileIO.exportButton, loc.fileIO.exportShort);
+    addListEntry(utilList, "li", loc.fileIO.printButton, loc.fileIO.printShort);
+    addAttr(addElem(helpText, "h3", loc.help.introFloorplan), { "class": "helpLink" }).addEventListener("click", clickFloorplan);
+    addElem(helpText, "p", loc.help.explanationFloorplan);
+    addAttr(addElem(helpText, "h3", loc.help.introRoom), { "class": "helpLink" }).addEventListener("click", clickRoom);
+    addElem(helpText, "p", loc.help.explanationRoom);
+    addAttr(addElem(helpText, "h3", loc.help.introFurniture), { "class": "helpLink" }).addEventListener("click", clickFurniture);
+    addElem(helpText, "p", loc.help.explanationFurniture);
+    addAttr(addElem(helpText, "h3", loc.help.introDisplay), { "class": "helpLink" }).addEventListener("click", clickDisplay);
+    addElem(helpText, "p", loc.help.explanationDisplay);
+    addElem(addElem(helpText, "p"), "b", loc.help.creator);
+    document.getElementById("helpClose").textContent = getText(loc.help.helpClose);
 }
 window.addEventListener("resize", setSize);
 function setSize() {
@@ -108,7 +158,7 @@ function init() {
     }
     console.log("language:", settings.language);
     document.getElementById("distanceInput").dispatchEvent(new Event("input"));
-    document.getElementById("roomButton").click();
+    clickRoom();
     document.getElementById("leftOpenableButton").click();
     document.getElementById("circleButton").click();
     initNodeSize();

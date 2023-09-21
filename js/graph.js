@@ -160,6 +160,25 @@ const graph = {
         this.nodes = {};
         this.edges = {};
     },
+    nextEdgeToSegment: function (center, p) {
+        let result = null;
+        let minDist = null;
+        for (const outEdges of Object.values(this.edges)) {
+            for (const edge of Object.values(outEdges)) {
+                const node1 = this.nodes[edge.id1];
+                const node2 = this.nodes[edge.id2];
+                const intersectionPoint = getIntersectionPoint(center, p, node1.p, node2.p);
+                if (intersectionPoint !== null) {
+                    const dist = distance(intersectionPoint, p);
+                    if (minDist === null || dist < minDist) {
+                        minDist = dist;
+                        result = intersectionPoint;
+                    }
+                }
+            }
+        }
+        return result;
+    },
     // p, the position to check; p is in node position space
     closestNodeToClick: function (p) {
         let minDist = null;
@@ -398,22 +417,12 @@ const graph = {
                         }
                     }
                 }
-                if (willRemove(e)) {
-                    node.remove = true;
-                }
-                else {
-                    node.remove = false;
-                }
+                handleRemove(e, node);
             }
             else if (node.extend) {
                 changed = true;
                 this.handleNodeSnap(node, e, true);
-                if (willRemove(e)) {
-                    node.remove = true;
-                }
-                else {
-                    node.remove = false;
-                }
+                handleRemove(e, node);
             }
         }
         return changed;
@@ -603,5 +612,8 @@ const graph = {
             }
             restoreDefaultContext();
         }
-    }
+    },
+    toJSON: function () {
+        return { nodes: this.nodes, edges: this.edges };
+    },
 };

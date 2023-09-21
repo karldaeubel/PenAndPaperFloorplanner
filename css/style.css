@@ -67,6 +67,10 @@ button.active {
     width: 100%;
 }
 
+#loadFloorplanButton {
+    padding: 2px 0;
+}
+
 .tab.mode {
     overflow: hidden;
     border: 1px solid #ccc;
@@ -119,6 +123,7 @@ button.active {
     outline: none;
     cursor: pointer;
     transition: 0.3s;
+    text-align: center;
 }
 
 .loadInputClass:hover {
@@ -151,6 +156,10 @@ button.active {
     align-items: center;
 }
 
+.h100pc {
+    height: 100%;
+}
+
 .w100pc {
     width: 100%;
 }
@@ -161,4 +170,26 @@ button.active {
 
 .w33pc {
     width: 33%;
+}
+
+#helpDialog {
+    border: 3px solid #4caf50;
+    width: 50%;
+    height: 90%;
+    border-radius: 10px;
+}
+
+#helpBox {
+    display: flex;
+    flex-direction: column;
+}
+
+#helpText {
+    overflow: auto;
+}
+
+.helpLink:hover {
+    background-color: #4caf50;
+    border-radius: 5px;
+    cursor: pointer;
 }

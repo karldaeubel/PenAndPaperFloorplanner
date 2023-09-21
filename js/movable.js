@@ -216,12 +216,7 @@ class Openable extends Movable {
         if (this.translate) {
             changed = true;
             this.handleEdgeSnap(e, graph);
-            if (willRemove(e)) {
-                this.remove = true;
-            }
-            else {
-                this.remove = false;
-            }
+            handleRemove(e, this);
         }
         else if (this.rotate) {
             changed = true;
@@ -417,12 +412,7 @@ class Rectangle extends Movable {
             this.p.y += (e.y - this.delta.y) / projection.scale;
             this.delta.x = e.x;
             this.delta.y = e.y;
-            if (willRemove(e)) {
-                this.remove = true;
-            }
-            else {
-                this.remove = false;
-            }
+            handleRemove(e, this);
         }
         else if (this.rotate) {
             changed = true;
@@ -494,6 +484,27 @@ class Rectangle extends Movable {
             ctx.stroke();
         }
         ctx.restore();
+        this.drawWallDistances();
+        restoreDefaultContext();
+    }
+    drawWallDistances() {
+        if (this.translate || this.rotate) {
+            ctx.save();
+            this.setStyle(settings.mode === Mode.Room, true);
+            const rotateSize = this.getRotateSize();
+            setFontSize(rotateSize * 2);
+            const center = this.center();
+            const maxDim = this.getMaxDim();
+            // right
+            drawDistanceToNextWall(center, rotate(center, { x: center.x + maxDim.w / 2, y: center.y }, this.angle));
+            // left
+            drawDistanceToNextWall(center, rotate(center, { x: center.x - maxDim.w / 2, y: center.y }, this.angle));
+            // top
+            drawDistanceToNextWall(center, rotate(center, { x: center.x, y: center.y - maxDim.h / 2 }, this.angle));
+            // bottom
+            drawDistanceToNextWall(center, rotate(center, { x: center.x, y: center.y + maxDim.h / 2 }, this.angle));
+            ctx.restore();
+        }
     }
     toJSON() {
         return { mov: super.movableToJSON(), name: this.name, p: this.p, dims: this.dims, angle: this.angle };
@@ -543,12 +554,7 @@ class Circle extends Movable {
             this.c.y += (e.y - this.delta.y) / projection.scale;
             this.delta.x = e.x;
             this.delta.y = e.y;
-            if (willRemove(e)) {
-                this.remove = true;
-            }
-            else {
-                this.remove = false;
-            }
+            handleRemove(e, this);
         }
         return changed;
     }
@@ -574,6 +580,26 @@ class Circle extends Movable {
             ctx.stroke();
         }
         ctx.restore();
+        this.drawWallDistances();
+        restoreDefaultContext();
+    }
+    drawWallDistances() {
+        if (this.translate || this.rotate) {
+            ctx.save();
+            this.setStyle(settings.mode === Mode.Room, true);
+            const rotateSize = this.getDimSize();
+            setFontSize(rotateSize * 2);
+            const center = this.center();
+            // right
+            drawDistanceToNextWall(center, { x: center.x + this.r, y: center.y });
+            // left
+            drawDistanceToNextWall(center, { x: center.x - this.r, y: center.y });
+            // top
+            drawDistanceToNextWall(center, { x: center.x, y: center.y - this.r });
+            // bottom
+            drawDistanceToNextWall(center, { x: center.x, y: center.y + this.r });
+            ctx.restore();
+        }
     }
     toJSON() {
         return { mov: super.movableToJSON(), name: this.name, c: this.c, r: this.r };
@@ -663,12 +689,7 @@ class Ellipse extends Movable {
             this.c.y += (e.y - this.delta.y) / projection.scale;
             this.delta.x = e.x;
             this.delta.y = e.y;
-            if (willRemove(e)) {
-                this.remove = true;
-            }
-            else {
-                this.remove = false;
-            }
+            handleRemove(e, this);
         }
         else if (this.rotate) {
             changed = true;
@@ -716,6 +737,26 @@ class Ellipse extends Movable {
             ctx.stroke();
         }
         ctx.restore();
+        this.drawWallDistances();
+        restoreDefaultContext();
+    }
+    drawWallDistances() {
+        if (this.translate || this.rotate) {
+            ctx.save();
+            this.setStyle(settings.mode === Mode.Room, true);
+            const rotateSize = this.getDimSize();
+            setFontSize(rotateSize * 2);
+            const center = this.center();
+            // right
+            drawDistanceToNextWall(center, rotate(center, { x: center.x + this.rX, y: center.y }, this.angle));
+            // left
+            drawDistanceToNextWall(center, rotate(center, { x: center.x - this.rX, y: center.y }, this.angle));
+            // top
+            drawDistanceToNextWall(center, rotate(center, { x: center.x, y: center.y - this.rY }, this.angle));
+            // bottom
+            drawDistanceToNextWall(center, rotate(center, { x: center.x, y: center.y + this.rY }, this.angle));
+            ctx.restore();
+        }
     }
     toJSON() {
         return { mov: super.movableToJSON(), name: this.name, c: this.c, rX: this.rX, rY: this.rY, angle: this.angle };
