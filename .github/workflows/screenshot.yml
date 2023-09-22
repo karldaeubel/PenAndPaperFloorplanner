@@ -1,11 +1,11 @@
 name: Screenshot
 on:
   push:
-    # paths:
-    #   - 'index.html'
-    #   - 'css/**'
-    #   - 'js/**'
-    #   - 'ts/**'
+    paths:
+      - 'index.html'
+      - 'css/**'
+      - 'js/**'
+      - 'ts/**'
   pull_request:
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
