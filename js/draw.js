@@ -250,3 +250,48 @@ function drawDistanceToNextWall(center, border) {
         ctx.restore();
     }
 }
+function centerProjection(proj) {
+    let minX = null;
+    let minY = null;
+    let maxX = null;
+    let maxY = null;
+    const updateBoundary = (p) => {
+        if (minX === null || p.x < minX) {
+            minX = p.x;
+        }
+        if (maxX === null || p.x > maxX) {
+            maxX = p.x;
+        }
+        if (minY === null || p.y < minY) {
+            minY = p.y;
+        }
+        if (maxY === null || p.y > maxY) {
+            maxY = p.y;
+        }
+    };
+    for (const openable of openables) {
+        updateBoundary(openable.p);
+    }
+    for (const label of labels) {
+        updateBoundary(label.p);
+    }
+    for (const fur of furniture) {
+        updateBoundary(fur.center());
+    }
+    for (const node of Object.values(graph.nodes)) {
+        updateBoundary(node.p);
+    }
+    if (minX === null || minY === null || maxX === null || maxY === null) {
+        return;
+    }
+    // fix zoom with 10% border
+    let a = projection.to({ x: 0, y: 0 });
+    let b = projection.to({ x: canvas.width, y: canvas.height });
+    const zoomValue = Math.min((b.x - a.x) / ((maxX - minX) * 1.1), (b.y - a.y) / ((maxY - minY) * 1.1));
+    zoom(proj.p, zoomValue);
+    // fix view of projection to middle
+    a = projection.to({ x: 0, y: 0 });
+    b = projection.to({ x: canvas.width, y: canvas.height });
+    proj.p = proj.from({ x: -(minX + maxX) / 2 + (b.x - a.x) / 2, y: -(minY + maxY) / 2 + (b.y - a.y) / 2 });
+    drawMain();
+}

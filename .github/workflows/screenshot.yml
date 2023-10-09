@@ -1,0 +1,41 @@
+name: Screenshot
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  Screenshot:
+    name: Screenshot
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        env:
+          fetch-depth: "1"
+
+      - name: Install capture-website-cli
+        run: npm install --global capture-website-cli
+
+      - name: Install chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Screenshot Floorplan
+        run: capture-website https://karldaeubel.github.io/PenAndPaperFloorplanner/ --overwrite --delay=2 --full-page --module=js/loadExamples/Example.js --launch-options='{"headless":"false","args":["--start-maximized", "--no-sandbox", "--disable-setuid-sandbox"]}' --width="1920" --height="1080" --click-element='#floorplanButton' --wait-for-element="#loadFloorplanButton" --output=images/Screenshot-Floorplan.png
+
+      - name: Screenshot Room
+        run: capture-website https://karldaeubel.github.io/PenAndPaperFloorplanner/ --overwrite --delay=2 --full-page --module=js/loadExamples/Example.js --launch-options='{"headless":"false","args":["--start-maximized", "--no-sandbox", "--disable-setuid-sandbox"]}' --width="1920" --height="1080" --click-element='#roomButton' --wait-for-element="#addLabelButton" --output=images/Screenshot-Room.png
+
+      - name: Screenshot Furniture
+        run: capture-website https://karldaeubel.github.io/PenAndPaperFloorplanner/ --overwrite --delay=2 --full-page --module=js/loadExamples/Example.js --launch-options='{"headless":"false","args":["--start-maximized", "--no-sandbox", "--disable-setuid-sandbox"]}' --width="1920" --height="1080" --click-element='#furnitureButton' --wait-for-element="#addFurnitureButton" --output=images/Screenshot-Furniture.png
+
+      - name: Screenshot Presentation
+        run: capture-website https://karldaeubel.github.io/PenAndPaperFloorplanner/ --overwrite --delay=2 --full-page --module=js/loadExamples/Example.js --launch-options='{"headless":"false","args":["--start-maximized", "--no-sandbox", "--disable-setuid-sandbox"]}' --width="1920" --height="1080" --click-element='#presentationButton' --wait-for-element="#edgeLabelCheckbox" --output=images/Screenshot-Presentation.png
+
+      - name: Screenshot PenAndPaperFloorplanner
+        run: capture-website https://karldaeubel.github.io/PenAndPaperFloorplanner/ --overwrite --delay=2 --full-page --module=js/loadExamples/PenAndPaperFloorplanner.js --launch-options='{"headless":"false","args":["--start-maximized", "--no-sandbox", "--disable-setuid-sandbox"]}' --width="1920" --height="1080" --click-element='#presentationButton' --wait-for-element="#edgeLabelCheckbox" --output=images/PenAndPaperFloorplanner.png
+
+      - name: Add and Commit
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Updated Screenshots.'

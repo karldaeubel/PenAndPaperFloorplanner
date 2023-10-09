@@ -42,6 +42,118 @@ function setState() {
     state = createState();
 }
 
+function loadFloorplan(content: string, fileName: string) {
+    let floorPlanner;
+    try {
+        floorPlanner = JSON.parse(content);
+    } catch (err) {
+        alert(getText(loc.fileIO.errorAtFile) + " " + fileName + ".\n\n" + getText(loc.fileIO.errorMessage) + "\n" + err);
+        console.error(err);
+        return;
+    }
+
+    graph.reset();
+    labels.length = 0;
+    openables.length = 0;
+    furniture.length = 0;
+    floorplanImage.reset();
+
+    if (floorPlanner.graph) {
+        let maxId = -1;
+        for (const id in floorPlanner.graph.nodes) {
+            const node = floorPlanner.graph.nodes[id] as CornerJSON;
+            if (maxId < node.id) {
+                maxId = node.id;
+            }
+            graph.nodes[node.id] = new CornerNode(node.id, node.p.x, node.p.y);
+        }
+        graph.count = maxId + 1;
+
+        for (const i in floorPlanner.graph.edges) {
+            for (const j in floorPlanner.graph.edges[i]) {
+                const edge = floorPlanner.graph.edges[i][j] as EdgeJSON;
+                graph.addEdge(edge.id1, edge.id2);
+            }
+        }
+    }
+
+    if (floorPlanner.labels) {
+        for (const label of floorPlanner.labels) {
+            labels.push(loadRectangle(label as RectangleJSON));
+        }
+    }
+
+    if (floorPlanner.openables) {
+        for (const openable of floorPlanner.openables) {
+            openables.push(loadOpenable(openable as OpenableJSON, graph));
+        }
+    }
+
+    if (floorPlanner.furniture) {
+        for (const fur of floorPlanner.furniture) {
+            switch (fur.mov.type) {
+                case MovableType.Circle: {
+                    furniture.push(loadCircle(fur as CircleJSON));
+                    break;
+                }
+                case MovableType.Ellipse: {
+                    furniture.push(loadEllipse(fur as EllipseJSON));
+                    break;
+                }
+                case MovableType.Rectangle:
+                case MovableType.L:
+                case MovableType.U: {
+                    furniture.push(loadRectangle(fur as RectangleJSON));
+                    break;
+                }
+            }
+        }
+    }
+
+    if (floorPlanner.floorplanImage && floorPlanner.floorplanImage.image) {
+        const floorplanImageJson = floorPlanner.floorplanImage as FloorplanImageJSON;
+        const img = new Image();
+        img.onload = (onLoadResult) => {
+            const image = onLoadResult.target as HTMLImageElement;
+            floorplanImage.image = image;
+
+            setState();
+            drawMain();
+        };
+        img.onerror = () => {
+            alert(getText(loc.fileIO.errorAtFile) + ".");
+        };
+        img.src = floorplanImageJson.image;
+
+        floorplanImage.distance = floorplanImageJson.distance;
+
+        const node1 = floorplanImageJson.node1;
+        floorplanImage.node1 = new CornerNode(node1.id, node1.p.x, node1.p.y);
+
+        const node2 = floorplanImageJson.node2;
+        floorplanImage.node2 = new CornerNode(node2.id, node2.p.x, node2.p.y);
+    }
+
+    setState();
+
+    drawMain();
+}
+
+function loadRemoteExample(url: string) {
+    let gitHubExampleRequest = new XMLHttpRequest();
+    gitHubExampleRequest.onload = readerEvent => {
+        const target = readerEvent.currentTarget;
+        if (target) {
+            const content = (target as XMLHttpRequest).response;
+            loadFloorplan(content, url);
+
+            centerProjection(projection);
+        }
+    }
+    gitHubExampleRequest.open("GET", url);
+    gitHubExampleRequest.send();
+}
+
 document.getElementById("loadInput")!.addEventListener("change", (e: Event) => {
     const files = (e.target as HTMLInputElement).files;
     const file = files?.item(0);
@@ -54,101 +166,11 @@ document.getElementById("loadInput")!.addEventListener("change", (e: Event) => {
     reader.readAsText(file, "UTF-8");
 
     reader.onload = readerEvent => {
-        const content = readerEvent.target!.result;
-        let floorPlanner;
-        try {
-            floorPlanner = JSON.parse(content as string);
-        } catch (err) {
-            alert(getText(loc.fileIO.errorAtFile) + " " + file.name + ".\n\n" + getText(loc.fileIO.errorMessage) + "\n" + err);
-            console.error(err);
-            return;
+        const target = readerEvent.target;
+        if (target) {
+            const content = target.result as string;
+            loadFloorplan(content, file.name)
         }
-
-        graph.reset();
-        labels.length = 0;
-        openables.length = 0;
-        furniture.length = 0;
-        floorplanImage.reset();
-
-        if (floorPlanner.graph) {
-            let maxId = -1;
-            for (const id in floorPlanner.graph.nodes) {
-                const node = floorPlanner.graph.nodes[id] as CornerJSON;
-                if (maxId < node.id) {
-                    maxId = node.id;
-                }
-                graph.nodes[node.id] = new CornerNode(node.id, node.p.x, node.p.y);
-            }
-            graph.count = maxId + 1;
-
-            for (const i in floorPlanner.graph.edges) {
-                for (const j in floorPlanner.graph.edges[i]) {
-                    const edge = floorPlanner.graph.edges[i][j] as EdgeJSON;
-                    graph.addEdge(edge.id1, edge.id2);
-                }
-            }
-        }
-
-        if (floorPlanner.labels) {
-            for (const label of floorPlanner.labels) {
-                labels.push(loadRectangle(label as RectangleJSON));
-            }
-        }
-
-        if (floorPlanner.openables) {
-            for (const openable of floorPlanner.openables) {
-                openables.push(loadOpenable(openable as OpenableJSON, graph));
-            }
-        }
-
-        if (floorPlanner.furniture) {
-            for (const fur of floorPlanner.furniture) {
-                switch (fur.mov.type) {
-                    case MovableType.Circle: {
-                        furniture.push(loadCircle(fur as CircleJSON));
-                        break;
-                    }
-                    case MovableType.Ellipse: {
-                        furniture.push(loadEllipse(fur as EllipseJSON));
-                        break;
-                    }
-                    case MovableType.Rectangle:
-                    case MovableType.L:
-                    case MovableType.U: {
-                        furniture.push(loadRectangle(fur as RectangleJSON));
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (floorPlanner.floorplanImage && floorPlanner.floorplanImage.image) {
-            const floorplanImageJson = floorPlanner.floorplanImage as FloorplanImageJSON;
-            const img = new Image();
-            img.onload = (onLoadResult) => {
-                const image = onLoadResult.target as HTMLImageElement;
-                floorplanImage.image = image;
-
-                setState();
-                drawMain();
-            };
-            img.onerror = () => {
-                alert(getText(loc.fileIO.errorAtFile) + ".");
-            };
-            img.src = floorplanImageJson.image;
-
-            floorplanImage.distance = floorplanImageJson.distance;
-
-            const node1 = floorplanImageJson.node1;
-            floorplanImage.node1 = new CornerNode(node1.id, node1.p.x, node1.p.y);
-
-            const node2 = floorplanImageJson.node2;
-            floorplanImage.node2 = new CornerNode(node2.id, node2.p.x, node2.p.y);
-        }
-
-        setState();
-
-        drawMain();
     };
 });
 
