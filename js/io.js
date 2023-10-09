@@ -39,15 +39,13 @@ function createState() {
 function setState() {
     state = createState();
 }
-
-function loadFloorPlan(content) {
-
+function loadFloorplan(content, fileName) {
     let floorPlanner;
     try {
         floorPlanner = JSON.parse(content);
     }
     catch (err) {
-        alert(getText(loc.fileIO.errorAtFile) + " " + file.name + ".\n\n" + getText(loc.fileIO.errorMessage) + "\n" + err);
+        alert(getText(loc.fileIO.errorAtFile) + " " + fileName + ".\n\n" + getText(loc.fileIO.errorMessage) + "\n" + err);
         console.error(err);
         return;
     }
@@ -125,18 +123,19 @@ function loadFloorPlan(content) {
     setState();
     drawMain();
 }
-
 function loadRemoteExample(url) {
-
     let gitHubExampleRequest = new XMLHttpRequest();
-    gitHubExampleRequest.onload = function(data) {
-        const content = data.currentTarget.response;
-        loadFloorPlan(content);
-    }
+    gitHubExampleRequest.onload = readerEvent => {
+        const target = readerEvent.currentTarget;
+        if (target) {
+            const content = target.response;
+            loadFloorplan(content, url);
+            centerProjection(projection);
+        }
+    };
     gitHubExampleRequest.open("GET", url);
     gitHubExampleRequest.send();
 }
-
 document.getElementById("loadInput").addEventListener("change", (e) => {
     const files = e.target.files;
     const file = files?.item(0);
@@ -146,8 +145,11 @@ document.getElementById("loadInput").addEventListener("change", (e) => {
     const reader = new FileReader();
     reader.readAsText(file, "UTF-8");
     reader.onload = readerEvent => {
-        const content = readerEvent.target.result;
-        loadFloorPlan(content);
+        const target = readerEvent.target;
+        if (target) {
+            const content = target.result;
+            loadFloorplan(content, file.name);
+        }
     };
 });
 document.getElementById("saveButton").addEventListener("click", () => {
