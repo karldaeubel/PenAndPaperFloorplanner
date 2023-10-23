@@ -308,7 +308,7 @@ function centerProjection() {
     if (minX === null || minY === null || maxX === null || maxY === null) {
         return;
     }
-    { // fix zoom with 10% border
+    { // fix zoom with 20% border
         const a = proj.to({ x: 0, y: 0 });
         const b = proj.to({ x: canvas.width, y: canvas.height });
         const zoomValue = Math.min((b.x - a.x) / ((maxX - minX) * 1.2), (b.y - a.y) / ((maxY - minY) * 1.2));

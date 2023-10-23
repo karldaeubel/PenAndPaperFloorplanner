@@ -28,10 +28,10 @@ The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no 
 
 ---
 
-![Screenshot-Floorplan](images/Screenshot-Floorplan.png)
-
 ![Screenshot-Room](images/Screenshot-Room.png)
 
 ![Screenshot-Furniture](images/Screenshot-Furniture.png)
 
 ![Screenshot-Presentation](images/Screenshot-Presentation.png)
+
+![Screenshot-Floorplan](images/Screenshot-Floorplan.png)
