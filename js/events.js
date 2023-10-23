@@ -232,3 +232,7 @@ document.getElementById("edgeLabelCheckbox").addEventListener("change", (e) => {
     settings.showEdgeLabels = e.target.checked;
     drawMain();
 });
+document.getElementById("roomSizeCheckbox").addEventListener("change", (e) => {
+    settings.showRoomSize = e.target.checked;
+    drawMain();
+});

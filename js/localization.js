@@ -338,10 +338,14 @@ const loc = {
                 en: "Global Options",
                 de: "Globale Einstellungen"
             },
-            shwoEdgeLabel: {
+            showEdgeLabel: {
                 en: "Show Wall Length",
                 de: "Zeige Wandlänge"
-            }
+            },
+            roomSizeLabel: {
+                en: "Show Room Size",
+                de: "Zeige Raumgröße"
+            },
         },
     },
 };

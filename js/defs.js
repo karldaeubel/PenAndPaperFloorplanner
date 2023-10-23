@@ -85,6 +85,7 @@ const settings = {
     furnitureRotateSize: 100,
     furnitureSnapAngle: 5,
     showEdgeLabels: false,
+    showRoomSize: false,
 };
 // state will lazily track changes since init or last save/load as string
 let state = null;

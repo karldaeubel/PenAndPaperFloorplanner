@@ -87,6 +87,7 @@ interface Settings {
     readonly furnitureSnapAngle: number,
 
     showEdgeLabels: boolean,
+    showRoomSize: boolean,
 };
 
 const settings: Settings = {
@@ -110,6 +111,7 @@ const settings: Settings = {
     furnitureSnapAngle: 5,
 
     showEdgeLabels: false,
+    showRoomSize: false,
 };
 
 type optionalPoint = { x: optionalNumber, y: optionalNumber };
