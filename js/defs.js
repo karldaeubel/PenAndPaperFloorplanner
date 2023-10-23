@@ -36,6 +36,13 @@ var FurnitureType;
 ;
 ;
 ;
+var Direction;
+(function (Direction) {
+    Direction[Direction["Up"] = 0] = "Up";
+    Direction[Direction["Down"] = 1] = "Down";
+    Direction[Direction["Right"] = 2] = "Right";
+    Direction[Direction["Left"] = 3] = "Left";
+})(Direction || (Direction = {}));
 class Projection {
     scale;
     p;
@@ -87,6 +94,9 @@ const settings = {
     showEdgeLabels: false,
     showRoomSize: false,
 };
+function getCurrProjection() {
+    return settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+}
 // state will lazily track changes since init or last save/load as string
 let state = null;
 const labels = [];

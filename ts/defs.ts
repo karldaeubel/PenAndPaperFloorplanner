@@ -39,6 +39,13 @@ interface Dim {
     h: number,
 };
 
+enum Direction {
+    Up,
+    Down,
+    Right,
+    Left,
+}
+
 class Projection {
     scale: number;
     p: Point;
@@ -103,6 +110,7 @@ const settings: Settings = {
         h: 50
     },
     isRemove: false,
+
     nodeTransSize: 50,
     nodeExtendSize: 150,
     nodeSnapDist: 100,
@@ -113,6 +121,10 @@ const settings: Settings = {
     showEdgeLabels: false,
     showRoomSize: false,
 };
+
+function getCurrProjection() {
+    return settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+}
 
 type optionalPoint = { x: optionalNumber, y: optionalNumber };
 type optionalString = string | null;

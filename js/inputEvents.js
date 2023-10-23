@@ -69,7 +69,7 @@ function zoomEvent(e) {
 }
 function zoom(p, factor) {
     if (factor !== null) {
-        const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+        const proj = getCurrProjection();
         const newScale = proj.scale * factor;
         if (newScale > settings.minZoom && newScale < settings.maxZoom) {
             proj.scale = newScale;
@@ -210,3 +210,35 @@ function mouseUp(e) {
     settings.isRemove = false;
     drawMain();
 }
+function zoomToMiddle(factor) {
+    zoom({ x: canvas.width / 2, y: canvas.height / 2 }, factor);
+}
+document.getElementById("navZoomIn").addEventListener("click", () => {
+    zoomToMiddle(Math.pow(settings.zoomFactor, 4));
+});
+document.getElementById("navZoomOut").addEventListener("click", () => {
+    zoomToMiddle(1 / Math.pow(settings.zoomFactor, 4));
+});
+document.getElementById("navCenter").addEventListener("click", () => {
+    centerProjection();
+});
+document.addEventListener("keydown", (e) => {
+    switch (e.code) {
+        case "ArrowRight": {
+            moveProjection(Direction.Right);
+            break;
+        }
+        case "ArrowLeft": {
+            moveProjection(Direction.Left);
+            break;
+        }
+        case "ArrowUp": {
+            moveProjection(Direction.Up);
+            break;
+        }
+        case "ArrowDown": {
+            moveProjection(Direction.Down);
+            break;
+        }
+    }
+});
