@@ -282,3 +282,9 @@ document.getElementById("edgeLabelCheckbox")!.addEventListener("change", (e) => 
 
     drawMain();
 });
+
+document.getElementById("roomSizeCheckbox")!.addEventListener("change", (e) => {
+    settings.showRoomSize = (e.target as HTMLInputElement).checked;
+
+    drawMain();
+});

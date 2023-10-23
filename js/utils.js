@@ -43,3 +43,6 @@ function getIntersectionPoint(center, border, wall1, wall2) {
     }
     return null;
 }
+function getTrapezoidArea(p1, p2) {
+    return (p1.x - p2.x) * (p1.y + p2.y) / 2;
+}

@@ -26,9 +26,11 @@ function setNodeExtendSize() {
     transSlider.value = String(settings.nodeTransSize);
     drawMain();
 }
-function resetEdgeLabelCheckBox() {
+function resetOptions() {
     settings.showEdgeLabels = false;
     document.getElementById("edgeLabelCheckbox").checked = false;
+    settings.showRoomSize = false;
+    document.getElementById("roomSizeCheckbox").checked = false;
 }
 function addElem(parent, type, text = null) {
     const elem = document.createElement(type);
@@ -94,7 +96,8 @@ function setButtonContent() {
     // presentation
     document.getElementById("presentationButton").textContent = getText(loc.presentation.category);
     document.getElementById("presentationOptionsHead").textContent = getText(loc.presentation.option.head);
-    document.getElementById("edgeLabelCheckboxLabel").textContent = getText(loc.presentation.option.shwoEdgeLabel);
+    document.getElementById("edgeLabelCheckboxLabel").textContent = getText(loc.presentation.option.showEdgeLabel);
+    document.getElementById("roomSizeCheckboxLabel").textContent = getText(loc.presentation.option.roomSizeLabel);
     // util
     document.getElementById("saveButton").textContent = getText(loc.fileIO.saveButton);
     document.getElementById("loadButton").textContent = getText(loc.fileIO.loadButton);
@@ -165,5 +168,5 @@ function init() {
     setButtonContent();
     setState();
     setSize();
-    resetEdgeLabelCheckBox();
+    resetOptions();
 }

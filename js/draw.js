@@ -1,8 +1,8 @@
 "use strict";
 // utils
-function setFontSize(size, fixed = true) {
+function setFontSize(size, fixed = true, bold = false) {
     const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
-    ctx.font = (size / (fixed ? 1 : proj.scale)) + "px Segoe UI, Segoe UI, sans-serif";
+    ctx.font = (bold ? "normal 900 " : "") + (size / (fixed ? 1 : proj.scale)) + "px Segoe UI, Segoe UI, sans-serif";
 }
 function restoreDefaultContext() {
     const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;

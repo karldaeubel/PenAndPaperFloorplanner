@@ -366,6 +366,59 @@ const graph = {
             }
         }
     },
+    getFaces: function () {
+        let directedEdges = [];
+        let allEdges = {};
+        for (const outEdges of Object.values(this.edges)) {
+            for (const edge of Object.values(outEdges)) {
+                directedEdges.push([edge.id1, edge.id2]);
+                directedEdges.push([edge.id2, edge.id1]);
+                allEdges[edge.id1] = allEdges[edge.id1] || [];
+                allEdges[edge.id2] = allEdges[edge.id2] || [];
+                allEdges[edge.id1].push(edge.id2);
+                allEdges[edge.id2].push(edge.id1);
+            }
+        }
+        let nextEdge = {};
+        Object.entries(allEdges).forEach(([id1S, outEdges]) => {
+            if (outEdges.length === 0) {
+                return;
+            }
+            // wtf; why can I not access the key as number here...
+            const id1 = Number(id1S);
+            const currNode = this.nodes[id1];
+            outEdges.sort((other1, other2) => {
+                const otherNode1 = this.nodes[other1];
+                const otherNode2 = this.nodes[other2];
+                const angle1 = Math.atan2(otherNode1.p.y - currNode.p.y, otherNode1.p.x - currNode.p.x);
+                const angle2 = Math.atan2(otherNode2.p.y - currNode.p.y, otherNode2.p.x - currNode.p.x);
+                return angle1 - angle2;
+            });
+            nextEdge[id1] = nextEdge[id1] || {};
+            nextEdge[id1][outEdges.at(0)] = outEdges.at(outEdges.length - 1);
+            for (let idx = 1; idx < outEdges.length; ++idx) {
+                const id2 = outEdges[idx];
+                nextEdge[id1][id2] = outEdges.at(idx - 1);
+            }
+        });
+        let result = [];
+        while (directedEdges.length > 0) {
+            let currFace = result.at(result.push([]) - 1);
+            const [id1, id2] = directedEdges.at(0);
+            let currNode = this.nodes[id1];
+            let nextNode = this.nodes[id2];
+            currFace.push(currNode);
+            let removeIdx = -1;
+            while ((removeIdx = directedEdges.findIndex((val) => val.at(0) === currNode.id && val.at(1) === nextNode.id)) !== -1) {
+                currFace.push(nextNode);
+                directedEdges.splice(removeIdx, 1);
+                const nextId = nextEdge[nextNode.id][currNode.id];
+                currNode = nextNode;
+                nextNode = this.nodes[nextId];
+            }
+        }
+        return result;
+    },
     // e, the click position; e is in screen space
     handleClick: function (e) {
         let selected = false;
@@ -467,10 +520,47 @@ const graph = {
     },
     draw: function () {
         this.drawEdges();
+        if (settings.showRoomSize) {
+            this.drawFaces();
+        }
         if (settings.mode === Mode.Room) {
             this.drawNodes();
             this.drawExtend();
         }
+    },
+    drawFaces: function () {
+        const faces = this.getFaces();
+        setFontSize(22, false, true);
+        ctx.fillStyle = "lightgray";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        for (const face of faces) {
+            if (face.length < 2) {
+                continue;
+            }
+            let area = 0;
+            let mid = { x: 0, y: 0 };
+            let prevP = face.at(0).p;
+            for (let i = 1; i < face.length; ++i) {
+                const currP = face.at(i).p;
+                area += getTrapezoidArea(prevP, currP);
+                mid = {
+                    x: mid.x + (prevP.x + currP.x) * (prevP.x * currP.y - currP.x * prevP.y),
+                    y: mid.y + (prevP.y + currP.y) * (prevP.x * currP.y - currP.x * prevP.y),
+                };
+                prevP = currP;
+            }
+            mid = {
+                x: mid.x / (6 * area),
+                y: mid.y / (6 * area),
+            };
+            area /= 1000 * 1000;
+            if (area <= 0) {
+                continue;
+            }
+            ctx.fillText(area.toFixed(1) + "m²", mid.x, mid.y);
+        }
+        restoreDefaultContext();
     },
     drawEdges: function () {
         for (const outEdges of Object.values(this.edges)) {
