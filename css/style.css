@@ -59,6 +59,21 @@ button.active {
     overflow: auto;
 }
 
+#navigationBar {
+    position: absolute;
+    bottom: 0;
+    right: 20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.navigationBarButton {
+    font-size: 25px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+}
+
 #bottomMenu {
     overflow: hidden;
     border: 1px solid #ccc;
@@ -75,6 +90,7 @@ button.active {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
+    width: auto;
 }
 
 .tabContent.mode {
@@ -95,7 +111,7 @@ button.active {
 .buttonRow {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: auto;
 }
 
 .buttonRow button,

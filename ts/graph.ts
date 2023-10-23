@@ -598,11 +598,11 @@ const graph: Graph = {
         }
     },
     draw: function () {
-        this.drawEdges();
-
         if (settings.showRoomSize) {
             this.drawFaces();
         }
+
+        this.drawEdges();
 
         if (settings.mode === Mode.Room) {
             this.drawNodes();
@@ -613,7 +613,6 @@ const graph: Graph = {
     drawFaces: function () {
         const faces = this.getFaces();
 
-        setFontSize(22, false, true);
         ctx.fillStyle = "lightgray";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -639,6 +638,11 @@ const graph: Graph = {
             }
             area /= 1000 * 1000;
 
+            if (area < 1) {
+                setFontSize(18, false, true);
+            } else {
+                setFontSize(22, false, true);
+            }
             if (area <= 0) { continue; }
 
             ctx.fillText(area.toFixed(1) + "m²", mid.x, mid.y);

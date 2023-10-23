@@ -130,7 +130,7 @@ function loadRemoteExample(url) {
         if (target) {
             const content = target.response;
             loadFloorplan(content, url);
-            centerProjection(projection);
+            centerProjection();
         }
     };
     gitHubExampleRequest.open("GET", url);

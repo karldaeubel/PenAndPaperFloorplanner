@@ -12,6 +12,8 @@ interface FloorplanImage {
     handleMove: (e: Point) => boolean,
     handleUnclick: () => void,
 
+    getCurrentScale: () => number,
+
     draw: () => void,
     drawEdge: () => void,
     drawNodes: () => void,
@@ -81,9 +83,12 @@ const floorplanImage: FloorplanImage = {
             node.delta = { x: 0, y: 0 };
         }
     },
+    getCurrentScale: function (): number {
+        return settings.mode === Mode.Floorplan ? 1 : this.distance / distance(this.node1.p, this.node2.p);
+    },
     draw: function () {
         if (this.image !== null) {
-            const currentScale = settings.mode === Mode.Floorplan ? 1 : this.distance / distance(this.node1.p, this.node2.p);
+            const currentScale = this.getCurrentScale();
             ctx.drawImage(this.image, 0, 0, this.image.width * currentScale, this.image.height * currentScale);
             if (settings.mode === Mode.Floorplan) {
                 this.drawEdge();

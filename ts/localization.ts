@@ -23,6 +23,10 @@ const loc = {
             en: "More Help 🡲",
             de: "Mehr Hilfe 🡲"
         },
+        findNav: {
+            en: "Navigation 🡲",
+            de: "Navigation 🡲"
+        },
         welcome: {
             en: "Welcome to the Pen And Paper Floorplanner.",
             de: "Willkommen zum Pen And Paper Floorplanner."

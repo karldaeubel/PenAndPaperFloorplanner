@@ -147,7 +147,7 @@ function loadRemoteExample(url: string) {
             const content = (target as XMLHttpRequest).response;
             loadFloorplan(content, url);
 
-            centerProjection(projection);
+            centerProjection();
         }
     }
     gitHubExampleRequest.open("GET", url);

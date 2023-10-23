@@ -1,11 +1,11 @@
 "use strict";
 // utils
 function setFontSize(size, fixed = true, bold = false) {
-    const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+    const proj = getCurrProjection();
     ctx.font = (bold ? "normal 900 " : "") + (size / (fixed ? 1 : proj.scale)) + "px Segoe UI, Segoe UI, sans-serif";
 }
 function restoreDefaultContext() {
-    const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+    const proj = getCurrProjection();
     ctx.lineWidth = 1.5 / proj.scale;
     ctx.lineJoin = "miter";
     setFontSize(15);
@@ -80,7 +80,7 @@ function drawMain() {
     }
 }
 function drawHelp() {
-    const proj = settings.mode === Mode.Floorplan ? floorplanProjection : projection;
+    const proj = getCurrProjection();
     const ul = { x: -proj.p.x / proj.scale, y: -proj.p.y / proj.scale };
     const br = proj.to({ x: canvas.width, y: canvas.height });
     ctx.fillStyle = "gray";
@@ -105,39 +105,52 @@ function drawHelp() {
         }
     }
     ctx.stroke();
-    // find help
-    const helpRect = document.getElementById("helpOpen").getBoundingClientRect();
-    const helpAnchor = proj.to({ x: helpRect.x, y: helpRect.y + helpRect.height / 2 });
-    ctx.beginPath();
-    setFontSize(30, false);
-    ctx.fillStyle = "green";
-    ctx.textAlign = "right";
-    ctx.textBaseline = "middle";
-    ctx.fillText(getText(loc.help.findHelp), br.x, helpAnchor.y);
-    ctx.stroke();
-    // remove help
-    const a = projection.to({ x: canvas.width - settings.deleteDim.w, y: 0 });
-    const d = projection.to({ x: canvas.width, y: settings.deleteDim.h });
-    const w = d.x - a.x;
-    const h = d.y - a.y;
-    ctx.beginPath();
-    ctx.fillStyle = "red";
-    setFontSize(20, false);
-    ctx.textAlign = "right";
-    ctx.textBaseline = "top";
-    switch (settings.mode) {
-        case Mode.Floorplan:
-            break;
-        case Mode.Room:
-            ctx.fillText(getText(loc.room.removeHelp), br.x - w, ul.y + h);
-            break;
-        case Mode.Furniture:
-            ctx.fillText(getText(loc.furniture.removeHelp), br.x - w, ul.y + h);
-            break;
-        case Mode.Presentation:
-            break;
+    { // find help
+        const helpRect = document.getElementById("helpOpen").getBoundingClientRect();
+        const helpAnchor = proj.to({ x: helpRect.x, y: helpRect.y + helpRect.height / 2 });
+        ctx.beginPath();
+        setFontSize(30, false);
+        ctx.fillStyle = "green";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(getText(loc.help.findHelp), helpAnchor.x, helpAnchor.y);
+        ctx.stroke();
     }
-    ctx.stroke();
+    { // navigation help
+        const navRect = document.getElementById("navCenter").getBoundingClientRect();
+        const navAnchor = proj.to({ x: navRect.x, y: navRect.y + navRect.height / 2 });
+        ctx.beginPath();
+        setFontSize(20, false);
+        ctx.fillStyle = "blue";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(getText(loc.help.findNav), navAnchor.x, navAnchor.y);
+        ctx.stroke();
+    }
+    { // remove help
+        const a = proj.to({ x: canvas.width - settings.deleteDim.w, y: 0 });
+        const d = proj.to({ x: canvas.width, y: settings.deleteDim.h });
+        const w = d.x - a.x;
+        const h = d.y - a.y;
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        setFontSize(20, false);
+        ctx.textAlign = "right";
+        ctx.textBaseline = "top";
+        switch (settings.mode) {
+            case Mode.Floorplan:
+                break;
+            case Mode.Room:
+                ctx.fillText(getText(loc.room.removeHelp), br.x - w, ul.y + h);
+                break;
+            case Mode.Furniture:
+                ctx.fillText(getText(loc.furniture.removeHelp), br.x - w, ul.y + h);
+                break;
+            case Mode.Presentation:
+                break;
+        }
+        ctx.stroke();
+    }
     restoreDefaultContext();
 }
 function drawLabel(label) {
@@ -250,7 +263,8 @@ function drawDistanceToNextWall(center, border) {
         ctx.restore();
     }
 }
-function centerProjection(proj) {
+function centerProjection() {
+    const proj = getCurrProjection();
     let minX = null;
     let minY = null;
     let maxX = null;
@@ -269,29 +283,64 @@ function centerProjection(proj) {
             maxY = p.y;
         }
     };
-    for (const openable of openables) {
-        updateBoundary(openable.p);
+    if (settings.mode !== Mode.Floorplan) {
+        for (const openable of openables) {
+            updateBoundary(openable.p);
+        }
+        for (const label of labels) {
+            updateBoundary(label.p);
+        }
+        for (const fur of furniture) {
+            updateBoundary(fur.center());
+        }
+        for (const node of Object.values(graph.nodes)) {
+            updateBoundary(node.p);
+        }
     }
-    for (const label of labels) {
-        updateBoundary(label.p);
-    }
-    for (const fur of furniture) {
-        updateBoundary(fur.center());
-    }
-    for (const node of Object.values(graph.nodes)) {
-        updateBoundary(node.p);
+    if (floorplanImage.image) {
+        updateBoundary(floorplanImage.node1.p);
+        updateBoundary(floorplanImage.node2.p);
+        const image = floorplanImage.image;
+        const imageScale = floorplanImage.getCurrentScale();
+        updateBoundary({ x: image.x, y: image.y });
+        updateBoundary({ x: image.x + image.width * imageScale, y: image.y + image.height * imageScale });
     }
     if (minX === null || minY === null || maxX === null || maxY === null) {
         return;
     }
-    // fix zoom with 10% border
-    let a = projection.to({ x: 0, y: 0 });
-    let b = projection.to({ x: canvas.width, y: canvas.height });
-    const zoomValue = Math.min((b.x - a.x) / ((maxX - minX) * 1.1), (b.y - a.y) / ((maxY - minY) * 1.1));
-    zoom(proj.p, zoomValue);
-    // fix view of projection to middle
-    a = projection.to({ x: 0, y: 0 });
-    b = projection.to({ x: canvas.width, y: canvas.height });
-    proj.p = proj.from({ x: -(minX + maxX) / 2 + (b.x - a.x) / 2, y: -(minY + maxY) / 2 + (b.y - a.y) / 2 });
+    { // fix zoom with 10% border
+        const a = proj.to({ x: 0, y: 0 });
+        const b = proj.to({ x: canvas.width, y: canvas.height });
+        const zoomValue = Math.min((b.x - a.x) / ((maxX - minX) * 1.2), (b.y - a.y) / ((maxY - minY) * 1.2));
+        zoom(proj.p, zoomValue);
+    }
+    { // fix view of projection to middle
+        const a = proj.to({ x: 0, y: 0 });
+        const b = proj.to({ x: canvas.width, y: canvas.height });
+        const newP = proj.from({ x: (minX + maxX) / 2 - (b.x - a.x) / 2, y: (minY + maxY) / 2 - (b.y - a.y) / 2 });
+        proj.p = { x: proj.p.x - newP.x, y: proj.p.y - newP.y };
+    }
+    drawMain();
+}
+function moveProjection(direction) {
+    const proj = getCurrProjection();
+    switch (direction) {
+        case Direction.Up: {
+            proj.p.y -= canvas.height / 20;
+            break;
+        }
+        case Direction.Down: {
+            proj.p.y += canvas.height / 20;
+            break;
+        }
+        case Direction.Left: {
+            proj.p.x -= canvas.width / 20;
+            break;
+        }
+        case Direction.Right: {
+            proj.p.x += canvas.width / 20;
+            break;
+        }
+    }
     drawMain();
 }
