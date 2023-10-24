@@ -139,7 +139,7 @@ function drawHelp() {
     }
 
     {// navigation help
-        const navRect = (document.getElementById("navCenter") as HTMLButtonElement).getBoundingClientRect();
+        const navRect = (document.getElementById("navLeft") as HTMLButtonElement).getBoundingClientRect();
         const navAnchor = proj.to({ x: navRect.x, y: navRect.y + navRect.height / 2 });
 
         ctx.beginPath();

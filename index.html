@@ -11,10 +11,18 @@
 <body>
     <div id="content">
         <canvas id="canvas"> Your browser does not support the HTML 5 Canvas.</canvas>
-        <div id="navigationBar">
-            <button type="button" id="navZoomIn" class="navigationBarButton">⊕</button>
-            <button type="button" id="navCenter" class="navigationBarButton">⊚</button>
-            <button type="button" id="navZoomOut" class="navigationBarButton">⊖</button>
+        <div class="navBar">
+            <button type="button" id="navZoomIn" class="navBarButton">⊕</button>
+            <button type="button" id="navCenter" class="navBarButton">⊚</button>
+            <button type="button" id="navZoomOut" class="navBarButton">⊖</button>
+        </div>
+        <div class="navBar translate">
+            <button type="button" id="navUp" class="navBarButton wide">⮉</button>
+            <div class="subBar">
+                <button type="button" id="navLeft" class="navBarButton">⮈</button>
+                <button type="button" id="navRight" class="navBarButton">⮊</button>
+            </div>
+            <button type="button" id="navDown" class="navBarButton wide">⮋</button>
         </div>
         <div id="sidebar">
             <div class="tab mode buttonRow">

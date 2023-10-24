@@ -117,7 +117,7 @@ function drawHelp() {
         ctx.stroke();
     }
     { // navigation help
-        const navRect = document.getElementById("navCenter").getBoundingClientRect();
+        const navRect = document.getElementById("navLeft").getBoundingClientRect();
         const navAnchor = proj.to({ x: navRect.x, y: navRect.y + navRect.height / 2 });
         ctx.beginPath();
         setFontSize(20, false);
