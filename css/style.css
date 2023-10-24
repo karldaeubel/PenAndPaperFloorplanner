@@ -59,7 +59,7 @@ button.active {
     overflow: auto;
 }
 
-#navigationBar {
+.navBar {
     position: absolute;
     bottom: 0;
     right: 20%;
@@ -67,11 +67,24 @@ button.active {
     flex-direction: column;
 }
 
-.navigationBarButton {
+.navBar.translate {
+    margin-right: 40px;
+}
+
+.subBar {
+    display: flex;
+    flex-direction: row;
+}
+
+.navBarButton {
     font-size: 25px;
     width: 40px;
     height: 40px;
     border: 1px solid #ccc;
+}
+
+.navBarButton.wide {
+    width: 80px;
 }
 
 #bottomMenu {

@@ -222,6 +222,18 @@ document.getElementById("navZoomOut").addEventListener("click", () => {
 document.getElementById("navCenter").addEventListener("click", () => {
     centerProjection();
 });
+document.getElementById("navUp").addEventListener("click", () => {
+    moveProjection(Direction.Up);
+});
+document.getElementById("navRight").addEventListener("click", () => {
+    moveProjection(Direction.Right);
+});
+document.getElementById("navDown").addEventListener("click", () => {
+    moveProjection(Direction.Down);
+});
+document.getElementById("navLeft").addEventListener("click", () => {
+    moveProjection(Direction.Left);
+});
 document.addEventListener("keydown", (e) => {
     switch (e.code) {
         case "ArrowRight": {
