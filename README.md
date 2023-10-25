@@ -1,10 +1,9 @@
 <p align="center">
     <img style="width: 60%;"
     src="https://github.com/karldaeubel/PenAndPaperFloorplanner/assets/1245268/7da23427-5514-4b60-96df-23046855731b" alt="PenAndPaperFloorplanner">
+    <img title="Lint" alt="Lint" src="https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/lint.yml/badge.svg" />
+    <img title="GitHub Pages" alt="GitHub Pages" src="https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/pages.yml/badge.svg" />
 </p>
-
-[![Lint](https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/lint.yml/badge.svg)](https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/lint.yml)
-[![pages-build-deployment](https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/karldaeubel/PenAndPaperFloorplanner/actions/workflows/pages/pages-build-deployment)
 
 The Pen And Paper Floorplanner is an easy to use 2D floorplanner webapp with no overhead or registration.
 
