@@ -1,7 +1,7 @@
 // utils
 function setFontSize(size: number, fixed: boolean = true, bold: boolean = false) {
     const proj = getCurrProjection();
-    ctx.font = (bold ? "normal 900 " : "") + (size / (fixed ? 1 : proj.scale)) + "px Segoe UI, Segoe UI, sans-serif";
+    ctx.font = (bold ? "normal 900 " : "") + (size / (fixed ? 1 : proj.scale)) + "px \"Segoe UI\", Arial, Helvetica, sans-serif";
 }
 
 function restoreDefaultContext() {
@@ -30,6 +30,12 @@ function handleRemove(p: Point, elem: Movable | CornerNode) {
         }
         elem.remove = false;
     }
+}
+
+function drawDistance(x: number, y: number, distance: number, precision: number | null = null, unit: string = "", factor: number = 1) {
+    const distanceInUnit = distance / factor;
+    const output = (precision === null ? distanceInUnit : distanceInUnit.toFixed(precision)) + unit;
+    ctx.fillText(output, x, y, distance);
 }
 
 // main
@@ -321,7 +327,7 @@ function drawDistanceToNextWall(center: Point, border: Point) {
         ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
 
         ctx.beginPath();
-        ctx.fillText(dist.toFixed(1), 0, 0, dist);
+        drawDistance(0, 0, dist, 0, "mm");
         ctx.stroke();
 
         ctx.restore();

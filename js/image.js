@@ -81,7 +81,7 @@ const floorplanImage = {
         ctx.translate(c.x, c.y);
         const angle = Math.atan2(this.node2.p.y - this.node1.p.y, this.node2.p.x - this.node1.p.x);
         ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
-        ctx.fillText(String(this.distance), 0, 0, distance(this.node1.p, this.node2.p));
+        ctx.fillText(String(this.distance) + "mm", 0, 0, distance(this.node1.p, this.node2.p));
         ctx.restore();
     },
     drawNodes: function () {

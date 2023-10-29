@@ -2,7 +2,7 @@
 // utils
 function setFontSize(size, fixed = true, bold = false) {
     const proj = getCurrProjection();
-    ctx.font = (bold ? "normal 900 " : "") + (size / (fixed ? 1 : proj.scale)) + "px Segoe UI, Segoe UI, sans-serif";
+    ctx.font = (bold ? "normal 900 " : "") + (size / (fixed ? 1 : proj.scale)) + "px \"Segoe UI\", Arial, Helvetica, sans-serif";
 }
 function restoreDefaultContext() {
     const proj = getCurrProjection();
@@ -28,6 +28,11 @@ function handleRemove(p, elem) {
         }
         elem.remove = false;
     }
+}
+function drawDistance(x, y, distance, precision = null, unit = "", factor = 1) {
+    const distanceInUnit = distance / factor;
+    const output = (precision === null ? distanceInUnit : distanceInUnit.toFixed(precision)) + unit;
+    ctx.fillText(output, x, y, distance);
 }
 // main
 function drawMain() {
@@ -258,7 +263,7 @@ function drawDistanceToNextWall(center, border) {
         const angle = Math.atan2(border.y - intersectionPoint.y, border.x - intersectionPoint.x);
         ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
         ctx.beginPath();
-        ctx.fillText(dist.toFixed(1), 0, 0, dist);
+        drawDistance(0, 0, dist, 0, "mm");
         ctx.stroke();
         ctx.restore();
     }
