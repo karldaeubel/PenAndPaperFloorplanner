@@ -722,7 +722,7 @@ const graph: Graph = {
                     const angle = Math.atan2(node.p.y - other.p.y, node.p.x - other.p.x);
 
                     ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
-                    ctx.fillText(dist.toFixed(1), 0, 0, distance(otherBorder, b));
+                    ctx.fillText(dist.toFixed(0) + "mm", 0, 0, distance(otherBorder, b));
 
                     ctx.restore();
                 } else if (settings.showEdgeLabels) {
@@ -739,8 +739,7 @@ const graph: Graph = {
                     const angle = Math.atan2(node2.p.y - node1.p.y, node2.p.x - node1.p.x);
 
                     ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
-                    ctx.fillText(dist.toFixed(0), 0, 0, dist);
-
+                    drawDistance(0, 0, dist, 1, "m", 1000);
                     ctx.restore();
                 }
 
@@ -807,7 +806,7 @@ const graph: Graph = {
                     const angle = Math.atan2(node.p.y - newPos.y, node.p.x - newPos.x);
 
                     ctx.rotate(angle < -Math.PI / 2 || angle > Math.PI / 2 ? angle + Math.PI : angle);
-                    ctx.fillText(dist.toFixed(1), 0, 0, dist - 2 * settings.nodeTransSize);
+                    ctx.fillText(dist.toFixed(0) + "mm", 0, 0, dist - 2 * settings.nodeTransSize);
 
                     ctx.restore();
                 }

@@ -355,7 +355,7 @@ class Openable extends Movable {
             setFontSize(rotateSize * 2);
 
             ctx.beginPath();
-            ctx.fillText(String(this.dim.w), 0, -this.dim.h + rotateSize * 2, this.dim.w);
+            drawDistance(0, -this.dim.h + rotateSize * 2, this.dim.w, null, "mm");
             ctx.stroke();
 
             if (this.snap.edge !== null && this.snap.pos !== null && this.snap.orientation !== null) {
@@ -369,14 +369,14 @@ class Openable extends Movable {
                 if (dist1 > 0) {
                     ctx.textAlign = this.snap.orientation === 0 ? "right" : "left";
                     ctx.beginPath();
-                    ctx.fillText(dist1.toFixed(1), (this.snap.orientation - 1 / 2) * this.dim.w, -this.dim.h + rotateSize * 2, dist1);
+                    drawDistance((this.snap.orientation - 1 / 2) * this.dim.w, -this.dim.h + rotateSize * 2, dist1, 0, "mm");
                     ctx.stroke();
                 }
 
                 if (dist2 > 0) {
                     ctx.textAlign = this.snap.orientation === 1 ? "right" : "left";
                     ctx.beginPath();
-                    ctx.fillText(dist2.toFixed(1), (-this.snap.orientation + 1 / 2) * this.dim.w, -this.dim.h + rotateSize * 2, dist2);
+                    drawDistance((-this.snap.orientation + 1 / 2) * this.dim.w, -this.dim.h + rotateSize * 2, dist2, 0, "mm");
                     ctx.stroke();
                 }
             }
@@ -587,14 +587,14 @@ class Rectangle extends Movable {
 
             ctx.moveTo(-maxDim.w / 2, -maxDim.h / 2 + rotateSize);
             ctx.lineTo(-maxDim.w / 2 + maxDim.w, -maxDim.h / 2 + rotateSize);
-            ctx.fillText(String(maxDim.w), 0, -maxDim.h / 2 + rotateSize, maxDim.w);
+            drawDistance(0, -maxDim.h / 2 + rotateSize, maxDim.w, null, "mm");
 
             ctx.moveTo(-maxDim.w / 2 + rotateSize, -maxDim.h / 2);
             ctx.lineTo(-maxDim.w / 2 + rotateSize, -maxDim.h / 2 + maxDim.h);
 
             ctx.translate(-maxDim.w / 2 + rotateSize, 0);
             ctx.rotate(toRad(-90));
-            ctx.fillText(String(maxDim.h), 0, 0, maxDim.h);
+            drawDistance(0, 0, maxDim.h, null, "mm");
 
             ctx.stroke();
         }
@@ -611,7 +611,7 @@ class Rectangle extends Movable {
 
             this.setStyle(settings.mode === Mode.Room, true);
             const rotateSize = this.getRotateSize();
-            setFontSize(rotateSize * 2);
+            setFontSize(rotateSize * 1.5);
 
             const center = this.center();
             const maxDim = this.getMaxDim();
@@ -722,8 +722,7 @@ class Circle extends Movable {
 
             ctx.moveTo(-this.r, -this.r);
             ctx.lineTo(this.r, -this.r);
-            ctx.fillText(String(2 * this.r), 0, -this.r + rotateSize, 2 * this.r);
-
+            drawDistance(0, -this.r + rotateSize, 2 * this.r, null, "mm");
             ctx.stroke();
         }
 
@@ -739,7 +738,7 @@ class Circle extends Movable {
 
             this.setStyle(settings.mode === Mode.Room, true);
             const rotateSize = this.getDimSize();
-            setFontSize(rotateSize * 2);
+            setFontSize(rotateSize * 1.5);
 
             const center = this.center();
 
@@ -922,14 +921,14 @@ class Ellipse extends Movable {
 
             ctx.moveTo(-this.rX, -this.rY);
             ctx.lineTo(this.rX, -this.rY);
-            ctx.fillText(String(2 * this.rX), 0, -this.rY + dimSize, 2 * this.rX);
+            drawDistance(0, -this.rY + dimSize, 2 * this.rX, null, "mm");
 
             ctx.moveTo(-this.rX, -this.rY);
             ctx.lineTo(-this.rX, this.rY);
 
             ctx.translate(-this.rX + dimSize, 0);
             ctx.rotate(toRad(-90));
-            ctx.fillText(String(2 * this.rY), 0, 0, 2 * this.rY);
+            drawDistance(0, 0, 2 * this.rY, null, "mm");
 
             ctx.stroke();
         }
@@ -946,7 +945,7 @@ class Ellipse extends Movable {
 
             this.setStyle(settings.mode === Mode.Room, true);
             const rotateSize = this.getDimSize();
-            setFontSize(rotateSize * 2);
+            setFontSize(rotateSize * 1.5);
 
             const center = this.center();
 
