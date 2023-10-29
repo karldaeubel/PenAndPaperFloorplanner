@@ -60,6 +60,7 @@ button.active {
 }
 
 .navBar {
+    align-items: center;
     position: absolute;
     bottom: 0;
     right: 20%;
@@ -81,10 +82,7 @@ button.active {
     width: 40px;
     height: 40px;
     border: 1px solid #ccc;
-}
-
-.navBarButton.wide {
-    width: 80px;
+    border-radius: 20%;
 }
 
 #loadFloorplanButton {
